@@ -24,6 +24,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private Button emailButton, googleButton;
     ProgressBar progressBar;
     private UserViewModel userViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                         .setIsSmartLockEnabled(false)
                         .setAvailableProviders(providers)
                         .build(),
-                RC_SIGN_IN );
+                RC_SIGN_IN);
     }
 
 
@@ -75,7 +76,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 userViewModel.createUser();
                 showToast(String.valueOf("Connecté"));
-               // startMainActivity();
+                startPropertyListFragment();
                 progressBar.setVisibility(View.INVISIBLE);
             } else if (response == null) {
                 showToast(String.valueOf("Pas connecté"));
@@ -89,6 +90,12 @@ public class AuthenticationActivity extends AppCompatActivity {
         } else {
             startActivity(this.getIntent());
         }
+    }
+
+    private void startPropertyListFragment() {
+       // Intent homeActivityIntent = new Intent(this, PropertyListFragment.class);
+       // startActivity(homeActivityIntent);
+        finish();
     }
 }
 
