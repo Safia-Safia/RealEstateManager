@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
     <string name="the_property_coast">\"Le premier bien immobilier enregistré vaut \"</string>
+    <string name="title_activity_properties_detail_host">propertiesDetailHostActivity</string>
+    <string name="title_properties_list">Properties</string>
+    <string name="title_properties_detail">properties Detail</string>
 </resources>

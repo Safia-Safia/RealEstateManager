@@ -1,31 +1,36 @@
-package com.openclassrooms.realestatemanager;
+package com.openclassrooms.realestatemanager.controller;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class AuthenticationActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private Button emailButton, googleButton;
     ProgressBar progressBar;
+    private UserViewModel userViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_authentication);
+        setUpView();
+        setupListeners();
+        isUserLogged();
     }
 
     private void setUpView() {
@@ -57,33 +62,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //this.handleResponseAfterSignIn(requestCode, resultCode, data);
-    }
-
-    // Show Toast with a message
     private void showToast(String message) {
         Toast.makeText(this, message, LENGTH_SHORT).show();
     }
 
+
     // Method that handles response after SignIn Activity close
-  /*  private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
+    private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
         IdpResponse response = IdpResponse.fromResultIntent(data);
         if (requestCode == RC_SIGN_IN) {
             // SUCCESS
             if (resultCode == RESULT_OK) {
-                viewModel.createUser();
-                showToast(String.valueOf(getString(R.string.connected)));
-                startHomeActivity();
+                userViewModel.createUser();
+                showToast(String.valueOf("Connecté"));
+               // startMainActivity();
                 progressBar.setVisibility(View.INVISIBLE);
             } else if (response == null) {
-                showToast(String.valueOf(getString(R.string.notConnected)));
+                showToast(String.valueOf("Pas connecté"));
             }
         }
-    }*/
+    }
 
-
+    public void isUserLogged() {
+        if (userViewModel.isCurrentUserLogged()) {
+            //startMainActivity();
+        } else {
+            startActivity(this.getIntent());
+        }
+    }
 }
 
