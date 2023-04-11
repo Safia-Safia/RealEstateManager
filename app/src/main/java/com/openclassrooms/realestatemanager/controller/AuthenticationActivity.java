@@ -10,10 +10,15 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.repository.UserRepository;
+import com.openclassrooms.realestatemanager.utils.Injection.Injection;
+import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 import java.util.Collections;
@@ -31,6 +36,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_authentication);
         setUpView();
         setupListeners();
+        configureViewModel();
         isUserLogged();
     }
 
@@ -49,6 +55,11 @@ public class AuthenticationActivity extends AppCompatActivity {
         googleButton.setOnClickListener(view ->
                 signInBuilder(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()))
         );
+    }
+
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
     private void signInBuilder(List<AuthUI.IdpConfig> providers) {
