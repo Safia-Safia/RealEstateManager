@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -16,6 +17,10 @@ import androidx.lifecycle.ViewModelProviders;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controller.databinding.PropertyDetailFragment;
+import com.openclassrooms.realestatemanager.controller.databinding.PropertyDetailHostActivity;
+import com.openclassrooms.realestatemanager.controller.databinding.PropertyListFragment;
+import com.openclassrooms.realestatemanager.controller.placeholder.PlaceholderContent;
 import com.openclassrooms.realestatemanager.repository.UserRepository;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
@@ -78,6 +83,11 @@ public class AuthenticationActivity extends AppCompatActivity {
         Toast.makeText(this, message, LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        this.handleResponseAfterSignIn(requestCode, resultCode, data);
+    }
 
     // Method that handles response after SignIn Activity close
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
@@ -97,15 +107,15 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     public void isUserLogged() {
         if (userViewModel.isCurrentUserLogged()) {
-            //startMainActivity();
+            startPropertyListFragment();
         } else {
             startActivity(this.getIntent());
         }
     }
 
     private void startPropertyListFragment() {
-       // Intent homeActivityIntent = new Intent(this, PropertyListFragment.class);
-       // startActivity(homeActivityIntent);
+        Intent homeActivityIntent = new Intent(this, PropertyDetailHostActivity.class);
+        startActivity(homeActivityIntent);
         finish();
     }
 }
