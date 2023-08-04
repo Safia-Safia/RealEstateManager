@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Real Estate Manager</string>
+    <string name="the_property_coast">\"Le premier bien immobilier enregistré vaut \"</string>
+    <string name="title_activity_properties_detail_host">propertiesDetailHostActivity</string>
+    <string name="title_properties_list">Properties</string>
+    <string name="title_properties_detail">properties Detail</string>
+    <string name="title_activity_property_detail_host">PropertyDetailHostActivity</string>
+    <string name="title_property_list">Properties</string>
+    <string name="title_property_detail">Property Detail</string>
+    <string name="title_activity_poperty_detail_host">PopertyDetailHostActivity</string>
+    <string name="title_poperty_list">properties</string>
+    <string name="title_poperty_detail">Poperty Detail</string>
+    <string name="search_hint">what are you looking for</string>
+    <string name="app_label">realestate</string>
+
+    //MAPS
+    <string name="maps_api_key">AIzaSyDo56I7H0BwhZG_OnNfpfhts8skicIANyg</string>
+    <string name="title_activity_maps">MapsActivity</string>
+</resources>
