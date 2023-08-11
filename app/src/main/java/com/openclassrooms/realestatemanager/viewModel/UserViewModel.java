@@ -17,7 +17,7 @@ public class UserViewModel extends ViewModel {
         this.userRepository = userRepository;
     }
 
-    // -- RESTAURANT USER'S METHODS --
+    // -- USER'S METHODS --
 
 
     public FirebaseUser getCurrentUser() {
