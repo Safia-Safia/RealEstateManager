@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="15dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/type_of_property_layout"
@@ -18,28 +19,18 @@
             app:layout_constraintBottom_toTopOf="@id/price_layout"
             app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:id="@+id/textview_property_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="5dp"
-                android:text="Type of property : "
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/type_of_property_layout" />
-
             <Spinner
                 android:id="@+id/type_of_property_spinner"
-                android:layout_width="22dp"
+                android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginHorizontal="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/textview_property_type"
                 app:layout_constraintTop_toTopOf="@id/type_of_property_layout" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/price_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="10dp"
@@ -57,9 +48,11 @@
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edittext_house_price"
-                android:layout_width="30dp"
+                android:layout_width="100dp"
                 android:layout_height="40dp"
-                android:hint="00"
+                android:hint="00000000"
+                android:text="€"
+                android:textAlignment="textEnd"
                 android:inputType="number"
                 app:layout_constraintStart_toEndOf="@+id/house_price_image"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -67,11 +60,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="Prix du bien"
                 android:textSize="10sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/house_price_image"
                 app:layout_constraintTop_toBottomOf="@id/edittext_house_price" />
 
 
@@ -79,17 +71,18 @@
                 android:id="@+id/house_surface_image"
                 android:layout_width="48dp"
                 android:layout_height="44dp"
+                android:layout_marginStart="20dp"
                 android:src="@drawable/ic_house_m2"
-                app:layout_constraintEnd_toStartOf="@id/house_nbr_of_piece_image"
-                app:layout_constraintHorizontal_bias="0.397"
-                app:layout_constraintStart_toEndOf="@+id/edittext_house_price"
+                app:layout_constraintStart_toEndOf="@id/edittext_house_price"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edittext_surface"
-                android:layout_width="30dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
-                android:hint="00"
+                android:hint="000"
+                android:text="²"
+                android:textAlignment="textEnd"
                 android:inputType="number"
                 app:layout_constraintStart_toEndOf="@+id/house_surface_image"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -138,7 +131,7 @@
             android:id="@+id/view_1"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_margin="10dp"
+            android:layout_marginVertical="10dp"
             android:background="#605D5D"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -157,42 +150,35 @@
             android:id="@+id/edit_description"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_margin="10dp"
+            android:layout_marginVertical="10dp"
             android:background="@drawable/rectangle_border"
             android:gravity="top"
             android:inputType="textMultiLine"
             android:maxLines="5"
+            android:hint="Décrivez le logement."
+            android:textSize="12sp"
+            android:textColorHint="@color/quantum_grey"
             android:textAlignment="gravity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_description" />
 
-        <View
-            android:id="@+id/view_2"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:background="#605D5D"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_property_image" />
-
         <LinearLayout
             android:id="@+id/layout_property_image"
-            android:layout_width="418dp"
+            android:layout_width="match_parent"
             android:layout_height="112dp"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="15dp"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_description">
 
             <ImageButton
-                android:id="@+id/selectImageButton"
+                android:id="@+id/addPictureBtn"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@drawable/search_border"
-                android:text="Sélectionner des images"
-                />
+                android:src="@drawable/baseline_add_a_photo_24"
+                android:text="Sélectionner des images" />
 
 
             <LinearLayout
@@ -214,6 +200,149 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:id="@+id/view_2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="10dp"
+            android:background="#605D5D"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_property_image" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview_search_location_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:paddingVertical="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_2">
+
+            <Button
+                android:id="@+id/search_location_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Rechercher"
+                android:textAlignment="textStart"
+                android:drawableStart="@drawable/baseline_location_on_24" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/autocomplete_fragment"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <CheckBox
+            android:id="@+id/school_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="School"
+            app:layout_constraintTop_toBottomOf="@+id/cardview_search_location_btn"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/store_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Store"
+            app:layout_constraintTop_toBottomOf="@+id/cardview_search_location_btn"
+            app:layout_constraintStart_toEndOf="@id/school_checkBox"/>
+
+        <CheckBox
+            android:id="@+id/park_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Park"
+            app:layout_constraintTop_toBottomOf="@+id/cardview_search_location_btn"
+            app:layout_constraintStart_toEndOf="@id/store_checkBox"/>
+
+        <CheckBox
+            android:id="@+id/parking_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Parking"
+            app:layout_constraintTop_toBottomOf="@+id/cardview_search_location_btn"
+            app:layout_constraintStart_toEndOf="@id/park_checkBox"/>
+
+        <View
+            android:id="@+id/view_3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="15dp"
+            android:background="#605D5D"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/store_checkBox" />
+
+        <ImageButton
+            android:id="@+id/datepicker_entry"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/baseline_date"
+            app:layout_constraintTop_toBottomOf="@+id/view_3"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="10dp"/>
+
+        <TextView
+            android:id="@+id/textview_date_entry"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="bottom"
+            android:text="00/00/00"
+            app:layout_constraintStart_toEndOf="@+id/datepicker_entry"
+            app:layout_constraintTop_toBottomOf="@id/view_3"/>
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_sold"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:checked="false"
+            android:thumb="@drawable/track_selector"
+            app:track="@drawable/switch_selector"
+            android:textOn="Vendu"
+            android:textOff="Disponible"
+            app:showText="true"
+            app:layout_constraintStart_toEndOf="@id/textview_date_entry"
+            app:layout_constraintEnd_toStartOf="@+id/datepicker_sold"
+            app:layout_constraintTop_toBottomOf="@id/view_3"/>
+
+        <ImageButton
+            android:id="@+id/datepicker_sold"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:src="@drawable/baseline_date"
+            app:layout_constraintTop_toBottomOf="@+id/view_3"
+            app:layout_constraintEnd_toStartOf="@id/textview_date_sold"
+            android:layout_margin="10dp"/>
+
+        <TextView
+            android:id="@+id/textview_date_sold"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="bottom"
+            android:text="00/00/00"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_3"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Agent immobilier sur le bien"
+            app:layout_constraintTop_toBottomOf="@+id/datepicker_sold"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/search_border"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

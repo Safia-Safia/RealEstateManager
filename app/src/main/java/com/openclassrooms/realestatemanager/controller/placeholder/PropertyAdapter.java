@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +16,7 @@ import com.openclassrooms.realestatemanager.R;
 import java.util.List;
 
 public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder> {
-    private  List<Uri> imageUris;
+    private final List<Uri> imageUris;
 
     public PropertyAdapter(List<Uri> imageUris) {
         this.imageUris = imageUris;
@@ -32,14 +33,10 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
     public void onBindViewHolder(@NonNull PropertyViewHolder holder, int position) {
         Uri imageUri = imageUris.get(position);
         holder.imageView.setImageURI(imageUri);
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position =holder.getAdapterPosition();
-                // Supprimez l'élément de la liste et mettez à jour le RecyclerView
-                imageUris.remove(position);
-                notifyItemRemoved(position);
-            }
+        holder.deleteButton.setOnClickListener(v -> {
+            int position1 =holder.getBindingAdapterPosition();
+            imageUris.remove(position1);
+            notifyItemRemoved(position1);
         });
     }
 
@@ -49,14 +46,16 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
     }
 
     public static class PropertyViewHolder extends RecyclerView.ViewHolder {
-
         ImageView imageView;
         ImageButton deleteButton;
+        public static TextView pictureDescription;
 
-        public PropertyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            deleteButton = itemView.findViewById(R.id.deleteButton);
-            imageView = itemView.findViewById(R.id.property_picture);
+        public PropertyViewHolder(@NonNull View view) {
+            super(view);
+            deleteButton = view.findViewById(R.id.deleteButton);
+            imageView = view.findViewById(R.id.property_picture);
+            pictureDescription = view.findViewById(R.id.cardview_picture_description);
+
         }
 
 
