@@ -5,51 +5,39 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
-public class Property implements Parcelable {
-    int price, numberOfRoom ,propertySurface, id;
-
-    String description, picturesUri, sellerName;
+public class Estate implements Parcelable {
+    int id;
+    String description, picturesUri, sellerName, estateType, numberOfRoom, price, surface, address,entryDate, soldDate;
     Boolean propertyStatus, school, store, park, parking;
-    Date entryDate, soldDate;
 
-    public Property(int price, int numberOfRoom, int propertySurface, String description, String picturesUri, String sellerName, Boolean propertyStatus, Boolean school, Boolean store, Boolean park, Boolean parking, Date entryDate, Date soldDate) {
-        this.price = price;
-        this.numberOfRoom = numberOfRoom;
-        this.propertySurface = propertySurface;
+    public Estate(){
+
+    }
+    public Estate(int id, String description, String picturesUri, String sellerName, String estateType, String numberOfRoom, String price, String surface, String address, String entryDate, String soldDate, Boolean propertyStatus, Boolean school, Boolean store, Boolean park, Boolean parking) {
+        this.id = id;
         this.description = description;
         this.picturesUri = picturesUri;
         this.sellerName = sellerName;
+        this.estateType = estateType;
+        this.numberOfRoom = numberOfRoom;
+        this.price = price;
+        this.surface = surface;
+        this.address = address;
+        this.entryDate = entryDate;
+        this.soldDate = soldDate;
         this.propertyStatus = propertyStatus;
         this.school = school;
         this.store = store;
         this.park = park;
         this.parking = parking;
-        this.entryDate = entryDate;
-        this.soldDate = soldDate;
     }
 
-    public int getPrice() {
-        return price;
+    public int getId() {
+        return id;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public int getNumberOfRoom() {
-        return numberOfRoom;
-    }
-
-    public void setNumberOfRoom(int numberOfRoom) {
-        this.numberOfRoom = numberOfRoom;
-    }
-
-    public int getPropertySurface() {
-        return propertySurface;
-    }
-
-    public void setPropertySurface(int propertySurface) {
-        this.propertySurface = propertySurface;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -74,6 +62,46 @@ public class Property implements Parcelable {
 
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    public String getEstateType() {
+        return estateType;
+    }
+
+    public void setEstateType(String estateType) {
+        this.estateType = estateType;
+    }
+
+    public String getNumberOfRoom() {
+        return numberOfRoom;
+    }
+
+    public void setNumberOfRoom(String numberOfRoom) {
+        this.numberOfRoom = numberOfRoom;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getSurface() {
+        return surface;
+    }
+
+    public void setSurface(String surface) {
+        this.surface = surface;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Boolean getPropertyStatus() {
@@ -116,19 +144,19 @@ public class Property implements Parcelable {
         this.parking = parking;
     }
 
-    public Date getEntryDate() {
+    public String getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(Date entryDate) {
+    public void setEntryDate(String entryDate) {
         this.entryDate = entryDate;
     }
 
-    public Date getSoldDate() {
+    public String getSoldDate() {
         return soldDate;
     }
 
-    public void setSoldDate(Date soldDate) {
+    public void setSoldDate(String soldDate) {
         this.soldDate = soldDate;
     }
 
@@ -140,66 +168,71 @@ public class Property implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.price);
-        dest.writeInt(this.numberOfRoom);
-        dest.writeInt(this.propertySurface);
+        dest.writeInt(this.id);
         dest.writeString(this.description);
         dest.writeString(this.picturesUri);
         dest.writeString(this.sellerName);
+        dest.writeString(this.estateType);
+        dest.writeString(this.numberOfRoom);
+        dest.writeString(this.price);
+        dest.writeString(this.surface);
+        dest.writeString(this.address);
         dest.writeValue(this.propertyStatus);
         dest.writeValue(this.school);
         dest.writeValue(this.store);
         dest.writeValue(this.park);
         dest.writeValue(this.parking);
-        dest.writeLong(this.entryDate != null ? this.entryDate.getTime() : -1);
-        dest.writeLong(this.soldDate != null ? this.soldDate.getTime() : -1);
+        dest.writeString(this.entryDate);
+        dest.writeString(this.soldDate);
     }
 
     public void readFromParcel(Parcel source) {
-        this.price = source.readInt();
-        this.numberOfRoom = source.readInt();
-        this.propertySurface = source.readInt();
+        this.id = source.readInt();
         this.description = source.readString();
         this.picturesUri = source.readString();
         this.sellerName = source.readString();
+        this.estateType = source.readString();
+        this.numberOfRoom = source.readString();
+        this.price = source.readString();
+        this.surface = source.readString();
+        this.address = source.readString();
+        this.entryDate = source.readString();
+        this.soldDate = source.readString();
         this.propertyStatus = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.school = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.store = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.park = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.parking = (Boolean) source.readValue(Boolean.class.getClassLoader());
-        long tmpEntryDate = source.readLong();
-        this.entryDate = tmpEntryDate == -1 ? null : new Date(tmpEntryDate);
-        long tmpSoldDate = source.readLong();
-        this.soldDate = tmpSoldDate == -1 ? null : new Date(tmpSoldDate);
     }
 
-    protected Property(Parcel in) {
-        this.price = in.readInt();
-        this.numberOfRoom = in.readInt();
-        this.propertySurface = in.readInt();
+    protected Estate(Parcel in) {
+        this.id = in.readInt();
         this.description = in.readString();
         this.picturesUri = in.readString();
         this.sellerName = in.readString();
+        this.estateType = in.readString();
+        this.numberOfRoom = in.readString();
+        this.price = in.readString();
+        this.surface = in.readString();
+        this.address = in.readString();
+        this.entryDate = in.readString();
+        this.soldDate = in.readString();
         this.propertyStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.school = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.store = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.park = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.parking = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        long tmpEntryDate = in.readLong();
-        this.entryDate = tmpEntryDate == -1 ? null : new Date(tmpEntryDate);
-        long tmpSoldDate = in.readLong();
-        this.soldDate = tmpSoldDate == -1 ? null : new Date(tmpSoldDate);
     }
 
-    public static final Parcelable.Creator<Property> CREATOR = new Parcelable.Creator<Property>() {
+    public static final Creator<Estate> CREATOR = new Creator<Estate>() {
         @Override
-        public Property createFromParcel(Parcel source) {
-            return new Property(source);
+        public Estate createFromParcel(Parcel source) {
+            return new Estate(source);
         }
 
         @Override
-        public Property[] newArray(int size) {
-            return new Property[size];
+        public Estate[] newArray(int size) {
+            return new Estate[size];
         }
     };
 }

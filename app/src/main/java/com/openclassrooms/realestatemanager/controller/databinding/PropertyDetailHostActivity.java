@@ -1,11 +1,14 @@
 package com.openclassrooms.realestatemanager.controller.databinding;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -14,11 +17,17 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.CreateProperty;
+import com.openclassrooms.realestatemanager.controller.AddEstate;
 import com.openclassrooms.realestatemanager.databinding.ActivityPropertyDetailBinding;
+import com.openclassrooms.realestatemanager.utils.Injection.Injection;
+import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
+import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 public class PropertyDetailHostActivity extends AppCompatActivity {
     FloatingActionButton mCreatePropertyBtn;
+
+    UserViewModel userViewModel;
+    ImageButton filterBtn, signOutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +43,52 @@ public class PropertyDetailHostActivity extends AppCompatActivity {
                 Builder(navController.getGraph())
                 .build();
 
-        mCreatePropertyBtn = findViewById(R.id.button_create_property);
-        mCreatePropertyBtn.setOnClickListener(view -> {
-            Intent createPropertyIntent = new Intent(PropertyDetailHostActivity.this, CreateProperty.class);
-            startActivity(createPropertyIntent);
-            finish();
-        });
 
+        setUpView();
+        setUpAddProperty();
+        setUserViewModel();
+        setLogOutBtn();
+
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+    }
+
+    private void setUpView() {
+        mCreatePropertyBtn = findViewById(R.id.button_create_property);
+        signOutBtn = findViewById(R.id.sign_out_btn);
+        filterBtn = findViewById(R.id.filter_button);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+    }
+
+    private void setUpAddProperty() {
+        mCreatePropertyBtn.setOnClickListener(view -> {
+            Intent addEstateIntent = new Intent(this, AddEstate.class);
+            startActivity(addEstateIntent);
+        });
+    }
+
+    private void setLogOutBtn() {
+        signOutBtn.setOnClickListener(view -> {
+            new AlertDialog.Builder(this)
+                    .setMessage("Souhaitez vous déconnecté ?")
+                    .setCancelable(true)
+                    .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            userViewModel.signOut(PropertyDetailHostActivity.this);
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+
+
+        });
+    }
+
+    private void setUserViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
     @Override

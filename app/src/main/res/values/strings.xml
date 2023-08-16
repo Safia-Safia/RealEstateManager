@@ -61,4 +61,5 @@
     </string>
     <string name="delete_button">deleteButton</string>
     <string name="adding_property_picture">addingPropertyPicture</string>
+    <string name="estateManagerName">"L'agent en charge de ce bien est "</string>
 </resources>

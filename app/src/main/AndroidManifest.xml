@@ -14,8 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".controller.CreateProperty"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:name=".controller.AddEstate"
+            android:theme="@style/Theme.AppCompat.DayNight"
             android:exported="false" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"

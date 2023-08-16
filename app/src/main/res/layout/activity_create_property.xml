@@ -2,9 +2,10 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_property"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.CreateProperty">
+    tools:context=".controller.AddEstate">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -285,7 +286,7 @@
             android:id="@+id/datepicker_entry"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/baseline_date"
+            android:background="@drawable/baseline_date"
             app:layout_constraintTop_toBottomOf="@+id/view_3"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_margin="10dp"/>
@@ -296,29 +297,34 @@
             android:layout_height="48dp"
             android:gravity="bottom"
             android:text="00/00/00"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/datepicker_entry"
             app:layout_constraintTop_toBottomOf="@id/view_3"/>
 
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_sold"
+            android:id="@+id/switch_btn"
             android:layout_width="wrap_content"
-            android:layout_height="56dp"
+            android:layout_height="60dp"
             android:checked="false"
+            android:gravity="center_vertical"
+            android:layout_marginHorizontal="10dp"
             android:thumb="@drawable/track_selector"
             app:track="@drawable/switch_selector"
             android:textOn="Vendu"
             android:textOff="Disponible"
             app:showText="true"
+            android:textColor="#FFF"
             app:layout_constraintStart_toEndOf="@id/textview_date_entry"
             app:layout_constraintEnd_toStartOf="@+id/datepicker_sold"
             app:layout_constraintTop_toBottomOf="@id/view_3"/>
 
         <ImageButton
             android:id="@+id/datepicker_sold"
-            android:layout_width="wrap_content"
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/baseline_date"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/baseline_date"
             app:layout_constraintTop_toBottomOf="@+id/view_3"
             app:layout_constraintEnd_toStartOf="@id/textview_date_sold"
             android:layout_margin="10dp"/>
@@ -328,11 +334,13 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:gravity="bottom"
+            android:textSize="14sp"
             android:text="00/00/00"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/datepicker_sold"
             app:layout_constraintTop_toBottomOf="@id/view_3"/>
 
         <TextView
+            android:id="@+id/texteView_estate_manager"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Agent immobilier sur le bien"

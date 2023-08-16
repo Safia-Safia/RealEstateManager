@@ -7,32 +7,22 @@
     android:layout_height="match_parent"
     android:layout_marginEnd="1dp">
 
-
-    <ImageButton
-        android:id="@+id/filter_button"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/ic_filter_24"
-        app:layout_constraintStart_toEndOf="@+id/search_bar"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/search_border"
         android:focusable="false"
         app:closeIcon="@drawable/baseline_clear_24"
         app:iconifiedByDefault="false"
-        app:layout_constraintEnd_toStartOf="@+id/filter_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:queryHint="Search..."
         app:searchHintIcon="@null"
         app:searchIcon="@drawable/baseline_search_24" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/property_list"

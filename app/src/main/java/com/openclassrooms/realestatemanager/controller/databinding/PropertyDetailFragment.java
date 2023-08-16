@@ -17,7 +17,7 @@ import com.openclassrooms.realestatemanager.controller.placeholder.PlaceholderCo
 import com.openclassrooms.realestatemanager.databinding.FragmentPropertyDetailBinding;
 
 /**
- * A fragment representing a single Property detail screen.
+ * A fragment representing a single Estate detail screen.
  * This fragment is either contained in a {@link PropertyListFragment}
  * in two-pane mode (on larger screen devices) or self-contained
  * on handsets.
