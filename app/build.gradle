@@ -24,6 +24,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.openclassrooms.realestatemanager'
 }
 
 dependencies {
@@ -43,6 +44,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation 'com.google.android.libraries.places:places:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
@@ -50,6 +52,8 @@ dependencies {
     //MAPS
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.libraries.places:places:1.0.0'
+
 
     // FIREBASE UI
 
@@ -57,6 +61,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.firebaseui:firebase-ui-auth:8.0.1'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.firebaseui:firebase-ui-storage:7.1.1'
 
     // corner - searchview
     implementation 'com.github.bumptech.glide:glide:4.14.2'

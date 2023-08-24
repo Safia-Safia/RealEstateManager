@@ -3,20 +3,39 @@ package com.openclassrooms.realestatemanager.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Estate implements Parcelable {
-    int id;
-    String description, picturesUri, sellerName, estateType, numberOfRoom, price, surface, address,entryDate, soldDate;
-    Boolean propertyStatus, school, store, park, parking;
 
-    public Estate(){
+    String estateId;
+    String description, picturesUri, sellerName, estateType, numberOfRoom, price, surface, address, entryDate, soldDate;
+    Boolean isEstatesAvailable = true;
 
+    List<String> picturesList = new ArrayList<>();
+
+    List<String> picturesDescription = new ArrayList<>();
+
+    Boolean school = false;
+    Boolean store = false;
+    Boolean park = false;
+    Boolean parking = false;
+
+    private Double latitude;
+
+    private Double longitude;
+
+    public Estate() {
     }
-    public Estate(int id, String description, String picturesUri, String sellerName, String estateType, String numberOfRoom, String price, String surface, String address, String entryDate, String soldDate, Boolean propertyStatus, Boolean school, Boolean store, Boolean park, Boolean parking) {
-        this.id = id;
+
+    public Estate(String estateId, String description, String picturesUri, List<String> pictureDescription, String sellerName, String estateType, String numberOfRoom, String price, String surface, String address, String entryDate, String soldDate, Boolean isEstatesAvailable, List<String> picturesList, Boolean school, Boolean store, Boolean park, Boolean parking, Double latitude, Double longitude) {
+        this.estateId = estateId;
         this.description = description;
         this.picturesUri = picturesUri;
+        this.picturesDescription = pictureDescription;
         this.sellerName = sellerName;
         this.estateType = estateType;
         this.numberOfRoom = numberOfRoom;
@@ -25,19 +44,22 @@ public class Estate implements Parcelable {
         this.address = address;
         this.entryDate = entryDate;
         this.soldDate = soldDate;
-        this.propertyStatus = propertyStatus;
+        this.isEstatesAvailable = isEstatesAvailable;
+        this.picturesList = picturesList;
         this.school = school;
         this.store = store;
         this.park = park;
         this.parking = parking;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public int getId() {
-        return id;
+    public String getEstateId() {
+        return estateId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setEstateId(String estateId) {
+        this.estateId = estateId;
     }
 
     public String getDescription() {
@@ -54,6 +76,14 @@ public class Estate implements Parcelable {
 
     public void setPicturesUri(String picturesUri) {
         this.picturesUri = picturesUri;
+    }
+
+    public List<String> getPicturesDescription() {
+        return picturesDescription;
+    }
+
+    public void setPicturesDescription(List<String> pictureDescription) {
+        this.picturesDescription = pictureDescription;
     }
 
     public String getSellerName() {
@@ -104,12 +134,36 @@ public class Estate implements Parcelable {
         this.address = address;
     }
 
-    public Boolean getPropertyStatus() {
-        return propertyStatus;
+    public String getEntryDate() {
+        return entryDate;
     }
 
-    public void setPropertyStatus(Boolean propertyStatus) {
-        this.propertyStatus = propertyStatus;
+    public void setEntryDate(String entryDate) {
+        this.entryDate = entryDate;
+    }
+
+    public String getSoldDate() {
+        return soldDate;
+    }
+
+    public void setSoldDate(String soldDate) {
+        this.soldDate = soldDate;
+    }
+
+    public Boolean getEstatesAvailable() {
+        return isEstatesAvailable;
+    }
+
+    public void setEstatesAvailable(Boolean estatesAvailable) {
+        isEstatesAvailable = estatesAvailable;
+    }
+
+    public List<String> getPicturesList() {
+        return picturesList;
+    }
+
+    public void setPicturesList(List<String> picturesList) {
+        this.picturesList = picturesList;
     }
 
     public Boolean getSchool() {
@@ -144,20 +198,20 @@ public class Estate implements Parcelable {
         this.parking = parking;
     }
 
-    public String getEntryDate() {
-        return entryDate;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setEntryDate(String entryDate) {
-        this.entryDate = entryDate;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getSoldDate() {
-        return soldDate;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setSoldDate(String soldDate) {
-        this.soldDate = soldDate;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
 
@@ -168,28 +222,33 @@ public class Estate implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeString(this.estateId);
         dest.writeString(this.description);
         dest.writeString(this.picturesUri);
+        dest.writeStringList(this.picturesDescription);
         dest.writeString(this.sellerName);
         dest.writeString(this.estateType);
         dest.writeString(this.numberOfRoom);
         dest.writeString(this.price);
         dest.writeString(this.surface);
         dest.writeString(this.address);
-        dest.writeValue(this.propertyStatus);
+        dest.writeString(this.entryDate);
+        dest.writeString(this.soldDate);
+        dest.writeValue(this.isEstatesAvailable);
+        dest.writeStringList(this.picturesList);
         dest.writeValue(this.school);
         dest.writeValue(this.store);
         dest.writeValue(this.park);
         dest.writeValue(this.parking);
-        dest.writeString(this.entryDate);
-        dest.writeString(this.soldDate);
+        dest.writeValue(this.latitude);
+        dest.writeValue(this.longitude);
     }
 
     public void readFromParcel(Parcel source) {
-        this.id = source.readInt();
+        this.estateId = source.readString();
         this.description = source.readString();
         this.picturesUri = source.readString();
+        this.picturesDescription = source.createStringArrayList();
         this.sellerName = source.readString();
         this.estateType = source.readString();
         this.numberOfRoom = source.readString();
@@ -198,17 +257,21 @@ public class Estate implements Parcelable {
         this.address = source.readString();
         this.entryDate = source.readString();
         this.soldDate = source.readString();
-        this.propertyStatus = (Boolean) source.readValue(Boolean.class.getClassLoader());
+        this.isEstatesAvailable = (Boolean) source.readValue(Boolean.class.getClassLoader());
+        this.picturesList = source.createStringArrayList();
         this.school = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.store = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.park = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.parking = (Boolean) source.readValue(Boolean.class.getClassLoader());
+        this.latitude = (Double) source.readValue(Double.class.getClassLoader());
+        this.longitude = (Double) source.readValue(Double.class.getClassLoader());
     }
 
     protected Estate(Parcel in) {
-        this.id = in.readInt();
+        this.estateId = in.readString();
         this.description = in.readString();
         this.picturesUri = in.readString();
+        this.picturesDescription = in.createStringArrayList();
         this.sellerName = in.readString();
         this.estateType = in.readString();
         this.numberOfRoom = in.readString();
@@ -217,11 +280,14 @@ public class Estate implements Parcelable {
         this.address = in.readString();
         this.entryDate = in.readString();
         this.soldDate = in.readString();
-        this.propertyStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.isEstatesAvailable = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.picturesList = in.createStringArrayList();
         this.school = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.store = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.park = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.parking = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.latitude = (Double) in.readValue(Double.class.getClassLoader());
+        this.longitude = (Double) in.readValue(Double.class.getClassLoader());
     }
 
     public static final Creator<Estate> CREATOR = new Creator<Estate>() {
@@ -235,4 +301,6 @@ public class Estate implements Parcelable {
             return new Estate[size];
         }
     };
+
+
 }

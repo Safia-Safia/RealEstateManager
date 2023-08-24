@@ -7,15 +7,53 @@
     android:layout_height="match_parent"
     tools:context=".controller.AddEstate">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="15dp">
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/add_estate_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/type_of_property_layout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:text="Annuler"
+                android:textColor="#B2AAAAAA"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Créer une annonce"
+                android:textColor="#FFF"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="15dp"
+                android:background="@color/colorPrimary"
+                android:text="Enregistrer"
+                android:textColor="#FFEBEB"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/type_of_property_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
             android:padding="10dp"
             app:layout_constraintBottom_toTopOf="@id/price_layout"
             app:layout_constraintStart_toStartOf="parent">
@@ -24,6 +62,7 @@
                 android:id="@+id/type_of_property_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
+                android:outlineAmbientShadowColor="@color/colorAccent"
                 android:layout_marginHorizontal="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/type_of_property_layout" />
@@ -34,6 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="15dp"
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/type_of_property_layout">
@@ -51,10 +91,9 @@
                 android:id="@+id/edittext_house_price"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
-                android:hint="00000000"
+                android:inputType="number"
                 android:text="€"
                 android:textAlignment="textEnd"
-                android:inputType="number"
                 app:layout_constraintStart_toEndOf="@+id/house_price_image"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -81,10 +120,10 @@
                 android:id="@+id/edittext_surface"
                 android:layout_width="50dp"
                 android:layout_height="40dp"
-                android:hint="000"
-                android:text="²"
-                android:textAlignment="textEnd"
                 android:inputType="number"
+                android:text="m²"
+                android:textAlignment="textEnd"
+                android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@+id/house_surface_image"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -132,6 +171,7 @@
             android:id="@+id/view_1"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
             android:layout_marginVertical="10dp"
             android:background="#605D5D"
             app:layout_constraintEnd_toEndOf="parent"
@@ -142,6 +182,7 @@
             android:id="@+id/text_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:padding="10dp"
             android:text="Description"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,15 +192,17 @@
             android:id="@+id/edit_description"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_marginHorizontal="15dp"
             android:layout_marginVertical="10dp"
             android:background="@drawable/rectangle_border"
             android:gravity="top"
+            android:hint="   Décrivez le logement."
             android:inputType="textMultiLine"
             android:maxLines="5"
-            android:hint="Décrivez le logement."
-            android:textSize="12sp"
-            android:textColorHint="@color/quantum_grey"
+            android:text=""
             android:textAlignment="gravity"
+            android:textColorHint="@color/quantum_grey"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_description" />
@@ -168,6 +211,7 @@
             android:id="@+id/layout_property_image"
             android:layout_width="match_parent"
             android:layout_height="112dp"
+            android:layout_marginHorizontal="15dp"
             android:layout_marginVertical="15dp"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
@@ -205,18 +249,27 @@
             android:id="@+id/view_2"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
             android:layout_marginVertical="10dp"
             android:background="#605D5D"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_property_image" />
 
+        <TextView
+            android:id="@+id/textview_nearby_places"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Point de proximité"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardview_search_location_btn"/>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview_search_location_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:paddingVertical="10dp"
+            android:layout_margin="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_2">
 
@@ -224,9 +277,9 @@
                 android:id="@+id/search_location_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:drawableStart="@drawable/baseline_location_on_24"
                 android:text="Rechercher"
-                android:textAlignment="textStart"
-                android:drawableStart="@drawable/baseline_location_on_24" />
+                android:textAlignment="textStart" />
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/autocomplete_fragment"
@@ -240,10 +293,11 @@
             android:id="@+id/school_checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
             android:padding="5dp"
             android:text="School"
-            app:layout_constraintTop_toBottomOf="@+id/cardview_search_location_btn"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places" />
 
         <CheckBox
             android:id="@+id/store_checkBox"
@@ -251,8 +305,8 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Store"
-            app:layout_constraintTop_toBottomOf="@+id/cardview_search_location_btn"
-            app:layout_constraintStart_toEndOf="@id/school_checkBox"/>
+            app:layout_constraintStart_toEndOf="@id/school_checkBox"
+            app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places" />
 
         <CheckBox
             android:id="@+id/park_checkBox"
@@ -260,8 +314,8 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Park"
-            app:layout_constraintTop_toBottomOf="@+id/cardview_search_location_btn"
-            app:layout_constraintStart_toEndOf="@id/store_checkBox"/>
+            app:layout_constraintStart_toEndOf="@id/store_checkBox"
+            app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places" />
 
         <CheckBox
             android:id="@+id/parking_checkBox"
@@ -269,88 +323,22 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Parking"
-            app:layout_constraintTop_toBottomOf="@+id/cardview_search_location_btn"
-            app:layout_constraintStart_toEndOf="@id/park_checkBox"/>
+            app:layout_constraintStart_toEndOf="@id/park_checkBox"
+            app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places" />
 
         <View
             android:id="@+id/view_3"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
             android:layout_marginVertical="15dp"
             android:background="#605D5D"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/store_checkBox" />
 
-        <ImageButton
-            android:id="@+id/datepicker_entry"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/baseline_date"
-            app:layout_constraintTop_toBottomOf="@+id/view_3"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="10dp"/>
-
-        <TextView
-            android:id="@+id/textview_date_entry"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:gravity="bottom"
-            android:text="00/00/00"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/datepicker_entry"
-            app:layout_constraintTop_toBottomOf="@id/view_3"/>
 
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:checked="false"
-            android:gravity="center_vertical"
-            android:layout_marginHorizontal="10dp"
-            android:thumb="@drawable/track_selector"
-            app:track="@drawable/switch_selector"
-            android:textOn="Vendu"
-            android:textOff="Disponible"
-            app:showText="true"
-            android:textColor="#FFF"
-            app:layout_constraintStart_toEndOf="@id/textview_date_entry"
-            app:layout_constraintEnd_toStartOf="@+id/datepicker_sold"
-            app:layout_constraintTop_toBottomOf="@id/view_3"/>
-
-        <ImageButton
-            android:id="@+id/datepicker_sold"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/baseline_date"
-            app:layout_constraintTop_toBottomOf="@+id/view_3"
-            app:layout_constraintEnd_toStartOf="@id/textview_date_sold"
-            android:layout_margin="10dp"/>
-
-        <TextView
-            android:id="@+id/textview_date_sold"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:gravity="bottom"
-            android:textSize="14sp"
-            android:text="00/00/00"
-            app:layout_constraintStart_toEndOf="@+id/datepicker_sold"
-            app:layout_constraintTop_toBottomOf="@id/view_3"/>
-
-        <TextView
-            android:id="@+id/texteView_estate_manager"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Agent immobilier sur le bien"
-            app:layout_constraintTop_toBottomOf="@+id/datepicker_sold"
-            android:gravity="center"
-            android:layout_margin="10dp"
-            android:background="@drawable/search_border"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controller.placeholder;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,14 +49,13 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
     public static class PropertyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         ImageButton deleteButton;
-        public static TextView pictureDescription;
+        public static TextView pictureDescriptionView;
 
         public PropertyViewHolder(@NonNull View view) {
             super(view);
             deleteButton = view.findViewById(R.id.deleteButton);
             imageView = view.findViewById(R.id.property_picture);
-            pictureDescription = view.findViewById(R.id.cardview_picture_description);
-
+            pictureDescriptionView = view.findViewById(R.id.cardview_picture_description);
         }
 
 

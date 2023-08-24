@@ -1,17 +1,24 @@
 package com.openclassrooms.realestatemanager.repository;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.realestatemanager.model.User;
 
 public class UserRepository {
 
+    public static final String COLLECTION_USERS = "users";
     private static volatile UserRepository instance;
+
+    public CollectionReference getUsersCollection() {
+        return FirebaseFirestore.getInstance().collection(COLLECTION_USERS);
+    }
 
     public UserRepository() {
     }
@@ -52,4 +59,7 @@ public class UserRepository {
         FirebaseUser user = getCurrentUser();
         return (user != null) ? user.getUid() : null;
     }
+
+
 }
+
