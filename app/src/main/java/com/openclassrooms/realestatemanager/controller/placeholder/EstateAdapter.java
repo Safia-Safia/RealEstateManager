@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.controller.placeholder;
 
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.model.Picture;
 
 import java.util.List;
 
-public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder> {
-    private final List<Uri> imageUris;
+public class EstateAdapter extends RecyclerView.Adapter<EstateAdapter.PropertyViewHolder> {
+    private final List<Picture> imageUris;
 
-    public PropertyAdapter(List<Uri> imageUris) {
+    public EstateAdapter(List<Picture> imageUris) {
         this.imageUris = imageUris;
     }
 
@@ -32,8 +31,9 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
 
     @Override
     public void onBindViewHolder(@NonNull PropertyViewHolder holder, int position) {
-        Uri imageUri = imageUris.get(position);
-        holder.imageView.setImageURI(imageUri);
+        Picture picture = imageUris.get(position);
+        holder.imageView.setImageURI(picture.getImageUri());
+        holder.pictureDescriptionView.setText(picture.getDescription());
         holder.deleteButton.setOnClickListener(v -> {
             int position1 =holder.getBindingAdapterPosition();
             imageUris.remove(position1);
@@ -49,7 +49,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
     public static class PropertyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         ImageButton deleteButton;
-        public static TextView pictureDescriptionView;
+        TextView pictureDescriptionView;
 
         public PropertyViewHolder(@NonNull View view) {
             super(view);

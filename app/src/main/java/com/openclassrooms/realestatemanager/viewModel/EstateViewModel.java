@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.viewModel;
 
 import android.net.Uri;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.openclassrooms.realestatemanager.model.Estate;
@@ -16,15 +17,8 @@ public class EstateViewModel extends ViewModel {
         this.estateRepository = estateRepository;
     }
 
-    public void getCreatedEstate(Estate estate) {
-        estateRepository.getCreatedEstates(estate);
+    public LiveData<Boolean> createEstate(Estate estate) {
+        return estateRepository.createEstate(estate);
     }
 
-    public void sendImage(Uri imageUri, Estate estate, String description){
-            estateRepository.uploadImage(imageUri).addOnSuccessListener(taskSnapshot -> {
-                taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
-                    estateRepository.createForURL(uri.toString(), estate, description);
-                });;
-            });
-        }
 }

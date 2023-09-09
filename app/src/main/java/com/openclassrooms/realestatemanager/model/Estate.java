@@ -3,57 +3,26 @@ package com.openclassrooms.realestatemanager.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Estate implements Parcelable {
+public class Estate implements Serializable {
 
     String estateId;
-    String description, picturesUri, sellerName, estateType, numberOfRoom, price, surface, address, entryDate, soldDate;
+    String description, coverPictureUrl, sellerName, estateType, numberOfRoom, price, surface, address, entryDate, soldDate;
     Boolean isEstatesAvailable = true;
-
-    List<String> picturesList = new ArrayList<>();
-
-    List<String> picturesDescription = new ArrayList<>();
-
     Boolean school = false;
     Boolean store = false;
     Boolean park = false;
     Boolean parking = false;
 
+    List<Picture> pictures = new ArrayList<>();
     private Double latitude;
 
     private Double longitude;
 
-    public Estate() {
-    }
-
-    public Estate(String estateId, String description, String picturesUri, List<String> pictureDescription, String sellerName, String estateType, String numberOfRoom, String price, String surface, String address, String entryDate, String soldDate, Boolean isEstatesAvailable, List<String> picturesList, Boolean school, Boolean store, Boolean park, Boolean parking, Double latitude, Double longitude) {
-        this.estateId = estateId;
-        this.description = description;
-        this.picturesUri = picturesUri;
-        this.picturesDescription = pictureDescription;
-        this.sellerName = sellerName;
-        this.estateType = estateType;
-        this.numberOfRoom = numberOfRoom;
-        this.price = price;
-        this.surface = surface;
-        this.address = address;
-        this.entryDate = entryDate;
-        this.soldDate = soldDate;
-        this.isEstatesAvailable = isEstatesAvailable;
-        this.picturesList = picturesList;
-        this.school = school;
-        this.store = store;
-        this.park = park;
-        this.parking = parking;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
+    public Estate(){}
     public String getEstateId() {
         return estateId;
     }
@@ -70,20 +39,12 @@ public class Estate implements Parcelable {
         this.description = description;
     }
 
-    public String getPicturesUri() {
-        return picturesUri;
+    public String getCoverPictureUrl() {
+        return coverPictureUrl;
     }
 
-    public void setPicturesUri(String picturesUri) {
-        this.picturesUri = picturesUri;
-    }
-
-    public List<String> getPicturesDescription() {
-        return picturesDescription;
-    }
-
-    public void setPicturesDescription(List<String> pictureDescription) {
-        this.picturesDescription = pictureDescription;
+    public void setCoverPictureUrl(String coverPictureUrl) {
+        this.coverPictureUrl = coverPictureUrl;
     }
 
     public String getSellerName() {
@@ -158,14 +119,6 @@ public class Estate implements Parcelable {
         isEstatesAvailable = estatesAvailable;
     }
 
-    public List<String> getPicturesList() {
-        return picturesList;
-    }
-
-    public void setPicturesList(List<String> picturesList) {
-        this.picturesList = picturesList;
-    }
-
     public Boolean getSchool() {
         return school;
     }
@@ -198,6 +151,14 @@ public class Estate implements Parcelable {
         this.parking = parking;
     }
 
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(List<Picture> pictures) {
+        this.pictures = pictures;
+    }
+
     public Double getLatitude() {
         return latitude;
     }
@@ -214,8 +175,7 @@ public class Estate implements Parcelable {
         this.longitude = longitude;
     }
 
-
-    @Override
+  /*  @Override
     public int describeContents() {
         return 0;
     }
@@ -224,8 +184,7 @@ public class Estate implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.estateId);
         dest.writeString(this.description);
-        dest.writeString(this.picturesUri);
-        dest.writeStringList(this.picturesDescription);
+        dest.writeString(this.coverPictureUrl);
         dest.writeString(this.sellerName);
         dest.writeString(this.estateType);
         dest.writeString(this.numberOfRoom);
@@ -235,11 +194,11 @@ public class Estate implements Parcelable {
         dest.writeString(this.entryDate);
         dest.writeString(this.soldDate);
         dest.writeValue(this.isEstatesAvailable);
-        dest.writeStringList(this.picturesList);
         dest.writeValue(this.school);
         dest.writeValue(this.store);
         dest.writeValue(this.park);
         dest.writeValue(this.parking);
+        dest.writeParcelable((Parcelable) this.pictures, flags);
         dest.writeValue(this.latitude);
         dest.writeValue(this.longitude);
     }
@@ -247,8 +206,7 @@ public class Estate implements Parcelable {
     public void readFromParcel(Parcel source) {
         this.estateId = source.readString();
         this.description = source.readString();
-        this.picturesUri = source.readString();
-        this.picturesDescription = source.createStringArrayList();
+        this.coverPictureUrl = source.readString();
         this.sellerName = source.readString();
         this.estateType = source.readString();
         this.numberOfRoom = source.readString();
@@ -258,11 +216,11 @@ public class Estate implements Parcelable {
         this.entryDate = source.readString();
         this.soldDate = source.readString();
         this.isEstatesAvailable = (Boolean) source.readValue(Boolean.class.getClassLoader());
-        this.picturesList = source.createStringArrayList();
         this.school = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.store = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.park = (Boolean) source.readValue(Boolean.class.getClassLoader());
         this.parking = (Boolean) source.readValue(Boolean.class.getClassLoader());
+        this.pictures = source.readParcelable(Picture.class.getClassLoader());
         this.latitude = (Double) source.readValue(Double.class.getClassLoader());
         this.longitude = (Double) source.readValue(Double.class.getClassLoader());
     }
@@ -270,8 +228,7 @@ public class Estate implements Parcelable {
     protected Estate(Parcel in) {
         this.estateId = in.readString();
         this.description = in.readString();
-        this.picturesUri = in.readString();
-        this.picturesDescription = in.createStringArrayList();
+        this.coverPictureUrl = in.readString();
         this.sellerName = in.readString();
         this.estateType = in.readString();
         this.numberOfRoom = in.readString();
@@ -281,11 +238,11 @@ public class Estate implements Parcelable {
         this.entryDate = in.readString();
         this.soldDate = in.readString();
         this.isEstatesAvailable = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.picturesList = in.createStringArrayList();
         this.school = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.store = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.park = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.parking = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.pictures = in.readParcelable(Picture.class.getClassLoader());
         this.latitude = (Double) in.readValue(Double.class.getClassLoader());
         this.longitude = (Double) in.readValue(Double.class.getClassLoader());
     }
@@ -300,7 +257,5 @@ public class Estate implements Parcelable {
         public Estate[] newArray(int size) {
             return new Estate[size];
         }
-    };
-
-
+    }; */
 }

@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.controller;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
@@ -23,24 +21,28 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.gson.Gson;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.placeholder.PropertyAdapter;
+import com.openclassrooms.realestatemanager.controller.placeholder.EstateAdapter;
 import com.openclassrooms.realestatemanager.model.Estate;
+import com.openclassrooms.realestatemanager.model.Picture;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
+import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 
 public class AddEstate extends AppCompatActivity {
     String description;
@@ -51,9 +53,11 @@ public class AddEstate extends AppCompatActivity {
     Button searchLocationBtn, saveBtn;
     private static final int PICK_IMAGE_REQUEST = 1;
     EditText textDescription, pictureDescription, price, surface, nbrOfPiece;
-    private PropertyAdapter propertyAdapter;
-    private List<Uri> property_picture;
+    private EstateAdapter propertyAdapter;
+    private List<Picture> property_picture;
     EstateViewModel estateViewModel;
+
+    UserViewModel userViewModel;
     CheckBox schoolCheckBox, parkCheckBox, parkingCheckBox, storeCheckBox;
 
     @Override
@@ -65,7 +69,9 @@ public class AddEstate extends AppCompatActivity {
         openPicturePicker();
         setSearchLocation();
         setUpEstateViewModel();
+        setUpUserViewModel();
         saveEstate();
+        setUpEntryDate();
 
     }
 
@@ -73,7 +79,7 @@ public class AddEstate extends AppCompatActivity {
         property_picture = new ArrayList<>();
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        propertyAdapter = new PropertyAdapter(property_picture);
+        propertyAdapter = new EstateAdapter(property_picture);
         recyclerView.setAdapter(propertyAdapter);
         addPictureBtn = findViewById(R.id.addPictureBtn);
         searchLocationBtn = findViewById(R.id.search_location_btn);
@@ -87,11 +93,18 @@ public class AddEstate extends AppCompatActivity {
         parkCheckBox = findViewById(R.id.park_checkBox);
         parkingCheckBox = findViewById(R.id.parking_checkBox);
         estate = new Estate();
+
+
     }
 
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
+    }
+
+    private void setUpUserViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
     private void spinner() {
@@ -116,10 +129,7 @@ public class AddEstate extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             imageUri = data.getData();
-            property_picture.add(imageUri);
-            propertyAdapter.notifyDataSetChanged();
             showAlertDialog();
-            estateViewModel.sendImage(imageUri, estate,description );
 
         }
     }
@@ -129,7 +139,7 @@ public class AddEstate extends AppCompatActivity {
             Places.initialize(getApplicationContext(), getText(R.string.maps_api_key).toString());
             Places.createClient(this);
 
-            List<Place.Field> fields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.ID, Place.Field.NAME);
+            List<Place.Field> fields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
 
             // Start the autocomplete intent.
             Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
@@ -157,20 +167,72 @@ public class AddEstate extends AppCompatActivity {
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         final View customLayout = getLayoutInflater().inflate(R.layout.custom_alert_dialog, null);
+        pictureDescription = customLayout.findViewById(R.id.edittext_alert_dialog_picture);
         alertDialog.setView(customLayout);
         alertDialog.setTitle("Décrivez la photo");
-        pictureDescription = customLayout.findViewById(R.id.edittext_alert_dialog_picture);
-        alertDialog.setPositiveButton("OK", (dialog, which) ->
-                PropertyAdapter.PropertyViewHolder.pictureDescriptionView.setText(pictureDescription.getText()));
+        alertDialog.setPositiveButton("OK", (dialog, which) -> {
+            Picture picture = new Picture();
+            picture.setImageUri(imageUri);
+            picture.setDescription(pictureDescription.getText().toString());
+            property_picture.add(picture);
+            propertyAdapter.notifyDataSetChanged();
+        });
         AlertDialog alert = alertDialog.create();
         alert.setCanceledOnTouchOutside(false);
         alert.show();
+
+
+    }
+
+    public boolean checkValid() {
+        if (price.getText().toString().isEmpty() ||
+                surface.getText().toString().isEmpty() ||
+                nbrOfPiece.getText().toString().isEmpty() ||
+                textDescription.getText().toString().isEmpty() ||
+                price.getText().toString().isEmpty()) {
+
+
+            surface.setError("incomplet");
+            price.setError("incomplet");
+            textDescription.setError("incomplet");
+            nbrOfPiece.setError("incomplet");
+
+            Toast.makeText(this, "Vérifiez les champs.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (estate.getPictures().size() == 0) {
+            Toast.makeText(this, "Ajoutez des photos.", Toast.LENGTH_SHORT).show();
+        } else if (estate.getAddress().isEmpty()) {
+            Toast.makeText(this, "Sélectionnez une adresse.", Toast.LENGTH_SHORT).show();
+        } else if (spinner.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Sélectionnez un type de bien.", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
 
-    public void saveEstate() {
-        saveBtn.setOnClickListener(view -> {
+    public void setUpEntryDate() {
+        Calendar currentDate = Calendar.getInstance();
+        SimpleDateFormat formatter;
+        Date date;
 
+        int year = currentDate.get(Calendar.YEAR);
+        int month = currentDate.get(Calendar.MONTH);
+        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+        formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
+        currentDate.set(Calendar.YEAR, year);
+        currentDate.set(Calendar.MONTH, month);
+        currentDate.set(Calendar.DAY_OF_MONTH, day);
+        date = currentDate.getTime();
+        String format = formatter.format(date.getTime());
+
+        estate.setEntryDate(format);
+        estate.setSoldDate("Non vendu.");
+    }
+
+    public void saveEstate() {
+        //TODO EntryDate et SellerName
+        saveBtn.setOnClickListener(view -> {
+            estate.setPictures(property_picture);
             estate.setEstateType(spinner.getSelectedItem().toString());
             estate.setPrice(price.getText().toString());
             estate.setNumberOfRoom(nbrOfPiece.getText().toString());
@@ -191,9 +253,15 @@ public class AddEstate extends AppCompatActivity {
             if (parkingCheckBox.isChecked()) {
                 estate.setParking(true);
             }
-            description = pictureDescription.getText().toString();
-            estateViewModel.getCreatedEstate(estate);
-            finish();
+
+
+            estate.setSellerName(userViewModel.getCurrentUser().getDisplayName());
+            if (checkValid()) {
+                estateViewModel.createEstate(estate).observe(this, aBoolean -> {
+                    Log.e("created estate", "true");
+                    finish();
+                });
+            }
         });
 
     }
