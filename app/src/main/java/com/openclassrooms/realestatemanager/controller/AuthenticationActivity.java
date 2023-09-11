@@ -11,17 +11,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.databinding.PropertyDetailFragment;
 import com.openclassrooms.realestatemanager.controller.databinding.PropertyDetailHostActivity;
-import com.openclassrooms.realestatemanager.controller.databinding.PropertyListFragment;
-import com.openclassrooms.realestatemanager.controller.placeholder.PlaceholderContent;
-import com.openclassrooms.realestatemanager.repository.UserRepository;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;

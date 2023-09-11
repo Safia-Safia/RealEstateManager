@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,8 +25,11 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.openclassrooms.realestatemanager.R;
@@ -36,6 +41,7 @@ import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,15 +69,15 @@ public class AddEstate extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_property);
+        setContentView(R.layout.activity_create_estate);
         setUpView();
         spinner();
         openPicturePicker();
         setSearchLocation();
         setUpEstateViewModel();
         setUpUserViewModel();
-        saveEstate();
         setUpEntryDate();
+        saveEstate();
 
     }
 
@@ -152,17 +158,31 @@ public class AddEstate extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> startAutocomplete = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
+
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
                     if (intent != null) {
                         Place place = Autocomplete.getPlaceFromIntent(intent);
+                        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
                         searchLocationBtn.setText(place.getName());
                         estate.setAddress(place.getAddress());
                         estate.setLatitude(place.getLatLng().latitude);
                         estate.setLongitude(place.getLatLng().longitude);
+
+                        try {
+                            List<Address> addresses = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+                            Address address = addresses.get(0);
+                            String city = address.getLocality();
+                            estate.setCity(city);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
-            });
+            }
+    );
+
 
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -184,31 +204,25 @@ public class AddEstate extends AppCompatActivity {
 
     }
 
-    public boolean checkValid() {
-        if (price.getText().toString().isEmpty() ||
-                surface.getText().toString().isEmpty() ||
-                nbrOfPiece.getText().toString().isEmpty() ||
-                textDescription.getText().toString().isEmpty() ||
-                price.getText().toString().isEmpty()) {
 
-
-            surface.setError("incomplet");
-            price.setError("incomplet");
-            textDescription.setError("incomplet");
-            nbrOfPiece.setError("incomplet");
-
+    private boolean isFieldEmpty(EditText editText, String errorMessage) {
+        if (editText.getText().toString().isEmpty()) {
+            editText.setError(errorMessage);
             Toast.makeText(this, "Vérifiez les champs.", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (estate.getPictures().size() == 0) {
-            Toast.makeText(this, "Ajoutez des photos.", Toast.LENGTH_SHORT).show();
-        } else if (estate.getAddress().isEmpty()) {
-            Toast.makeText(this, "Sélectionnez une adresse.", Toast.LENGTH_SHORT).show();
-        } else if (spinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Sélectionnez un type de bien.", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
 
+    public boolean checkValid() {
+        return isFieldEmpty(price, "incomplet") &&
+                isFieldEmpty(surface, "incomplet") &&
+                isFieldEmpty(nbrOfPiece, "incomplet") &&
+                isFieldEmpty(textDescription, "incomplet") &&
+                estate.getPictures().size() != 0 &&
+                !estate.getAddress().isEmpty() &&
+                spinner.getSelectedItemPosition() != 0;
+    }
 
     public void setUpEntryDate() {
         Calendar currentDate = Calendar.getInstance();
@@ -224,13 +238,11 @@ public class AddEstate extends AppCompatActivity {
         currentDate.set(Calendar.DAY_OF_MONTH, day);
         date = currentDate.getTime();
         String format = formatter.format(date.getTime());
-
         estate.setEntryDate(format);
         estate.setSoldDate("Non vendu.");
     }
 
     public void saveEstate() {
-        //TODO EntryDate et SellerName
         saveBtn.setOnClickListener(view -> {
             estate.setPictures(property_picture);
             estate.setEstateType(spinner.getSelectedItem().toString());

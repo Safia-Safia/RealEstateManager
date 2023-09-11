@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Estate implements Serializable {
-
-    String estateId;
-    String description, coverPictureUrl, sellerName, estateType, numberOfRoom, price, surface, address, entryDate, soldDate;
+    String description, coverPictureUrl, sellerName, estateType, numberOfRoom,
+            price, surface, address, entryDate, soldDate, city;
     Boolean isEstatesAvailable = true;
     Boolean school = false;
     Boolean store = false;
@@ -22,13 +21,15 @@ public class Estate implements Serializable {
 
     private Double longitude;
 
-    public Estate(){}
-    public String getEstateId() {
-        return estateId;
+    public Estate() {
     }
 
-    public void setEstateId(String estateId) {
-        this.estateId = estateId;
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getDescription() {
@@ -174,88 +175,4 @@ public class Estate implements Serializable {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
-
-  /*  @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.estateId);
-        dest.writeString(this.description);
-        dest.writeString(this.coverPictureUrl);
-        dest.writeString(this.sellerName);
-        dest.writeString(this.estateType);
-        dest.writeString(this.numberOfRoom);
-        dest.writeString(this.price);
-        dest.writeString(this.surface);
-        dest.writeString(this.address);
-        dest.writeString(this.entryDate);
-        dest.writeString(this.soldDate);
-        dest.writeValue(this.isEstatesAvailable);
-        dest.writeValue(this.school);
-        dest.writeValue(this.store);
-        dest.writeValue(this.park);
-        dest.writeValue(this.parking);
-        dest.writeParcelable((Parcelable) this.pictures, flags);
-        dest.writeValue(this.latitude);
-        dest.writeValue(this.longitude);
-    }
-
-    public void readFromParcel(Parcel source) {
-        this.estateId = source.readString();
-        this.description = source.readString();
-        this.coverPictureUrl = source.readString();
-        this.sellerName = source.readString();
-        this.estateType = source.readString();
-        this.numberOfRoom = source.readString();
-        this.price = source.readString();
-        this.surface = source.readString();
-        this.address = source.readString();
-        this.entryDate = source.readString();
-        this.soldDate = source.readString();
-        this.isEstatesAvailable = (Boolean) source.readValue(Boolean.class.getClassLoader());
-        this.school = (Boolean) source.readValue(Boolean.class.getClassLoader());
-        this.store = (Boolean) source.readValue(Boolean.class.getClassLoader());
-        this.park = (Boolean) source.readValue(Boolean.class.getClassLoader());
-        this.parking = (Boolean) source.readValue(Boolean.class.getClassLoader());
-        this.pictures = source.readParcelable(Picture.class.getClassLoader());
-        this.latitude = (Double) source.readValue(Double.class.getClassLoader());
-        this.longitude = (Double) source.readValue(Double.class.getClassLoader());
-    }
-
-    protected Estate(Parcel in) {
-        this.estateId = in.readString();
-        this.description = in.readString();
-        this.coverPictureUrl = in.readString();
-        this.sellerName = in.readString();
-        this.estateType = in.readString();
-        this.numberOfRoom = in.readString();
-        this.price = in.readString();
-        this.surface = in.readString();
-        this.address = in.readString();
-        this.entryDate = in.readString();
-        this.soldDate = in.readString();
-        this.isEstatesAvailable = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.school = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.store = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.park = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.parking = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.pictures = in.readParcelable(Picture.class.getClassLoader());
-        this.latitude = (Double) in.readValue(Double.class.getClassLoader());
-        this.longitude = (Double) in.readValue(Double.class.getClassLoader());
-    }
-
-    public static final Creator<Estate> CREATOR = new Creator<Estate>() {
-        @Override
-        public Estate createFromParcel(Parcel source) {
-            return new Estate(source);
-        }
-
-        @Override
-        public Estate[] newArray(int size) {
-            return new Estate[size];
-        }
-    }; */
 }

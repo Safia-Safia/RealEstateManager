@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.repository.EstateRepository;
 
+import java.util.List;
+
 public class EstateViewModel extends ViewModel {
 
     private final EstateRepository estateRepository;
@@ -21,4 +23,7 @@ public class EstateViewModel extends ViewModel {
         return estateRepository.createEstate(estate);
     }
 
+    public LiveData<List<Estate>> getEstates() {
+        return estateRepository.getEstates();
+    }
 }

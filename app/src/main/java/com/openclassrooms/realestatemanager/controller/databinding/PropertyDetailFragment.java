@@ -13,8 +13,9 @@ import android.widget.TextView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.placeholder.PlaceholderContent;
+import com.openclassrooms.realestatemanager.controller.placeholder.EstateViewHolderContent;
 import com.openclassrooms.realestatemanager.databinding.FragmentPropertyDetailBinding;
+import com.openclassrooms.realestatemanager.model.Estate;
 
 /**
  * A fragment representing a single Estate detail screen.
@@ -33,14 +34,14 @@ public class PropertyDetailFragment extends Fragment {
     /**
      * The placeholder content this fragment is presenting.
      */
-    private PlaceholderContent.PlaceholderItem mItem;
+    private Estate mItem;
     private CollapsingToolbarLayout mToolbarLayout;
     private TextView mTextView;
 
     private final View.OnDragListener dragListener = (v, event) -> {
         if (event.getAction() == DragEvent.ACTION_DROP) {
             ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-            mItem = PlaceholderContent.ITEM_MAP.get(clipDataItem.getText().toString());
+            mItem = EstateViewHolderContent.ITEM_MAP.get(clipDataItem.getText().toString());
             updateContent();
         }
         return true;
@@ -62,7 +63,7 @@ public class PropertyDetailFragment extends Fragment {
             // Load the placeholder content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = PlaceholderContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = EstateViewHolderContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -90,9 +91,9 @@ public class PropertyDetailFragment extends Fragment {
 
     private void updateContent() {
         if (mItem != null) {
-            mTextView.setText(mItem.details);
+        //    mTextView.setText(mItem.details);
             if (mToolbarLayout != null) {
-                mToolbarLayout.setTitle(mItem.content);
+        //        mToolbarLayout.setTitle(mItem.content);
             }
         }
     }

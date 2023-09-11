@@ -54,7 +54,7 @@ public class EstateAdapter extends RecyclerView.Adapter<EstateAdapter.PropertyVi
         public PropertyViewHolder(@NonNull View view) {
             super(view);
             deleteButton = view.findViewById(R.id.deleteButton);
-            imageView = view.findViewById(R.id.property_picture);
+            imageView = view.findViewById(R.id.recyclerviewcontent_property_picture);
             pictureDescriptionView = view.findViewById(R.id.cardview_picture_description);
         }
 

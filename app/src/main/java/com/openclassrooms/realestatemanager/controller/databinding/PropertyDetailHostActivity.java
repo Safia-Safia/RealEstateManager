@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 
+import androidx.activity.ActivityViewModelLazyKt;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.AddEstate;
-import com.openclassrooms.realestatemanager.databinding.ActivityPropertyDetailBinding;
+import com.openclassrooms.realestatemanager.databinding.ActivityEstateDetailBinding;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
@@ -33,7 +34,7 @@ public class PropertyDetailHostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityPropertyDetailBinding binding = ActivityPropertyDetailBinding.inflate(getLayoutInflater());
+        ActivityEstateDetailBinding binding = ActivityEstateDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
