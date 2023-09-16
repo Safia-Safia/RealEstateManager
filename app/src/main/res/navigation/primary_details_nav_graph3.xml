@@ -3,22 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/poperty_list_fragment">
+    app:startDestination="@id/estate_list_fragment">
 
     <fragment
-        android:id="@+id/poperty_list_fragment"
-        android:name="com.openclassrooms.realestatemanager.controller.PopertyListFragment"
-        android:label="PopertyListFragment">
+        android:id="@+id/estate_list_fragment"
+        android:name="com.openclassrooms.realestatemanager.controller.databinding.EstateListFragment"
+        android:label="EstateListFragment">
         <action
-            android:id="@+id/show_poperty_detail"
-            app:destination="@id/poperty_detail_fragment" />
+            android:id="@+id/show_estate_detail"
+            app:destination="@id/estate_detail_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/poperty_detail_fragment"
-        android:name="com.openclassrooms.realestatemanager.controller.PopertyDetailFragment"
-        android:label="poperty_detail"
-        tools:layout="@layout/fragment_property_detail">
+        android:id="@+id/estate_detail_fragment"
+        android:name="com.openclassrooms.realestatemanager.controller.databinding.EstateDetailFragment"
+        android:label="estate_detail"
+        tools:layout="@layout/fragment_estate_detail">
         <argument
+
             android:name="item_id"
             android:defaultValue=""
             app:argType="string" />

@@ -270,7 +270,6 @@ public class AddEstate extends AppCompatActivity {
             estate.setSellerName(userViewModel.getCurrentUser().getDisplayName());
             if (checkValid()) {
                 estateViewModel.createEstate(estate).observe(this, aBoolean -> {
-                    Log.e("created estate", "true");
                     finish();
                 });
             }

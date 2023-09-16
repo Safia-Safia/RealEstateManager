@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/properties_list_fragment"
-        android:name="com.openclassrooms.realestatemanager.controller.propertiesListFragment"
+        android:name="com.openclassrooms.realestatemanager.controller.databinding.EstateDetailFragment"
         android:label="propertiesListFragment">
         <action
             android:id="@+id/show_properties_detail"
@@ -15,9 +15,9 @@
     </fragment>
     <fragment
         android:id="@+id/properties_detail_fragment"
-        android:name="com.openclassrooms.realestatemanager.controller.propertiesDetailFragment"
+        android:name="com.openclassrooms.realestatemanager.controller.databinding.EstateDetailFragment"
         android:label="properties_detail"
-        tools:layout="@layout/fragment_properties_detail">
+        tools:layout="@layout/fragment_estate_detail">
         <argument
             android:name="item_id"
             android:defaultValue=""

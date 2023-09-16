@@ -81,6 +81,7 @@ public class EstateRepository {
                         List<Estate> estateList= new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Estate estate = document.toObject(Estate.class);
+                            estate.setId(document.getId());
                             estateList.add(estate);
                         }
                         result.postValue(estateList);

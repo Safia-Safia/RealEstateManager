@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Estate implements Serializable {
-    String description, coverPictureUrl, sellerName, estateType, numberOfRoom,
+
+    String id,description, coverPictureUrl, sellerName, estateType, numberOfRoom,
             price, surface, address, entryDate, soldDate, city;
     Boolean isEstatesAvailable = true;
     Boolean school = false;
@@ -23,6 +24,15 @@ public class Estate implements Serializable {
 
     public Estate() {
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 
     public String getCity() {
         return city;

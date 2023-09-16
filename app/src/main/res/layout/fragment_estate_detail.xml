@@ -5,7 +5,7 @@
     android:id="@+id/property_detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.databinding.PropertyDetailHostActivity"
+    tools:context=".controller.databinding.PropertyHostActivity"
     tools:ignore="MergeRootFrame">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -34,13 +34,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/property_detail_scroll_view"
+        android:id="@+id/estate_detail_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
-            android:id="@+id/property_detail"
+            android:id="@+id/estate_detail"
             style="?android:attr/textAppearanceLarge"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -49,6 +49,6 @@
             android:paddingEnd="@dimen/container_horizontal_margin"
             android:paddingBottom="16dp"
             android:textIsSelectable="true"
-            tools:context="com.openclassrooms.realestatemanager.controller.databinding.PropertyDetailFragment" />
+            tools:context="com.openclassrooms.realestatemanager.controller.databinding.EstateDetailFragment" />
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

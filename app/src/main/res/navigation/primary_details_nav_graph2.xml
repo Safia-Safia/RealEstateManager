@@ -17,7 +17,7 @@
         android:id="@+id/property_detail_fragment"
         android:name="com.openclassrooms.realestatemanager.controller.fragment.PropertyDetailFragment"
         android:label="property_detail"
-        tools:layout="@layout/fragment_property_detail">
+        tools:layout="@layout/fragment_estate_detail">
         <argument
             android:name="item_id"
             app:argType="string"

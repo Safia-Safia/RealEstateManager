@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 
-import androidx.activity.ActivityViewModelLazyKt;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +23,7 @@ import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
-public class PropertyDetailHostActivity extends AppCompatActivity {
+public class PropertyHostActivity extends AppCompatActivity {
     FloatingActionButton mCreatePropertyBtn;
 
     UserViewModel userViewModel;
@@ -76,7 +75,7 @@ public class PropertyDetailHostActivity extends AppCompatActivity {
                     .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            userViewModel.signOut(PropertyDetailHostActivity.this);
+                            userViewModel.signOut(PropertyHostActivity.this);
                             finish();
                         }
                     })
