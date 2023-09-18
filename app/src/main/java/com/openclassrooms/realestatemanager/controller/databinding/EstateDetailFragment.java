@@ -1,18 +1,16 @@
 package com.openclassrooms.realestatemanager.controller.databinding;
 
-import android.content.ClipData;
 import android.os.Bundle;
-import android.view.DragEvent;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.placeholder.EstateHolderContent;
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateDetailBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 
@@ -23,47 +21,18 @@ import com.openclassrooms.realestatemanager.model.Estate;
  * on handsets.
  */
 public class EstateDetailFragment extends Fragment {
-
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
     public static final String KEY_ESTATE = "ESTATE";
-
-    /**
-     * The placeholder content this fragment is presenting.
-     */
     private Estate estate;
+    Marker marker;
+    ImageView coverPicture, mapImage, userPicture;
+    TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
+            pointStore,pointSchool, pointParking, pointPark, sellerName;
     private CollapsingToolbarLayout mToolbarLayout;
-
-    private final View.OnDragListener dragListener = (v, event) -> {
-        if (event.getAction() == DragEvent.ACTION_DROP) {
-            ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-            estate = EstateHolderContent.ESTATE_MAP.get(clipDataItem.getText().toString());
-            updateContent();
-        }
-        return true;
-    };
     private FragmentEstateDetailBinding binding;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public EstateDetailFragment() {
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(KEY_ESTATE)) {
-            // Load the placeholder content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            estate = EstateHolderContent.ESTATE_MAP.get(getArguments().getString(KEY_ESTATE));
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,12 +40,14 @@ public class EstateDetailFragment extends Fragment {
 
         binding = FragmentEstateDetailBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
-
         mToolbarLayout = rootView.findViewById(R.id.toolbar_layout);
+        mToolbarLayout.setBackgroundResource(R.color.colorAccent);
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey(KEY_ESTATE)) {
+            estate = (Estate) bundle.getSerializable(KEY_ESTATE);
+        }
 
-        // Show the placeholder content as text in a TextView & in the toolbar if available.
         updateContent();
-        rootView.setOnDragListener(dragListener);
         return rootView;
     }
 
@@ -87,11 +58,59 @@ public class EstateDetailFragment extends Fragment {
     }
 
     private void updateContent() {
-        if (estate != null) {
-        //    mTextView.setText(mItem.details);
-            if (mToolbarLayout != null) {
-        //        mToolbarLayout.setTitle(mItem.content);
-            }
+        coverPicture = binding.getRoot().findViewById(R.id.collapsing_image);
+        mapImage = binding.getRoot().findViewById(R.id.map_snapshot);
+        surface = binding.surfaceDetailText;
+        price = binding.priceDetailTextView;
+        nbrOfPiece = binding.houseNbrOfPieceTextDetail;
+        detail = binding.getRoot().findViewById(R.id.description_detail);
+        address = binding.getRoot().findViewById(R.id.address_detail);
+        type = binding.getRoot().findViewById(R.id.type_detail_text);
+        school = binding.getRoot().findViewById(R.id.textView_school);
+        store = binding.getRoot().findViewById(R.id.textView_store);
+        park = binding.getRoot().findViewById(R.id.textView_park);
+        parking = binding.getRoot().findViewById(R.id.textView_parking);
+        pointSchool = binding.getRoot().findViewById(R.id.point_school);
+        pointStore = binding.getRoot().findViewById(R.id.point_store);
+        pointPark = binding.getRoot().findViewById(R.id.point_park);
+        pointParking = binding.getRoot().findViewById(R.id.point_parking);
+        userPicture = binding.getRoot().findViewById(R.id.sellerPic);
+        sellerName = binding.getRoot().findViewById(R.id.sellerName);
+        String apiKey = getString(R.string.maps_api_key);
+
+        isFieldChecked(estate.getSchool(), school, pointSchool);
+        isFieldChecked(estate.getPark(), park, pointPark);
+        isFieldChecked(estate.getParking(), parking, pointParking);
+        isFieldChecked(estate.getStore(), store, pointStore);
+
+        surface.setText(estate.getSurface());
+        price.setText(estate.getPrice());
+        nbrOfPiece.setText(estate.getNumberOfRoom());
+        detail.setText(estate.getDescription());
+        address.setText(estate.getAddress());
+        type.setText(estate.getEstateType());
+        sellerName.setText(estate.getSellerName());
+
+        Glide.with(this).load(estate.getCoverPictureUrl()).into(coverPicture);
+        double latitude = estate.getLatitude();
+        double longitude = estate.getLongitude();
+        int zoom = 17;
+
+        String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?"
+                + "center=" + latitude + "," + longitude
+                + "&zoom=" + zoom
+                + "&size=1400x200"
+                + "&markers=color:red|" + latitude + "," + longitude
+                + "&key=" + apiKey;
+        Glide.with(this).load(imageUrl).into(mapImage);
+
+       // Glide.with(this).load( estate.getSellerName()).circleCrop().into(userPicture);
+    }
+
+    private void isFieldChecked(boolean checkbox, TextView point, TextView textView) {
+        if (!checkbox) {
+            textView.setTextColor(getResources().getColor(R.color.grey));
+            point.setTextColor(getResources().getColor(R.color.grey));
         }
     }
 }

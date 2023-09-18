@@ -2,6 +2,8 @@ package com.openclassrooms.realestatemanager.controller.databinding;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.widget.ImageButton;
 
@@ -23,7 +25,7 @@ import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
-public class PropertyHostActivity extends AppCompatActivity {
+public class EstateHostActivity extends AppCompatActivity {
     FloatingActionButton mCreatePropertyBtn;
 
     UserViewModel userViewModel;
@@ -39,11 +41,7 @@ public class PropertyHostActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_property_detail);
         NavController navController = navHostFragment.getNavController();
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.
-                Builder(navController.getGraph())
-                .build();
-
-
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         setUpView();
         setUpAddProperty();
         setUserViewModel();
@@ -75,7 +73,7 @@ public class PropertyHostActivity extends AppCompatActivity {
                     .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            userViewModel.signOut(PropertyHostActivity.this);
+                            userViewModel.signOut(EstateHostActivity.this);
                             finish();
                         }
                     })

@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.databinding.PropertyHostActivity;
+import com.openclassrooms.realestatemanager.controller.databinding.EstateHostActivity;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
@@ -110,7 +110,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void startPropertyListFragment() {
-        Intent homeActivityIntent = new Intent(this, PropertyHostActivity.class);
+        Intent homeActivityIntent = new Intent(this, EstateHostActivity.class);
         startActivity(homeActivityIntent);
         finish();
     }

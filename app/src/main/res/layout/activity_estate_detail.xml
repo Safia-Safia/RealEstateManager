@@ -18,6 +18,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/primary_details_nav_graph3"
         tools:layout="@layout/fragment_estate_detail" />
+
+
     <ImageButton
         android:id="@+id/sign_out_btn"
         android:layout_width="30dp"

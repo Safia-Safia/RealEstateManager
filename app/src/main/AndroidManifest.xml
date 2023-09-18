@@ -21,7 +21,7 @@
             android:value="YOUR_API_KEY" />
 
         <activity
-            android:name=".controller.databinding.PropertyHostActivity"
+            android:name=".controller.databinding.EstateHostActivity"
             android:exported="false"
             android:label="@string/title_activity_property_detail_host"
             android:resizeableActivity="true"

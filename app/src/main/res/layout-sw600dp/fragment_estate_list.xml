@@ -17,8 +17,8 @@
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context="com.openclassrooms.realestatemanager.controller.databinding.PropertyHostActivity"
-        tools:listitem="@layout/property_list_content" />
+        tools:context="com.openclassrooms.realestatemanager.controller.databinding.EstateHostActivity"
+        tools:listitem="@layout/estate_list_content" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

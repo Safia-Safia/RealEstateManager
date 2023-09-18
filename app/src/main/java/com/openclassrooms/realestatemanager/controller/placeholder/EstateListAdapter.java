@@ -49,13 +49,13 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
                 .into(holder.coverPicture);
 
         holder.itemView.setOnClickListener(itemView -> {
-            Bundle arguments = new Bundle();
-            arguments.putString(EstateDetailFragment.KEY_ESTATE, estate.getId());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(EstateDetailFragment.KEY_ESTATE, estate);
             if (view != null) {
                 Navigation.findNavController(view)
-                        .navigate(R.id.fragment_estate_detail, arguments);
+                        .navigate(R.id.fragment_estate_detail, bundle);
             } else {
-                Navigation.findNavController(itemView).navigate(R.id.show_estate_detail, arguments);
+                Navigation.findNavController(itemView).navigate(R.id.show_estate_detail, bundle);
             }
         });
 
