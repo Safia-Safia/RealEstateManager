@@ -36,6 +36,7 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateAdapter;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
+import com.openclassrooms.realestatemanager.model.User;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
@@ -49,6 +50,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Random;
 
 public class AddEstate extends AppCompatActivity {
     String description;
@@ -250,7 +253,23 @@ public class AddEstate extends AppCompatActivity {
             estate.setNumberOfRoom(nbrOfPiece.getText().toString());
             estate.setSurface(surface.getText().toString());
             estate.setDescription(textDescription.getText().toString());
+            estate.setSellerName(userViewModel.getCurrentUser().getDisplayName());
 
+            User newUser = new User();
+            newUser.setEmail(userViewModel.getCurrentUser().getEmail());
+
+            if (userViewModel.getCurrentUser().getPhotoUrl()== null) {
+                String[] images = {
+                        "https://i.pravatar.cc/150?u=a042581f4e29026704a",
+                        "https://i.pravatar.cc/150?u=a042581f4e29026704b",
+                        "https://i.pravatar.cc/150?u=a042581f4e29026704c",
+                        "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                };
+                int randomIndex = new Random().nextInt(images.length);
+                String randomUserImage = images[randomIndex];
+                newUser.setUrlPicture(randomUserImage);
+            }else newUser.setUrlPicture(String.valueOf(userViewModel.getCurrentUser().getPhotoUrl()));
+            estate.setUser(newUser);
             if (schoolCheckBox.isChecked()) {
                 estate.setSchool(true);
             }
@@ -267,7 +286,6 @@ public class AddEstate extends AppCompatActivity {
             }
 
 
-            estate.setSellerName(userViewModel.getCurrentUser().getDisplayName());
             if (checkValid()) {
                 estateViewModel.createEstate(estate).observe(this, aBoolean -> {
                     finish();

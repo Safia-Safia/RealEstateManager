@@ -16,7 +16,7 @@ public class Estate implements Serializable {
     Boolean store = false;
     Boolean park = false;
     Boolean parking = false;
-
+    User user;
     List<Picture> pictures = new ArrayList<>();
     private Double latitude;
 
@@ -33,6 +33,13 @@ public class Estate implements Serializable {
         this.id = id;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getCity() {
         return city;

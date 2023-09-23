@@ -1,7 +1,11 @@
 package com.openclassrooms.realestatemanager.controller.databinding;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,12 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateDetailBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
+import com.openclassrooms.realestatemanager.model.User;
+import com.openclassrooms.realestatemanager.utils.Injection.Injection;
+import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
+import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
+
+import java.util.Random;
 
 /**
  * A fragment representing a single Estate detail screen.
@@ -23,10 +33,9 @@ import com.openclassrooms.realestatemanager.model.Estate;
 public class EstateDetailFragment extends Fragment {
     public static final String KEY_ESTATE = "ESTATE";
     private Estate estate;
-    Marker marker;
-    ImageView coverPicture, mapImage, userPicture;
+    ImageView coverPicture, mapImage, userPicture, mailButton;
     TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
-            pointStore,pointSchool, pointParking, pointPark, sellerName;
+            pointStore,pointSchool, pointParking, pointPark, sellerName, entryDate;
     private CollapsingToolbarLayout mToolbarLayout;
     private FragmentEstateDetailBinding binding;
 
@@ -41,12 +50,12 @@ public class EstateDetailFragment extends Fragment {
         binding = FragmentEstateDetailBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
         mToolbarLayout = rootView.findViewById(R.id.toolbar_layout);
-        mToolbarLayout.setBackgroundResource(R.color.colorAccent);
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(KEY_ESTATE)) {
             estate = (Estate) bundle.getSerializable(KEY_ESTATE);
         }
 
+        setUpView();
         updateContent();
         return rootView;
     }
@@ -57,7 +66,7 @@ public class EstateDetailFragment extends Fragment {
         binding = null;
     }
 
-    private void updateContent() {
+    public void setUpView(){
         coverPicture = binding.getRoot().findViewById(R.id.collapsing_image);
         mapImage = binding.getRoot().findViewById(R.id.map_snapshot);
         surface = binding.surfaceDetailText;
@@ -76,6 +85,10 @@ public class EstateDetailFragment extends Fragment {
         pointParking = binding.getRoot().findViewById(R.id.point_parking);
         userPicture = binding.getRoot().findViewById(R.id.sellerPic);
         sellerName = binding.getRoot().findViewById(R.id.sellerName);
+        mailButton = binding.getRoot().findViewById(R.id.mail_imageButton);
+        entryDate = binding.getRoot().findViewById(R.id.entryDate_detail);
+    }
+    private void updateContent() {
         String apiKey = getString(R.string.maps_api_key);
 
         isFieldChecked(estate.getSchool(), school, pointSchool);
@@ -90,6 +103,7 @@ public class EstateDetailFragment extends Fragment {
         address.setText(estate.getAddress());
         type.setText(estate.getEstateType());
         sellerName.setText(estate.getSellerName());
+        entryDate.setText(estate.getEntryDate());
 
         Glide.with(this).load(estate.getCoverPictureUrl()).into(coverPicture);
         double latitude = estate.getLatitude();
@@ -102,9 +116,19 @@ public class EstateDetailFragment extends Fragment {
                 + "&size=1400x200"
                 + "&markers=color:red|" + latitude + "," + longitude
                 + "&key=" + apiKey;
-        Glide.with(this).load(imageUrl).into(mapImage);
 
-       // Glide.with(this).load( estate.getSellerName()).circleCrop().into(userPicture);
+        Glide.with(this).load(imageUrl).into(mapImage);
+        setUpMailButton();
+        String[] images = {"https://i.pravatar.cc/150?u=a042581f4e29026704a","https://i.pravatar.cc/150?u=a042581f4e29026704b","https://i.pravatar.cc/150?u=a042581f4e29026704c","https://i.pravatar.cc/150?u=a042581f4e29026704d"};
+
+        int randomIndex = new Random().nextInt(images.length);
+        String randomUserImage = images[randomIndex];
+
+        Glide.with(this).load(randomUserImage).circleCrop().into(userPicture);
+    }
+
+    public void setUpMailButton() {
+        mailButton.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_SENDTO, Uri.parse(estate.getUser().email))));
     }
 
     private void isFieldChecked(boolean checkbox, TextView point, TextView textView) {

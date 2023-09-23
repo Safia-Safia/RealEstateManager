@@ -1,7 +1,10 @@
 package com.openclassrooms.realestatemanager.controller.databinding;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -12,11 +15,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controller.AddEstate;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateListAdapter;
-import com.openclassrooms.realestatemanager.databinding.FragmentEstateDetailBinding;
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateListBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
@@ -40,8 +45,8 @@ public class EstateListFragment extends Fragment {
     EstateListAdapter adapter;
     View v;
 
-    public static final String KEY_ESTATE = "ESTATE";
-
+    FloatingActionButton fabAddEstates;
+    ImageButton filterBtn, signOutBtn;
     ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
             Toast.makeText(
@@ -73,10 +78,17 @@ public class EstateListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
-        recyclerView = binding.propertyList;
+        recyclerView = binding.estateListRecyclerview;
         v = view.findViewById(R.id.property_detail_nav_container);
         setUpEstateViewModel();
         getAllEstates();
+
+        fabAddEstates = view.findViewById(R.id.button_create_property);
+        signOutBtn = view.findViewById(R.id.sign_out_btn);
+        filterBtn = view.findViewById(R.id.filter_button);
+
+        setLogOutBtn();
+        setUpAddEstate();
     }
 
 
@@ -101,5 +113,30 @@ public class EstateListFragment extends Fragment {
         binding = null;
     }
 
+    private void setUpAddEstate() {
+        fabAddEstates.setOnClickListener(view -> {
+            Intent addEstateIntent = new Intent(this.requireContext(), AddEstate.class);
+            startActivity(addEstateIntent);
+        });
+    }
+
+    private void setLogOutBtn() {
+        signOutBtn.setOnClickListener(view -> {
+            new AlertDialog.Builder(this.requireContext())
+                    .setMessage("Souhaitez vous déconnecté ?")
+                    .setCancelable(true)
+                    .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ((EstateHostActivity)EstateListFragment.this.requireActivity()).userViewModel.signOut(EstateListFragment.this.requireContext());
+                            EstateListFragment.this.requireActivity().finish();
+                        }
+                    })
+                    .create()
+                    .show();
+
+
+        });
+    }
     //onResume ou StartActivityResult
 }

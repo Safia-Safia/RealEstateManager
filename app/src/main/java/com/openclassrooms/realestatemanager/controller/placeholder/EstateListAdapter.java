@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controller.placeholder;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.databinding.EstateDetailFragment;
 import com.openclassrooms.realestatemanager.databinding.EstateListContentBinding;
@@ -49,8 +51,11 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
                 .into(holder.coverPicture);
 
         holder.itemView.setOnClickListener(itemView -> {
+            estate = estateList.get(position);
             Bundle bundle = new Bundle();
             bundle.putSerializable(EstateDetailFragment.KEY_ESTATE, estate);
+            Gson gson = new Gson();
+            Log.e("estate", gson.toJson(estate));
             if (view != null) {
                 Navigation.findNavController(view)
                         .navigate(R.id.fragment_estate_detail, bundle);

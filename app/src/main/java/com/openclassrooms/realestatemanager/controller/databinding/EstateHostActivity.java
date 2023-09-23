@@ -26,10 +26,9 @@ import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 public class EstateHostActivity extends AppCompatActivity {
-    FloatingActionButton mCreatePropertyBtn;
+
 
     UserViewModel userViewModel;
-    ImageButton filterBtn, signOutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,46 +42,17 @@ public class EstateHostActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         setUpView();
-        setUpAddProperty();
         setUserViewModel();
-        setLogOutBtn();
-
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     }
 
     private void setUpView() {
-        mCreatePropertyBtn = findViewById(R.id.button_create_property);
-        signOutBtn = findViewById(R.id.sign_out_btn);
-        filterBtn = findViewById(R.id.filter_button);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
     }
 
-    private void setUpAddProperty() {
-        mCreatePropertyBtn.setOnClickListener(view -> {
-            Intent addEstateIntent = new Intent(this, AddEstate.class);
-            startActivity(addEstateIntent);
-        });
-    }
 
-    private void setLogOutBtn() {
-        signOutBtn.setOnClickListener(view -> {
-            new AlertDialog.Builder(this)
-                    .setMessage("Souhaitez vous déconnecté ?")
-                    .setCancelable(true)
-                    .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            userViewModel.signOut(EstateHostActivity.this);
-                            finish();
-                        }
-                    })
-                    .create()
-                    .show();
-
-
-        });
-    }
 
     private void setUserViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);

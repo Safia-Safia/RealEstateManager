@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#1D5A63">
+        android:background="@color/darkBlue">
 
         <ImageView
             android:id="@+id/recyclerviewcontent_property_picture"

@@ -11,6 +11,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.openclassrooms.realestatemanager.model.User;
 
+import java.util.Random;
+
 public class UserRepository {
 
     public static final String COLLECTION_USERS = "users";
@@ -44,7 +46,19 @@ public class UserRepository {
             String urlPicture = (user.getPhotoUrl() != null) ? user.getPhotoUrl().toString() : null;
             String username = user.getDisplayName();
             String uid = user.getUid();
-            User userToCreate = new User(uid, username, urlPicture);
+            String email = user.getEmail();
+            if (urlPicture == null){
+                String[] images = {"https://i.pravatar.cc/150?u=a042581f4e29026704a",
+                        "https://i.pravatar.cc/150?u=a042581f4e29026704b",
+                        "https://i.pravatar.cc/150?u=a042581f4e29026704c",
+                        "https://i.pravatar.cc/150?u=a042581f4e29026704d"};
+
+                int randomIndex = new Random().nextInt(images.length);
+                String randomUserImage = images[randomIndex];
+                urlPicture = randomUserImage;
+            }
+            User userToCreate = new User(uid, username, urlPicture, email);
+            getUsersCollection().add(userToCreate);
         }
     }
 

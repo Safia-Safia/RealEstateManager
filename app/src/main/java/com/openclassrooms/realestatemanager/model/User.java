@@ -5,17 +5,20 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
-public class User implements Parcelable {
+public class User {
     public String uid;
     public String username;
     @Nullable
     private String urlPicture;
+
+    public String email;
     public User() { }
 
-    public User(String uid, String username, @Nullable String urlPicture) {
+    public User(String uid, String username, @Nullable String urlPicture, String email) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
+        this.email = email;
     }
 
     // --- GETTERS ---
@@ -24,39 +27,18 @@ public class User implements Parcelable {
     @Nullable
     public String getUrlPicture() { return urlPicture; }
 
+    public String getEmail() {
+        return email;
+    }
+
 
     // --- SETTERS ---
     public void setUsername(String username) { this.username = username; }
     public void setUid(String uid) { this.uid = uid; }
     public void setUrlPicture(@Nullable String urlPicture) { this.urlPicture = urlPicture; }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.uid);
-        dest.writeString(this.username);
-        dest.writeString(this.urlPicture);
-    }
-
-    protected User(Parcel in) {
-        this.uid = in.readString();
-        this.username = in.readString();
-        this.urlPicture = in.readString();
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel source) {
-            return new User(source);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 }

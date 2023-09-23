@@ -92,11 +92,11 @@ public class AuthenticationActivity extends AppCompatActivity {
             // SUCCESS
             if (resultCode == RESULT_OK) {
                 userViewModel.createUser();
-                showToast(String.valueOf("Connecté"));
+                showToast("Connecté");
                 startPropertyListFragment();
                 progressBar.setVisibility(View.INVISIBLE);
             } else if (response == null) {
-                showToast(String.valueOf("Pas connecté"));
+                showToast("Pas connecté");
             }
         }
     }
