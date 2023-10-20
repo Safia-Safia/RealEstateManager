@@ -97,7 +97,7 @@ public class EstateDetailFragment extends Fragment {
         isFieldChecked(estate.getStore(), store, pointStore);
 
         surface.setText(estate.getSurface());
-        price.setText(estate.getPrice());
+        price.setText(String.valueOf(estate.getPrice()));
         nbrOfPiece.setText(estate.getNumberOfRoom());
         detail.setText(estate.getDescription());
         address.setText(estate.getAddress());

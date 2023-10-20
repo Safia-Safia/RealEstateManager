@@ -41,7 +41,7 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
     @Override
     public void onBindViewHolder(final EstateViewHolder holder, int position) {
         estate = estateList.get(position);
-        holder.price.setText(estate.getPrice());
+        holder.price.setText(String.valueOf(estate.getPrice()));
         holder.description.setText(estate.getDescription());
         holder.typeOfEstate.setText(estate.getEstateType());
         holder.city.setText(estate.getCity());

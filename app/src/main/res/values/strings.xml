@@ -62,4 +62,15 @@
     <string name="delete_button">deleteButton</string>
     <string name="adding_property_picture">addingPropertyPicture</string>
     <string name="estateManagerName">"L'agent en charge de ce bien est "</string>
+    <string name="type">TYPE</string>
+    <string name="description">DESCRIPTION</string>
+    <string name="location">Localisation</string>
+    <string name="point_of_interest">Point d\'intérêts à proximité</string>
+    <string name="point">•</string>
+    <string name="ecole">Ecole</string>
+    <string name="parking">Parking</string>
+    <string name="parc">Parc</string>
+    <string name="magasin">Magasin</string>
+    <string name="entry_date">Date d\'entrée</string>
+    <string name="find_you_re_property">find you\'re property</string>
 </resources>

@@ -6,11 +6,14 @@ import android.os.Parcelable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Estate implements Serializable {
 
-    String id,description, coverPictureUrl, sellerName, estateType, numberOfRoom,
-            price, surface, address, entryDate, soldDate, city;
+    String description, coverPictureUrl, sellerName, estateType, numberOfRoom,
+            surface, address, entryDate, soldDate, city;
+
+    long price;
     Boolean isEstatesAvailable = true;
     Boolean school = false;
     Boolean store = false;
@@ -24,15 +27,6 @@ public class Estate implements Serializable {
 
     public Estate() {
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public User getUser() {
         return user;
     }
@@ -89,11 +83,11 @@ public class Estate implements Serializable {
         this.numberOfRoom = numberOfRoom;
     }
 
-    public String getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

@@ -47,7 +47,6 @@ public class EstateHostActivity extends AppCompatActivity {
     }
 
     private void setUpView() {
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
     }

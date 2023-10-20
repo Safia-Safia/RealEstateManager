@@ -15,7 +15,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,11 +24,8 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.openclassrooms.realestatemanager.R;
@@ -50,7 +46,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Random;
 
 public class AddEstate extends AppCompatActivity {
@@ -58,7 +53,7 @@ public class AddEstate extends AppCompatActivity {
     Uri imageUri;
     Estate estate;
     Spinner spinner;
-    ImageButton addPictureBtn;
+    ImageButton addPictureBtn, cancelBtn;
     Button searchLocationBtn, saveBtn;
     private static final int PICK_IMAGE_REQUEST = 1;
     EditText textDescription, pictureDescription, price, surface, nbrOfPiece;
@@ -81,6 +76,7 @@ public class AddEstate extends AppCompatActivity {
         setUpUserViewModel();
         setUpEntryDate();
         saveEstate();
+        setCancelBtn();
 
     }
 
@@ -101,6 +97,7 @@ public class AddEstate extends AppCompatActivity {
         storeCheckBox = findViewById(R.id.store_checkBox);
         parkCheckBox = findViewById(R.id.park_checkBox);
         parkingCheckBox = findViewById(R.id.parking_checkBox);
+        cancelBtn = findViewById(R.id.cancel_btn);
         estate = new Estate();
 
 
@@ -131,6 +128,10 @@ public class AddEstate extends AppCompatActivity {
             intent.setType("image/jpg");
             startActivityForResult(Intent.createChooser(intent, "Sélectionner une image"), PICK_IMAGE_REQUEST);
         });
+    }
+
+    public void setCancelBtn() {
+        cancelBtn.setOnClickListener(view -> finish());
     }
 
     @Override
@@ -249,7 +250,7 @@ public class AddEstate extends AppCompatActivity {
         saveBtn.setOnClickListener(view -> {
             estate.setPictures(property_picture);
             estate.setEstateType(spinner.getSelectedItem().toString());
-            estate.setPrice(price.getText().toString());
+            estate.setPrice(price.getText().length());
             estate.setNumberOfRoom(nbrOfPiece.getText().toString());
             estate.setSurface(surface.getText().toString());
             estate.setDescription(textDescription.getText().toString());

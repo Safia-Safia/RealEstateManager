@@ -101,7 +101,7 @@
                 android:id="@+id/house_surface_image"
                 android:layout_width="48dp"
                 android:layout_height="44dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="15dp"
                 android:src="@drawable/ic_house_m2"
                 app:layout_constraintStart_toEndOf="@id/edittext_house_price"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -132,7 +132,7 @@
                 android:id="@+id/house_nbr_of_piece_image"
                 android:layout_width="48dp"
                 android:layout_height="44dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="15dp"
                 android:src="@drawable/ic_nbr_of_pieces"
                 app:layout_constraintStart_toEndOf="@+id/edittext_surface"
                 app:layout_constraintTop_toTopOf="parent" />

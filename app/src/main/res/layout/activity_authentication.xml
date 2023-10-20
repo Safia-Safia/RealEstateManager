@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="find you're property"
+            android:text="@string/find_you_re_property"
             android:textColor="@color/colorAccent"
             android:textSize="14sp"
             android:textStyle="italic" />

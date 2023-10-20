@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="10dp"
-        android:text="TYPE"
+        android:text="@string/type"
         android:textColor="@color/colorAccentDark"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,9 +23,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="10dp"
-        android:text="DESCRIPTION"
+        android:text="@string/description"
         android:textColor="@color/darkBlue"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/type_detail_text" />
@@ -47,14 +47,15 @@
         android:layout_marginTop="10dp"
         android:src="@drawable/baseline_location_on_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/localisation" />
+        app:layout_constraintTop_toBottomOf="@id/localisation"
+        android:contentDescription="@string/location" />
 
     <TextView
         android:id="@+id/localisation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Localisation"
+        android:text="@string/location"
         android:textColor="@color/darkBlue"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -98,7 +99,8 @@
             android:id="@+id/map_snapshot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/title_activity_maps" />
     </androidx.cardview.widget.CardView>
 
 
@@ -118,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Point d'intérêts à proximité"
+        android:text="@string/point_of_interest"
         android:textColor="@color/darkBlue"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -132,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:padding="5dp"
-        android:text="•"
+        android:text="@string/point"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -146,7 +148,7 @@
         android:layout_marginStart="150dp"
         android:layout_marginTop="10dp"
         android:padding="5dp"
-        android:text="•"
+        android:text="@string/point"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -160,7 +162,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:padding="5dp"
-        android:text="•"
+        android:text="@string/point"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -173,7 +175,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
         android:padding="5dp"
-        android:text="•"
+        android:text="@string/point"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -186,7 +188,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Ecole"
+        android:text="@string/ecole"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/point_school"
@@ -197,7 +199,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Parking"
+        android:text="@string/parking"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/point_parking"
@@ -209,7 +211,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:padding="5dp"
-        android:text="Parc"
+        android:text="@string/parc"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/point_school"
@@ -221,7 +223,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:padding="5dp"
-        android:text="Magasin"
+        android:text="@string/magasin"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/point_store"
@@ -242,7 +244,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="Date d'entrée"
+        android:text="@string/entry_date"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -266,7 +268,8 @@
         android:layout_height="39dp"
         android:layout_margin="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/entryDate_detail" />
+        app:layout_constraintTop_toBottomOf="@id/entryDate_detail"
+        android:contentDescription="@string/adding_property_picture" />
 
     <TextView
         android:id="@+id/sellerName"
@@ -288,5 +291,6 @@
         android:background="@null"
         android:src="@drawable/baseline_email_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/entryDate_detail" />
+        app:layout_constraintTop_toBottomOf="@id/entryDate_detail"
+        android:contentDescription="@string/fui_sign_in_with_email" />
 </androidx.constraintlayout.widget.ConstraintLayout>

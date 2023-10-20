@@ -5,17 +5,22 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +33,7 @@ import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,13 +46,18 @@ import java.util.List;
  */
 public class EstateListFragment extends Fragment {
     FragmentEstateListBinding binding;
+    List<String> selectedFilters = new ArrayList<>();
+
     EstateViewModel estateViewModel;
     RecyclerView recyclerView;
     EstateListAdapter adapter;
     View v;
-
+    SeekBar seekBar;
+    TextView minPriceTextView, maxPriceTextView;
+    ConstraintLayout filterOptionsLayout;
     FloatingActionButton fabAddEstates;
     ImageButton filterBtn, signOutBtn;
+    Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, moreThan3PictureBtn, sinceAWeekBtn, soldBtn;
     ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
             Toast.makeText(
@@ -78,19 +89,193 @@ public class EstateListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
-        recyclerView = binding.estateListRecyclerview;
         v = view.findViewById(R.id.property_detail_nav_container);
         setUpEstateViewModel();
         getAllEstates();
 
-        fabAddEstates = view.findViewById(R.id.button_create_property);
-        signOutBtn = view.findViewById(R.id.sign_out_btn);
-        filterBtn = view.findViewById(R.id.filter_button);
-
+        setUpView();
+        setUpFilterButton();
+        setUpSeekBar();
         setLogOutBtn();
         setUpAddEstate();
+        initListOnButtonClick(noFilterBtn, "noFilter");
+        initListOnButtonClick(schoolBtn, "school");
+        initListOnButtonClick(storeBtn, "store");
+        initListOnButtonClick(soldBtn, "sold");
+        initListOnButtonClick(sinceAWeekBtn, "sinceAWeek");
+        initListOnButtonClick(parkingBtn, "parking");
+        initListOnButtonClick(parkBtn, "park");
+        initListOnButtonClick(moreThan3PictureBtn, "picture");
+
+
     }
 
+    private void setUpView() {
+        recyclerView = binding.estateListRecyclerview;
+        seekBar = binding.getRoot().findViewById(R.id.seekBar);
+        minPriceTextView = binding.getRoot().findViewById(R.id.minPriceTextView);
+        maxPriceTextView = binding.getRoot().findViewById(R.id.maxPriceTextView);
+        fabAddEstates = binding.getRoot().findViewById(R.id.button_create_property);
+        signOutBtn = binding.getRoot().findViewById(R.id.sign_out_btn);
+        filterBtn = binding.getRoot().findViewById(R.id.filter_button);
+        filterOptionsLayout = binding.includeFilter.getRoot();
+        filterOptionsLayout.setVisibility(View.GONE);
+        //FILTER'S BUTTON
+        noFilterBtn = binding.getRoot().findViewById(R.id.noFilter);
+        schoolBtn = binding.getRoot().findViewById(R.id.school);
+        storeBtn = binding.getRoot().findViewById(R.id.store);
+        parkBtn = binding.getRoot().findViewById(R.id.park);
+        parkingBtn = binding.getRoot().findViewById(R.id.parking);
+        sinceAWeekBtn = binding.getRoot().findViewById(R.id.sinceAweek);
+        moreThan3PictureBtn = binding.getRoot().findViewById(R.id.plus3pictures);
+        soldBtn = binding.getRoot().findViewById(R.id.sold);
+
+
+    }
+
+    public void changeButtonColor(Button button) {
+        boolean clicked = button.isSelected();
+        if (button.getId() == R.id.noFilter) {
+            resetOtherButtonsState(button);
+        } else {
+            resetButtonState(noFilterBtn);
+        }
+
+        if (clicked) {
+            button.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            button.setTextColor(getResources().getColor(R.color.quantum_white_text));
+        } else {
+            button.setBackground(getResources().getDrawable(R.drawable.filter_boder_blue));
+            button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    private void resetButtonState(Button button) {
+        button.setSelected(false);
+        button.setBackground(getResources().getDrawable(R.drawable.filter_boder_blue));
+        button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+    }
+
+    private void resetOtherButtonsState(Button clickedButton) {
+        Button[] allButtons = {noFilterBtn, schoolBtn, storeBtn, parkBtn, parkingBtn, sinceAWeekBtn, moreThan3PictureBtn, soldBtn};
+        for (Button button : allButtons) {
+            if (button != clickedButton) {
+                button.setSelected(false);
+                button.setBackground(getResources().getDrawable(R.drawable.filter_boder_blue));
+                button.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+        }
+    }
+
+    public void initListOnButtonClick(Button button, String filterCriteria) {
+        button.setOnClickListener(view -> {
+            boolean isButtonClicked = !button.isSelected();
+            button.setSelected(isButtonClicked);
+            if (isButtonClicked) {
+                selectedFilters.add(filterCriteria);
+            } else {
+                selectedFilters.remove(filterCriteria);
+            }
+            applyFilters();
+            changeButtonColor(button);
+        });
+
+    }
+
+    private void applyFilters() {
+        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+            List<Estate> filteredEstates = new ArrayList<>();
+
+            for (Estate estate : estates) {
+                boolean isFiltered = true;
+
+                for (String filterCriteria : selectedFilters) {
+                    switch (filterCriteria) {
+                        case "noFilter":
+                            getAllEstates();
+                            break;
+                        case "school":
+                            isFiltered = estate.getSchool();
+                            break;
+                        case "store":
+                            isFiltered = estate.getStore();
+                            break;
+                        case "park":
+                            isFiltered = estate.getPark();
+                            break;
+                        case "parking":
+                            isFiltered = estate.getParking();
+                            break;
+                        case "picture":
+                            isFiltered = estate.getPictures().size() >= 3;
+                            break;
+                    }
+                }
+
+                if (isFiltered) {
+                    filteredEstates.add(estate);
+                }
+            }
+            setupRecyclerView(filteredEstates);
+        });
+    }
+
+    public void setUpFilterButton() {
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            boolean visibility = false;
+
+            @Override
+            public void onClick(View view) {
+                visibility = !visibility;
+                if (visibility) {
+                    filterOptionsLayout.setVisibility(View.VISIBLE);
+                } else {
+                    filterOptionsLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+    }
+
+    public void setUpSeekBar() {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int minPrice = 200000;
+                int maxPrice = progress;
+                minPriceTextView.setText("Min: " + minPrice);
+                maxPriceTextView.setText("Max: " + maxPrice);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                int maxPrice = seekBar.getProgress();
+                filterByPrice(maxPrice);
+            }
+        });
+    }
+
+
+    public void filterByPrice(int maxPrice) {
+        List<Estate> filteredEstates = new ArrayList<>();
+        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+
+            for (Estate estate : estates) {
+                boolean isFiltered = maxPrice >= estate.getPrice();
+                Log.e("maxPrice", maxPrice+"");
+                Log.e("Price", estate.getPrice()+"");
+                if (isFiltered) {
+                    filteredEstates.add(estate);
+                }
+                Log.e("isfiltered", isFiltered+"");
+
+            }
+            Log.e("size", filteredEstates.size()+"");
+            setupRecyclerView(filteredEstates);
+        });
+    }
 
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireActivity());
@@ -101,7 +286,7 @@ public class EstateListFragment extends Fragment {
         estateViewModel.getEstates().observe(getViewLifecycleOwner(), this::setupRecyclerView);
     }
 
-    void setupRecyclerView(List<Estate> estates) {;
+    void setupRecyclerView(List<Estate> estates) {
         adapter = new EstateListAdapter(estates, v);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
@@ -125,12 +310,9 @@ public class EstateListFragment extends Fragment {
             new AlertDialog.Builder(this.requireContext())
                     .setMessage("Souhaitez vous déconnecté ?")
                     .setCancelable(true)
-                    .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ((EstateHostActivity)EstateListFragment.this.requireActivity()).userViewModel.signOut(EstateListFragment.this.requireContext());
-                            EstateListFragment.this.requireActivity().finish();
-                        }
+                    .setPositiveButton("Oui", (dialog, which) -> {
+                        ((EstateHostActivity) EstateListFragment.this.requireActivity()).userViewModel.signOut(EstateListFragment.this.requireContext());
+                        EstateListFragment.this.requireActivity().finish();
                     })
                     .create()
                     .show();
@@ -138,5 +320,11 @@ public class EstateListFragment extends Fragment {
 
         });
     }
-    //onResume ou StartActivityResult
+
+    //Update list when an estate is added
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAllEstates();
+    }
 }
