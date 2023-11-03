@@ -1,14 +1,8 @@
 package com.openclassrooms.realestatemanager.controller.databinding;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.widget.ImageButton;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
@@ -17,16 +11,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.AddEstate;
 import com.openclassrooms.realestatemanager.databinding.ActivityEstateDetailBinding;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 public class EstateHostActivity extends AppCompatActivity {
-
 
     UserViewModel userViewModel;
 
@@ -50,8 +41,6 @@ public class EstateHostActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
     }
-
-
 
     private void setUserViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);

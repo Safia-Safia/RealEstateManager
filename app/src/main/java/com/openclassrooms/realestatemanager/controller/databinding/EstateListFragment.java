@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.controller.databinding;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,14 +11,16 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
+
+import androidx.appcompat.widget.SearchView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,9 +33,18 @@ import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
+import com.stfalcon.pricerangebar.RangeBarWithChart;
+import com.stfalcon.pricerangebar.model.BarEntry;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import kotlin.Unit;
 
 /**
  * A fragment representing a list of Properties. This fragment
@@ -47,17 +57,19 @@ import java.util.List;
 public class EstateListFragment extends Fragment {
     FragmentEstateListBinding binding;
     List<String> selectedFilters = new ArrayList<>();
-
+    private RangeBarWithChart rangeBar;
+    private TextView rangeBarValue, rangeBarInfo;
+    SearchView searchView;
     EstateViewModel estateViewModel;
     RecyclerView recyclerView;
     EstateListAdapter adapter;
     View v;
-    SeekBar seekBar;
-    TextView minPriceTextView, maxPriceTextView;
     ConstraintLayout filterOptionsLayout;
     FloatingActionButton fabAddEstates;
     ImageButton filterBtn, signOutBtn;
     Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, moreThan3PictureBtn, sinceAWeekBtn, soldBtn;
+    int minPrice, maxPrice;
+
     ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
             Toast.makeText(
@@ -93,9 +105,19 @@ public class EstateListFragment extends Fragment {
         setUpEstateViewModel();
         getAllEstates();
 
+        //------------------------------------------------------------------
+
+        rangeBar = binding.getRoot().findViewById(R.id.rangeBar);
+        rangeBarValue = binding.getRoot().findViewById(R.id.rangeBarValue);
+        rangeBarInfo = binding.getRoot().findViewById(R.id.rangeBarInfo);
+
+
+        //-----------------------------------------------------------
+
+
         setUpView();
         setUpFilterButton();
-        setUpSeekBar();
+        //setUpSeekBar();
         setLogOutBtn();
         setUpAddEstate();
         initListOnButtonClick(noFilterBtn, "noFilter");
@@ -106,20 +128,45 @@ public class EstateListFragment extends Fragment {
         initListOnButtonClick(parkingBtn, "parking");
         initListOnButtonClick(parkBtn, "park");
         initListOnButtonClick(moreThan3PictureBtn, "picture");
+        initSearchBar();
+    }
 
 
+    private void initSearchBar() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String searchStr = newText.toLowerCase();
+                List<Estate> filteredEstates = new ArrayList<>();
+                estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+
+                    for (Estate estate : estates) {
+                        if (estate.getAddress().toLowerCase().contains(searchStr)) {
+                            filteredEstates.add(estate);
+                        }
+                    }
+                    setupRecyclerView(filteredEstates);
+                });
+                return true;
+            }
+
+        });
     }
 
     private void setUpView() {
         recyclerView = binding.estateListRecyclerview;
-        seekBar = binding.getRoot().findViewById(R.id.seekBar);
-        minPriceTextView = binding.getRoot().findViewById(R.id.minPriceTextView);
-        maxPriceTextView = binding.getRoot().findViewById(R.id.maxPriceTextView);
         fabAddEstates = binding.getRoot().findViewById(R.id.button_create_property);
         signOutBtn = binding.getRoot().findViewById(R.id.sign_out_btn);
         filterBtn = binding.getRoot().findViewById(R.id.filter_button);
         filterOptionsLayout = binding.includeFilter.getRoot();
         filterOptionsLayout.setVisibility(View.GONE);
+        searchView = binding.getRoot().findViewById(R.id.search_bar);
         //FILTER'S BUTTON
         noFilterBtn = binding.getRoot().findViewById(R.id.noFilter);
         schoolBtn = binding.getRoot().findViewById(R.id.school);
@@ -237,45 +284,6 @@ public class EstateListFragment extends Fragment {
 
     }
 
-    public void setUpSeekBar() {
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int minPrice = 200000;
-                int maxPrice = progress;
-                minPriceTextView.setText("Min: " + minPrice);
-                maxPriceTextView.setText("Max: " + maxPrice);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                int maxPrice = seekBar.getProgress();
-                filterByPrice(maxPrice);
-            }
-        });
-    }
-
-
-    public void filterByPrice(int maxPrice) {
-        List<Estate> filteredEstates = new ArrayList<>();
-        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
-
-            for (Estate estate : estates) {
-                boolean isFiltered = maxPrice >= estate.getPrice();
-                Log.e("maxPrice", maxPrice+"");
-                Log.e("Price", estate.getPrice()+"");
-                if (isFiltered) {
-                    filteredEstates.add(estate);
-                }
-                Log.e("isfiltered", isFiltered+"");
-
-            }
-            Log.e("size", filteredEstates.size()+"");
-            setupRecyclerView(filteredEstates);
-        });
-    }
 
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireActivity());
@@ -283,7 +291,11 @@ public class EstateListFragment extends Fragment {
     }
 
     private void getAllEstates() {
-        estateViewModel.getEstates().observe(getViewLifecycleOwner(), this::setupRecyclerView);
+        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+            setupRecyclerView(estates);
+            initRangeBar(estates);
+        });
+
     }
 
     void setupRecyclerView(List<Estate> estates) {
@@ -316,10 +328,9 @@ public class EstateListFragment extends Fragment {
                     })
                     .create()
                     .show();
-
-
         });
     }
+
 
     //Update list when an estate is added
     @Override
@@ -327,4 +338,66 @@ public class EstateListFragment extends Fragment {
         super.onResume();
         getAllEstates();
     }
+
+
+    //-----------------------------------------
+
+    private void initRangeBar(List<Estate> estates) {
+        ArrayList<com.stfalcon.pricerangebar.model.BarEntry> barEntries = new ArrayList<>();
+        Collections.sort(estates, (estate1, estate2) -> {
+            return Long.compare(estate1.getPrice(), estate2.getPrice());
+        });
+
+        Map<Long, Integer> countMap = new TreeMap<>();
+        for (Estate estate : estates) {
+            if (countMap.containsKey(estate.getPrice())) {
+                countMap.put(estate.getPrice(), countMap.get(estate.getPrice()) + 1);
+            } else {
+                countMap.put(estate.getPrice(), 1);
+            }
+        }
+
+        for (Map.Entry<Long, Integer> entry : countMap.entrySet()) {
+            System.out.println("Price: " + entry.getKey() + ", Count: " + entry.getValue());
+            barEntries.add(new com.stfalcon.pricerangebar.model.BarEntry(entry.getKey(), entry.getValue()));
+
+        }
+
+        rangeBar.setEntries(barEntries);
+        rangeBar.setOnRangeChanged(this::onRangeChanged);
+        rangeBar.setOnSelectedItemsSizeChanged(this::onSelectedItemsSizeChanged);
+
+
+        minPrice = (int) barEntries.get(0).getX();
+        maxPrice = (int) barEntries.get(barEntries.size() - 1).getX();
+
+        int totalSelectedSize = 0;
+        for (BarEntry entry : barEntries) {
+            totalSelectedSize += entry.getY();
+        }
+
+        rangeBarInfo.setText(String.format("Il y a %s bien(s).", Float.toString(totalSelectedSize)));
+    }
+
+
+    private Unit onRangeChanged(String leftPinValue, String rightPinValue) {
+        rangeBarValue.setText(leftPinValue + " - " + rightPinValue);
+        List<Estate> filteredEstates = new ArrayList<>();
+        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+            for (Estate estate : estates) {
+                if (estate.getPrice() >= Long.parseLong(leftPinValue) && estate.getPrice() <= Long.parseLong(rightPinValue)) {
+                    filteredEstates.add(estate);
+                }
+            }
+            setupRecyclerView(filteredEstates);
+        });
+
+        return Unit.INSTANCE;
+    }
+
+    private Unit onSelectedItemsSizeChanged(Integer selectedItemsSize) {
+        rangeBarInfo.setText(String.format("Il y a %s bien(s).", selectedItemsSize));
+        return Unit.INSTANCE;
+    }
+
 }

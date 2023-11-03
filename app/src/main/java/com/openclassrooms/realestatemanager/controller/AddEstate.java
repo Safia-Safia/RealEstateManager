@@ -243,7 +243,6 @@ public class AddEstate extends AppCompatActivity {
         date = currentDate.getTime();
         String format = formatter.format(date.getTime());
         estate.setEntryDate(format);
-        estate.setSoldDate("Non vendu.");
     }
 
     public void saveEstate() {
@@ -254,12 +253,10 @@ public class AddEstate extends AppCompatActivity {
             estate.setNumberOfRoom(nbrOfPiece.getText().toString());
             estate.setSurface(surface.getText().toString());
             estate.setDescription(textDescription.getText().toString());
-            estate.setSellerName(userViewModel.getCurrentUser().getDisplayName());
-
             User newUser = new User();
             newUser.setEmail(userViewModel.getCurrentUser().getEmail());
-
-            if (userViewModel.getCurrentUser().getPhotoUrl()== null) {
+            newUser.setUsername(userViewModel.getCurrentUser().getDisplayName());
+            if (userViewModel.getCurrentUser().getPhotoUrl() == null) {
                 String[] images = {
                         "https://i.pravatar.cc/150?u=a042581f4e29026704a",
                         "https://i.pravatar.cc/150?u=a042581f4e29026704b",
@@ -269,7 +266,8 @@ public class AddEstate extends AppCompatActivity {
                 int randomIndex = new Random().nextInt(images.length);
                 String randomUserImage = images[randomIndex];
                 newUser.setUrlPicture(randomUserImage);
-            }else newUser.setUrlPicture(String.valueOf(userViewModel.getCurrentUser().getPhotoUrl()));
+            } else
+                newUser.setUrlPicture(String.valueOf(userViewModel.getCurrentUser().getPhotoUrl()));
             estate.setUser(newUser);
             if (schoolCheckBox.isChecked()) {
                 estate.setSchool(true);

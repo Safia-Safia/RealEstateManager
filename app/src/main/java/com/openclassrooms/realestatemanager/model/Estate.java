@@ -1,16 +1,13 @@
 package com.openclassrooms.realestatemanager.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class Estate implements Serializable {
 
-    String description, coverPictureUrl, sellerName, estateType, numberOfRoom,
+    String description, coverPictureUrl, estateType, numberOfRoom,
             surface, address, entryDate, soldDate, city;
 
     long price;
@@ -57,14 +54,6 @@ public class Estate implements Serializable {
 
     public void setCoverPictureUrl(String coverPictureUrl) {
         this.coverPictureUrl = coverPictureUrl;
-    }
-
-    public String getSellerName() {
-        return sellerName;
-    }
-
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
     }
 
     public String getEstateType() {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/filter_button_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -191,41 +192,64 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
     </androidx.cardview.widget.CardView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/sincecardview">
-
-        <TextView
-            android:id="@+id/minPriceTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Min: 20000"
-            android:textSize="13sp" />
-
-
-        <SeekBar
-            android:id="@+id/seekBar"
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintTop_toBottomOf="@id/sincecardview"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="400dp"
+            android:layout_marginTop="15dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:max="3000000"
-            android:min="20000"
-            android:progress="20000"
-            />
+            tools:context=".MainActivity">
 
-        <TextView
-            android:id="@+id/maxPriceTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Max: 3000000"
-            android:textSize="13sp" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/rangeBarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="21dp"
+                android:text="Prix compris entre :"
+                android:textColor="@color/navy"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/rangeBarValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="21dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rangeBarTitle"
+                tools:text="50K€ - 340K€" />
+
+            <TextView
+                android:id="@+id/rangeBarInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="21dp"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rangeBarTitle"
+                tools:text="18 elements was selected" />
+
+            <com.stfalcon.pricerangebar.RangeBarWithChart
+                android:id="@+id/rangeBar"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_margin="16dp"
+                app:barActiveLineColor="@color/darkBlue"
+                app:barActiveThumbColor="@color/colorAccentDark"
+                app:barChartSelectedBackgroundColor="@color/colorPrimaryDark"
+                app:barChartUnselectedBackgroundColor="@color/colorPrimaryDark"
+                app:layout_constraintTop_toBottomOf="@+id/rangeBarInfo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:barLineColor="@color/colorPrimary"  />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,25 +4,30 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controller.placeholder.ViewPagerAdapter;
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateDetailBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
-import com.openclassrooms.realestatemanager.model.User;
-import com.openclassrooms.realestatemanager.utils.Injection.Injection;
-import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
-import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
+import com.openclassrooms.realestatemanager.model.Picture;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import me.relex.circleindicator.CircleIndicator;
 
 /**
  * A fragment representing a single Estate detail screen.
@@ -32,12 +37,21 @@ import java.util.Random;
  */
 public class EstateDetailFragment extends Fragment {
     public static final String KEY_ESTATE = "ESTATE";
+    private CircleIndicator indicator;
     private Estate estate;
     ImageView coverPicture, mapImage, userPicture, mailButton;
     TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
             pointStore,pointSchool, pointParking, pointPark, sellerName, entryDate;
     private CollapsingToolbarLayout mToolbarLayout;
     private FragmentEstateDetailBinding binding;
+
+    ViewPager mViewPager;
+
+    // images array
+    List<Picture> pictureList;
+
+    // Creating Object of ViewPagerAdapter
+    ViewPagerAdapter mViewPagerAdapter;
 
     public EstateDetailFragment() {
     }
@@ -55,8 +69,17 @@ public class EstateDetailFragment extends Fragment {
             estate = (Estate) bundle.getSerializable(KEY_ESTATE);
         }
 
+        mViewPager = (ViewPager)binding.viewPagerMain;
+
+        pictureList = estate.getPictures();
+        mViewPagerAdapter = new ViewPagerAdapter(this.requireContext(), pictureList);
+        mViewPager.setAdapter(mViewPagerAdapter);
+
         setUpView();
         updateContent();
+
+            indicator = binding.getRoot().findViewById(R.id.indicator);
+            indicator.setViewPager(mViewPager);
         return rootView;
     }
 
@@ -102,7 +125,6 @@ public class EstateDetailFragment extends Fragment {
         detail.setText(estate.getDescription());
         address.setText(estate.getAddress());
         type.setText(estate.getEstateType());
-        sellerName.setText(estate.getSellerName());
         entryDate.setText(estate.getEntryDate());
 
         Glide.with(this).load(estate.getCoverPictureUrl()).into(coverPicture);
@@ -119,12 +141,8 @@ public class EstateDetailFragment extends Fragment {
 
         Glide.with(this).load(imageUrl).into(mapImage);
         setUpMailButton();
-        String[] images = {"https://i.pravatar.cc/150?u=a042581f4e29026704a","https://i.pravatar.cc/150?u=a042581f4e29026704b","https://i.pravatar.cc/150?u=a042581f4e29026704c","https://i.pravatar.cc/150?u=a042581f4e29026704d"};
 
-        int randomIndex = new Random().nextInt(images.length);
-        String randomUserImage = images[randomIndex];
-
-        Glide.with(this).load(randomUserImage).circleCrop().into(userPicture);
+        Glide.with(this).load(estate.getUser().getUrlPicture()).circleCrop().into(userPicture);
     }
 
     public void setUpMailButton() {
