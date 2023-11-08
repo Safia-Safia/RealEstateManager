@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,8 @@ import com.openclassrooms.realestatemanager.controller.databinding.EstateDetailF
 import com.openclassrooms.realestatemanager.databinding.EstateListContentBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.EstateViewHolder> {
@@ -31,8 +34,9 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
         this.view = view;
     }
 
+    @NonNull
     @Override
-    public EstateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EstateViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         EstateListContentBinding binding =
                 EstateListContentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new EstateViewHolder(binding);
@@ -41,7 +45,12 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
     @Override
     public void onBindViewHolder(final EstateViewHolder holder, int position) {
         estate = estateList.get(position);
-        holder.price.setText(String.valueOf(estate.getPrice()));
+        DecimalFormatSymbols customSymbols = new DecimalFormatSymbols();
+        customSymbols.setGroupingSeparator(' ');
+        DecimalFormat decimalFormat = new DecimalFormat("#,###", customSymbols);
+        String formattedNumber = decimalFormat.format(estate.getPrice());
+        holder.price.setText(formattedNumber);
+
         holder.description.setText(estate.getDescription());
         holder.typeOfEstate.setText(estate.getEstateType());
         holder.city.setText(estate.getCity());

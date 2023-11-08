@@ -63,7 +63,7 @@ public class EstateRepository {
                 taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(url -> {
                     estate.getPictures().get(finalI).setImageUrl(url.toString());
                     if (finalI == estate.getPictures().size() - 1) {
-                        estate.setCoverPictureUrl(estate.getPictures().get(1).getImageUrl());
+                        estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                         getEstateCollection().document().set(estate);
                         result.setValue(true);
                     }

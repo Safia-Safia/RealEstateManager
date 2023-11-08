@@ -1,16 +1,14 @@
 package com.openclassrooms.realestatemanager.model;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Estate implements Serializable {
 
-    String description, coverPictureUrl, estateType, numberOfRoom,
-            surface, address, entryDate, soldDate, city;
+    String description, coverPictureUrl, estateType, address, entryDate, soldDate, city;
 
-    long price;
+    long price, surface, numberOfRoom;
     Boolean isEstatesAvailable = true;
     Boolean school = false;
     Boolean store = false;
@@ -18,9 +16,7 @@ public class Estate implements Serializable {
     Boolean parking = false;
     User user;
     List<Picture> pictures = new ArrayList<>();
-    private Double latitude;
-
-    private Double longitude;
+    private Double latitude, longitude;
 
     public Estate() {
     }
@@ -64,11 +60,11 @@ public class Estate implements Serializable {
         this.estateType = estateType;
     }
 
-    public String getNumberOfRoom() {
+    public long getNumberOfRoom() {
         return numberOfRoom;
     }
 
-    public void setNumberOfRoom(String numberOfRoom) {
+    public void setNumberOfRoom(long numberOfRoom) {
         this.numberOfRoom = numberOfRoom;
     }
 
@@ -80,11 +76,11 @@ public class Estate implements Serializable {
         this.price = price;
     }
 
-    public String getSurface() {
+    public long getSurface() {
         return surface;
     }
 
-    public void setSurface(String surface) {
+    public void setSurface(long surface) {
         this.surface = surface;
     }
 

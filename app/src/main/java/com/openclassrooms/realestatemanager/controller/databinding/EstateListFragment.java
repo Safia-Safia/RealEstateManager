@@ -1,8 +1,10 @@
 package com.openclassrooms.realestatemanager.controller.databinding;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.jem.rubberpicker.RubberRangePicker;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.AddEstate;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateListAdapter;
@@ -33,16 +36,12 @@ import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
-import com.stfalcon.pricerangebar.RangeBarWithChart;
-import com.stfalcon.pricerangebar.model.BarEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import kotlin.Unit;
 
@@ -57,7 +56,6 @@ import kotlin.Unit;
 public class EstateListFragment extends Fragment {
     FragmentEstateListBinding binding;
     List<String> selectedFilters = new ArrayList<>();
-    private RangeBarWithChart rangeBar;
     private TextView rangeBarValue, rangeBarInfo;
     SearchView searchView;
     EstateViewModel estateViewModel;
@@ -69,6 +67,7 @@ public class EstateListFragment extends Fragment {
     ImageButton filterBtn, signOutBtn;
     Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, moreThan3PictureBtn, sinceAWeekBtn, soldBtn;
     int minPrice, maxPrice;
+    private RubberRangePicker rubberRangePicker;
 
     ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
@@ -91,33 +90,22 @@ public class EstateListFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEstateListBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
         v = view.findViewById(R.id.property_detail_nav_container);
+
         setUpEstateViewModel();
         getAllEstates();
-
-        //------------------------------------------------------------------
-
-        rangeBar = binding.getRoot().findViewById(R.id.rangeBar);
-        rangeBarValue = binding.getRoot().findViewById(R.id.rangeBarValue);
-        rangeBarInfo = binding.getRoot().findViewById(R.id.rangeBarInfo);
-
-
-        //-----------------------------------------------------------
-
-
         setUpView();
         setUpFilterButton();
-        //setUpSeekBar();
         setLogOutBtn();
         setUpAddEstate();
         initListOnButtonClick(noFilterBtn, "noFilter");
@@ -176,7 +164,11 @@ public class EstateListFragment extends Fragment {
         sinceAWeekBtn = binding.getRoot().findViewById(R.id.sinceAweek);
         moreThan3PictureBtn = binding.getRoot().findViewById(R.id.plus3pictures);
         soldBtn = binding.getRoot().findViewById(R.id.sold);
-
+        //RANGEBAR
+        rubberRangePicker = new RubberRangePicker(requireContext());
+        rubberRangePicker = binding.getRoot().findViewById(R.id.rangeBar);
+        rangeBarValue = binding.getRoot().findViewById(R.id.rangeBarValue);
+        //rangeBarInfo = binding.getRoot().findViewById(R.id.rangeBarInfo);
 
     }
 
@@ -339,15 +331,31 @@ public class EstateListFragment extends Fragment {
         getAllEstates();
     }
 
-
-    //-----------------------------------------
-
     private void initRangeBar(List<Estate> estates) {
-        ArrayList<com.stfalcon.pricerangebar.model.BarEntry> barEntries = new ArrayList<>();
         Collections.sort(estates, (estate1, estate2) -> {
             return Long.compare(estate1.getPrice(), estate2.getPrice());
         });
 
+        long minPrice = Long.MAX_VALUE;
+        long maxPrice = Long.MIN_VALUE;
+        for (Estate estate : estates) {
+            long price = estate.getPrice(); //Each estate price
+            if (price < minPrice) { //if the current price is smaller than the minPrice
+                minPrice = price; // then we update the min price with the current price
+            }
+            if (price > maxPrice) {
+                maxPrice = price;
+            }
+        }
+
+        //rubberRangePicker.setMin((int) minPrice);
+        if (!estates.isEmpty()){
+            rubberRangePicker.setMax((int) maxPrice);
+
+        }
+        rubberRangePicker.setHighlightThumbOnTouchColor(Color.CYAN);
+
+        //COMBIEN DE BIEN ONT LE MEME PRIX
         Map<Long, Integer> countMap = new TreeMap<>();
         for (Estate estate : estates) {
             if (countMap.containsKey(estate.getPrice())) {
@@ -356,48 +364,29 @@ public class EstateListFragment extends Fragment {
                 countMap.put(estate.getPrice(), 1);
             }
         }
-
-        for (Map.Entry<Long, Integer> entry : countMap.entrySet()) {
-            System.out.println("Price: " + entry.getKey() + ", Count: " + entry.getValue());
-            barEntries.add(new com.stfalcon.pricerangebar.model.BarEntry(entry.getKey(), entry.getValue()));
-
-        }
-
-        rangeBar.setEntries(barEntries);
-        rangeBar.setOnRangeChanged(this::onRangeChanged);
-        rangeBar.setOnSelectedItemsSizeChanged(this::onSelectedItemsSizeChanged);
-
-
-        minPrice = (int) barEntries.get(0).getX();
-        maxPrice = (int) barEntries.get(barEntries.size() - 1).getX();
-
-        int totalSelectedSize = 0;
-        for (BarEntry entry : barEntries) {
-            totalSelectedSize += entry.getY();
-        }
-
-        rangeBarInfo.setText(String.format("Il y a %s bien(s).", Float.toString(totalSelectedSize)));
-    }
-
-
-    private Unit onRangeChanged(String leftPinValue, String rightPinValue) {
-        rangeBarValue.setText(leftPinValue + " - " + rightPinValue);
-        List<Estate> filteredEstates = new ArrayList<>();
-        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
-            for (Estate estate : estates) {
-                if (estate.getPrice() >= Long.parseLong(leftPinValue) && estate.getPrice() <= Long.parseLong(rightPinValue)) {
-                    filteredEstates.add(estate);
-                }
+        rubberRangePicker.setOnRubberRangePickerChangeListener(new RubberRangePicker.OnRubberRangePickerChangeListener() {
+            @Override
+            public void onProgressChanged(@NonNull RubberRangePicker rangePicker, int startValue, int endValue, boolean fromUser) {
+                rangeBarValue.setText(String.format("%s - %s", startValue, endValue));
+                List<Estate> filteredEstates = new ArrayList<>();
+                estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+                    for (Estate estate : estates) {
+                        if (estate.getPrice() >= Long.parseLong(String.valueOf(startValue)) && estate.getPrice() <= Long.parseLong(String.valueOf(endValue))) {
+                            filteredEstates.add(estate);
+                        }
+                    }
+                    setupRecyclerView(filteredEstates);
+                });
             }
-            setupRecyclerView(filteredEstates);
+
+            @Override
+            public void onStartTrackingTouch(RubberRangePicker rangePicker, boolean isStartThumb) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(RubberRangePicker rangePicker, boolean isStartThumb) {
+
+            }
         });
-
-        return Unit.INSTANCE;
     }
-
-    private Unit onSelectedItemsSizeChanged(Integer selectedItemsSize) {
-        rangeBarInfo.setText(String.format("Il y a %s bien(s).", selectedItemsSize));
-        return Unit.INSTANCE;
-    }
-
 }

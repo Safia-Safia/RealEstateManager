@@ -3,29 +3,24 @@ package com.openclassrooms.realestatemanager.controller.databinding;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.placeholder.ViewPagerAdapter;
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateDetailBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -37,12 +32,10 @@ import me.relex.circleindicator.CircleIndicator;
  */
 public class EstateDetailFragment extends Fragment {
     public static final String KEY_ESTATE = "ESTATE";
-    private CircleIndicator indicator;
     private Estate estate;
     ImageView coverPicture, mapImage, userPicture, mailButton;
     TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
             pointStore,pointSchool, pointParking, pointPark, sellerName, entryDate;
-    private CollapsingToolbarLayout mToolbarLayout;
     private FragmentEstateDetailBinding binding;
 
     ViewPager mViewPager;
@@ -58,12 +51,12 @@ public class EstateDetailFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentEstateDetailBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
-        mToolbarLayout = rootView.findViewById(R.id.toolbar_layout);
+        rootView.findViewById(R.id.toolbar_layout);
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(KEY_ESTATE)) {
             estate = (Estate) bundle.getSerializable(KEY_ESTATE);
@@ -78,7 +71,7 @@ public class EstateDetailFragment extends Fragment {
         setUpView();
         updateContent();
 
-            indicator = binding.getRoot().findViewById(R.id.indicator);
+        CircleIndicator indicator = binding.getRoot().findViewById(R.id.indicator);
             indicator.setViewPager(mViewPager);
         return rootView;
     }
@@ -119,9 +112,9 @@ public class EstateDetailFragment extends Fragment {
         isFieldChecked(estate.getParking(), parking, pointParking);
         isFieldChecked(estate.getStore(), store, pointStore);
 
-        surface.setText(estate.getSurface());
-        price.setText(String.valueOf(estate.getPrice()));
-        nbrOfPiece.setText(estate.getNumberOfRoom());
+        surface.setText(String.format("%s m²", estate.getSurface()));
+        price.setText(String.format("%s €", estate.getPrice()));
+        nbrOfPiece.setText(String.valueOf(estate.getNumberOfRoom()));
         detail.setText(estate.getDescription());
         address.setText(estate.getAddress());
         type.setText(estate.getEstateType());

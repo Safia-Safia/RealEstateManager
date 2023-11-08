@@ -6,8 +6,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="#6BFFFFFF"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:background="#6BFFFFFF">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/noFilterCardView"
@@ -171,6 +171,29 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/x"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:layout_marginVertical="10dp"
+        android:layout_marginStart="2dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintStart_toEndOf="@id/plus3picturescadview"
+        app:layout_constraintTop_toBottomOf="@id/parkcardview">
+
+        <Button
+            android:id="@+id/xy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/filter_boder_blue"
+            android:gravity="center"
+            android:text="Plus de 3 photos"
+            android:textAlignment="gravity"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/plus3picturescadview"
         android:layout_width="120dp"
         android:layout_height="30dp"
@@ -192,64 +215,70 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
     </androidx.cardview.widget.CardView>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            app:layout_constraintTop_toBottomOf="@id/sincecardview"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sincecardview"
+        tools:context=".MainActivity">
+
+
+        <TextView
+            android:id="@+id/rangeBarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:text="Prix"
+            android:textColor="@color/navy"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="400dp"
-            android:layout_marginTop="15dp"
-            android:layout_height="match_parent"
-            tools:context=".MainActivity">
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/rangeBarValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginEnd="25dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rangeBarTitle"
+            tools:text="1" />
 
-            <TextView
-                android:id="@+id/rangeBarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="21dp"
-                android:text="Prix compris entre :"
-                android:textColor="@color/navy"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/minPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="21dp"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rangeBarTitle"
+            tools:text="0" />
 
-            <TextView
-                android:id="@+id/rangeBarValue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="21dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/rangeBarTitle"
-                tools:text="50K€ - 340K€" />
+        <com.jem.rubberpicker.RubberRangePicker
+            android:id="@+id/rangeBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            app:dampingRatio="0.2"
+            app:defaultThumbInsideColor="@color/grey"
+            app:defaultThumbRadius="12dp"
+            app:elasticBehavior="linear"
+            app:highlightDefaultThumbOnTouchColor="@color/colorAccent"
+            app:highlightTrackColor="@color/colorPrimaryDark"
+            app:highlightTrackWidth="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/minPrice"
+            app:normalTrackColor="#AAAAAA"
+            app:normalTrackWidth="4dp"
+            app:stiffness="400"
+            app:stretchRange="36dp" />
 
-            <TextView
-                android:id="@+id/rangeBarInfo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="21dp"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rangeBarTitle"
-                tools:text="18 elements was selected" />
-
-            <com.stfalcon.pricerangebar.RangeBarWithChart
-                android:id="@+id/rangeBar"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_margin="16dp"
-                app:barActiveLineColor="@color/darkBlue"
-                app:barActiveThumbColor="@color/colorAccentDark"
-                app:barChartSelectedBackgroundColor="@color/colorPrimaryDark"
-                app:barChartUnselectedBackgroundColor="@color/colorPrimaryDark"
-                app:layout_constraintTop_toBottomOf="@+id/rangeBarInfo"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:barLineColor="@color/colorPrimary"  />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

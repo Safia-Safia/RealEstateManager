@@ -70,8 +70,10 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
 
     //SEEKBAR
-    implementation 'com.github.stfalcon-studio:StfalconPriceRangeBar-android:v1.5'
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    implementation('com.github.Chrisvin:RubberPicker:v1.5') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 
 
     //Viewpager Implementation
@@ -79,8 +81,8 @@ dependencies {
 
     //CircleIndicator
     implementation 'me.relex:circleindicator:2.1.6'
-
 }
 configurations.implementation {
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
 }

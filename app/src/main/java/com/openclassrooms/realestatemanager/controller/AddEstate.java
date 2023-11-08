@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -46,17 +47,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class AddEstate extends AppCompatActivity {
-    String description;
     Uri imageUri;
     Estate estate;
     Spinner spinner;
     ImageButton addPictureBtn, cancelBtn;
     Button searchLocationBtn, saveBtn;
     private static final int PICK_IMAGE_REQUEST = 1;
-    EditText textDescription, pictureDescription, price, surface, nbrOfPiece;
+    EditText textDescription, pictureDescription, price, surface, nbrOfRoom;
     private EstateAdapter propertyAdapter;
     private List<Picture> property_picture;
     EstateViewModel estateViewModel;
@@ -91,7 +90,7 @@ public class AddEstate extends AppCompatActivity {
         price = findViewById(R.id.edittext_house_price);
         surface = findViewById(R.id.edittext_surface);
         textDescription = findViewById(R.id.edit_description);
-        nbrOfPiece = findViewById(R.id.edittext_nbr_of_piece);
+        nbrOfRoom = findViewById(R.id.edittext_nbr_of_piece);
         saveBtn = findViewById(R.id.save_btn);
         schoolCheckBox = findViewById(R.id.school_checkBox);
         storeCheckBox = findViewById(R.id.store_checkBox);
@@ -221,7 +220,7 @@ public class AddEstate extends AppCompatActivity {
     public boolean checkValid() {
         return isFieldEmpty(price, "incomplet") &&
                 isFieldEmpty(surface, "incomplet") &&
-                isFieldEmpty(nbrOfPiece, "incomplet") &&
+                isFieldEmpty(nbrOfRoom, "incomplet") &&
                 isFieldEmpty(textDescription, "incomplet") &&
                 estate.getPictures().size() != 0 &&
                 !estate.getAddress().isEmpty() &&
@@ -246,49 +245,38 @@ public class AddEstate extends AppCompatActivity {
     }
 
     public void saveEstate() {
+
         saveBtn.setOnClickListener(view -> {
             estate.setPictures(property_picture);
             estate.setEstateType(spinner.getSelectedItem().toString());
-            estate.setPrice(price.getText().length());
-            estate.setNumberOfRoom(nbrOfPiece.getText().toString());
-            estate.setSurface(surface.getText().toString());
+            estate.setPrice(Integer.parseInt(price.getText().toString()));
+            estate.setNumberOfRoom(Integer.parseInt(nbrOfRoom.getText().toString()));
+            estate.setSurface(Integer.parseInt(surface.getText().toString()));
             estate.setDescription(textDescription.getText().toString());
             User newUser = new User();
+            newUser.setUid(userViewModel.getCurrentUser().getUid());
             newUser.setEmail(userViewModel.getCurrentUser().getEmail());
             newUser.setUsername(userViewModel.getCurrentUser().getDisplayName());
-            if (userViewModel.getCurrentUser().getPhotoUrl() == null) {
-                String[] images = {
-                        "https://i.pravatar.cc/150?u=a042581f4e29026704a",
-                        "https://i.pravatar.cc/150?u=a042581f4e29026704b",
-                        "https://i.pravatar.cc/150?u=a042581f4e29026704c",
-                        "https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                };
-                int randomIndex = new Random().nextInt(images.length);
-                String randomUserImage = images[randomIndex];
-                newUser.setUrlPicture(randomUserImage);
-            } else
-                newUser.setUrlPicture(String.valueOf(userViewModel.getCurrentUser().getPhotoUrl()));
+            newUser.setUrlPicture(String.valueOf(userViewModel.getCurrentUser().getPhotoUrl()));
             estate.setUser(newUser);
             if (schoolCheckBox.isChecked()) {
                 estate.setSchool(true);
             }
-
             if (storeCheckBox.isChecked()) {
                 estate.setStore(true);
             }
             if (parkCheckBox.isChecked()) {
                 estate.setPark(true);
             }
-
             if (parkingCheckBox.isChecked()) {
                 estate.setParking(true);
             }
-
-
             if (checkValid()) {
                 estateViewModel.createEstate(estate).observe(this, aBoolean -> {
                     finish();
                 });
+            }else{
+                Toast.makeText(this, "Vérifiez les champs.", Toast.LENGTH_SHORT).show();
             }
         });
 
