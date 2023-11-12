@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 
@@ -250,6 +251,12 @@ public class EstateListFragment extends Fragment {
                             break;
                     }
                 }
+                int startThumbValue = rubberRangePicker.getCurrentStartValue();
+                int endThumbValue = rubberRangePicker.getCurrentEndValue();
+                if (isFiltered){
+                    isFiltered =  (estate.getPrice() >= Long.parseLong(String.valueOf(startThumbValue))
+                            && estate.getPrice() <= Long.parseLong(String.valueOf(endThumbValue)));
+                }
 
                 if (isFiltered) {
                     filteredEstates.add(estate);
@@ -348,12 +355,20 @@ public class EstateListFragment extends Fragment {
             }
         }
 
-        //rubberRangePicker.setMin((int) minPrice);
+        if (minPrice == maxPrice){
+            minPrice = 0;
+        }
+
         if (!estates.isEmpty()){
             rubberRangePicker.setMax((int) maxPrice);
-
+            rubberRangePicker.setMin((int) minPrice);
+            rubberRangePicker.setCurrentStartValue((int)minPrice);
+            rubberRangePicker.setCurrentEndValue((int) maxPrice);
         }
         rubberRangePicker.setHighlightThumbOnTouchColor(Color.CYAN);
+
+
+
 
         //COMBIEN DE BIEN ONT LE MEME PRIX
         Map<Long, Integer> countMap = new TreeMap<>();
@@ -368,15 +383,7 @@ public class EstateListFragment extends Fragment {
             @Override
             public void onProgressChanged(@NonNull RubberRangePicker rangePicker, int startValue, int endValue, boolean fromUser) {
                 rangeBarValue.setText(String.format("%s - %s", startValue, endValue));
-                List<Estate> filteredEstates = new ArrayList<>();
-                estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
-                    for (Estate estate : estates) {
-                        if (estate.getPrice() >= Long.parseLong(String.valueOf(startValue)) && estate.getPrice() <= Long.parseLong(String.valueOf(endValue))) {
-                            filteredEstates.add(estate);
-                        }
-                    }
-                    setupRecyclerView(filteredEstates);
-                });
+                applyFilters();
             }
 
             @Override

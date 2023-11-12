@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.placeholder.ViewPagerAdapter;
@@ -35,7 +36,7 @@ public class EstateDetailFragment extends Fragment {
     private Estate estate;
     ImageView coverPicture, mapImage, userPicture, mailButton;
     TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
-            pointStore,pointSchool, pointParking, pointPark, sellerName, entryDate;
+            pointStore, pointSchool, pointParking, pointPark, sellerName, entryDate;
     private FragmentEstateDetailBinding binding;
 
     ViewPager mViewPager;
@@ -62,7 +63,7 @@ public class EstateDetailFragment extends Fragment {
             estate = (Estate) bundle.getSerializable(KEY_ESTATE);
         }
 
-        mViewPager = (ViewPager)binding.viewPagerMain;
+        mViewPager = (ViewPager) binding.viewPagerMain;
 
         pictureList = estate.getPictures();
         mViewPagerAdapter = new ViewPagerAdapter(this.requireContext(), pictureList);
@@ -72,7 +73,7 @@ public class EstateDetailFragment extends Fragment {
         updateContent();
 
         CircleIndicator indicator = binding.getRoot().findViewById(R.id.indicator);
-            indicator.setViewPager(mViewPager);
+        indicator.setViewPager(mViewPager);
         return rootView;
     }
 
@@ -82,7 +83,7 @@ public class EstateDetailFragment extends Fragment {
         binding = null;
     }
 
-    public void setUpView(){
+    public void setUpView() {
         coverPicture = binding.getRoot().findViewById(R.id.collapsing_image);
         mapImage = binding.getRoot().findViewById(R.id.map_snapshot);
         surface = binding.surfaceDetailText;
@@ -104,6 +105,7 @@ public class EstateDetailFragment extends Fragment {
         mailButton = binding.getRoot().findViewById(R.id.mail_imageButton);
         entryDate = binding.getRoot().findViewById(R.id.entryDate_detail);
     }
+
     private void updateContent() {
         String apiKey = getString(R.string.maps_api_key);
 
@@ -139,7 +141,11 @@ public class EstateDetailFragment extends Fragment {
     }
 
     public void setUpMailButton() {
-        mailButton.setOnClickListener(view -> startActivity(new Intent(Intent.ACTION_SENDTO, Uri.parse(estate.getUser().email))));
+        mailButton.setOnClickListener(view -> {
+            String userEmail = estate.getUser().getEmail();
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + userEmail));
+            startActivity(emailIntent);
+        });
     }
 
     private void isFieldChecked(boolean checkbox, TextView point, TextView textView) {

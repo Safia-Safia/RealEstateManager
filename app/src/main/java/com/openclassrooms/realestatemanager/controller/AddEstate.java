@@ -29,6 +29,8 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateAdapter;
 import com.openclassrooms.realestatemanager.model.Estate;
@@ -207,24 +209,23 @@ public class AddEstate extends AppCompatActivity {
 
     }
 
-
-    private boolean isFieldEmpty(EditText editText, String errorMessage) {
-        if (editText.getText().toString().isEmpty()) {
-            editText.setError(errorMessage);
-            Toast.makeText(this, "Vérifiez les champs.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
-    }
-
     public boolean checkValid() {
-        return isFieldEmpty(price, "incomplet") &&
-                isFieldEmpty(surface, "incomplet") &&
-                isFieldEmpty(nbrOfRoom, "incomplet") &&
-                isFieldEmpty(textDescription, "incomplet") &&
-                estate.getPictures().size() != 0 &&
-                !estate.getAddress().isEmpty() &&
-                spinner.getSelectedItemPosition() != 0;
+        boolean isFieldEmpty =
+                surface.getText().toString().isEmpty() ||
+                price.getText().toString().isEmpty() ||
+                nbrOfRoom.getText().toString().isEmpty() ||
+                textDescription.getText().toString().isEmpty() ||
+                estate.getPictures().size() == 0 ||
+                estate.getAddress().isEmpty() ||
+                spinner.getSelectedItemPosition() == 0;
+
+        if (isFieldEmpty) {
+            Snackbar.make(findViewById(android.R.id.content), "Vérifiez les champs.", Snackbar.LENGTH_LONG).show();
+            return false;
+        } else {
+            return true;
+
+        }
     }
 
     public void setUpEntryDate() {
@@ -247,6 +248,9 @@ public class AddEstate extends AppCompatActivity {
     public void saveEstate() {
 
         saveBtn.setOnClickListener(view -> {
+            if (!checkValid()) {
+                return;
+            }
             estate.setPictures(property_picture);
             estate.setEstateType(spinner.getSelectedItem().toString());
             estate.setPrice(Integer.parseInt(price.getText().toString()));
@@ -271,13 +275,10 @@ public class AddEstate extends AppCompatActivity {
             if (parkingCheckBox.isChecked()) {
                 estate.setParking(true);
             }
-            if (checkValid()) {
-                estateViewModel.createEstate(estate).observe(this, aBoolean -> {
-                    finish();
-                });
-            }else{
-                Toast.makeText(this, "Vérifiez les champs.", Toast.LENGTH_SHORT).show();
-            }
+            estateViewModel.createEstate(estate).observe(this, aBoolean -> {
+                finish();
+            });
+
         });
 
     }
