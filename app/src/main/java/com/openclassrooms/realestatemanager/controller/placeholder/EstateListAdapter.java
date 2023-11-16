@@ -63,8 +63,6 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
             estate = estateList.get(position);
             Bundle bundle = new Bundle();
             bundle.putSerializable(EstateDetailFragment.KEY_ESTATE, estate);
-            Gson gson = new Gson();
-            Log.e("estate", gson.toJson(estate));
             if (view != null) {
                 Navigation.findNavController(view)
                         .navigate(R.id.fragment_estate_detail, bundle);

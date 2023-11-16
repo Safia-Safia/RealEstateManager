@@ -13,17 +13,19 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.widget.SearchView;
 
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,13 +40,19 @@ import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
-
-import kotlin.Unit;
 
 /**
  * A fragment representing a list of Properties. This fragment
@@ -57,19 +65,22 @@ import kotlin.Unit;
 public class EstateListFragment extends Fragment {
     FragmentEstateListBinding binding;
     List<String> selectedFilters = new ArrayList<>();
-    private TextView rangeBarValue, rangeBarInfo;
+    private TextView priceMaxValue, priceMinValue, surfaceMaxValue, surfaceMinValue;
     SearchView searchView;
     EstateViewModel estateViewModel;
     RecyclerView recyclerView;
     EstateListAdapter adapter;
     View v;
+    SimpleDateFormat formatter;
+    Calendar lastWeek= Calendar.getInstance();
+
     ConstraintLayout filterOptionsLayout;
     FloatingActionButton fabAddEstates;
     ImageButton filterBtn, signOutBtn;
-    Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, moreThan3PictureBtn, sinceAWeekBtn, soldBtn;
-    int minPrice, maxPrice;
-    private RubberRangePicker rubberRangePicker;
+    Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, moreThan3PictureBtn, lastWeekBtn, soldBtn;
+    private RubberRangePicker priceRangeBar, surfaceRangeBar;
 
+    Spinner spinner;
     ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
             Toast.makeText(
@@ -102,10 +113,8 @@ public class EstateListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
         v = view.findViewById(R.id.property_detail_nav_container);
-
-        setUpEstateViewModel();
-        getAllEstates();
         setUpView();
+        setUpEstateViewModel();
         setUpFilterButton();
         setLogOutBtn();
         setUpAddEstate();
@@ -113,11 +122,15 @@ public class EstateListFragment extends Fragment {
         initListOnButtonClick(schoolBtn, "school");
         initListOnButtonClick(storeBtn, "store");
         initListOnButtonClick(soldBtn, "sold");
-        initListOnButtonClick(sinceAWeekBtn, "sinceAWeek");
         initListOnButtonClick(parkingBtn, "parking");
         initListOnButtonClick(parkBtn, "park");
         initListOnButtonClick(moreThan3PictureBtn, "picture");
+        initListOnButtonClick(lastWeekBtn, "lastWeek");
+        ;
         initSearchBar();
+        getAllEstates();
+        setUpDate();
+
     }
 
 
@@ -162,14 +175,22 @@ public class EstateListFragment extends Fragment {
         storeBtn = binding.getRoot().findViewById(R.id.store);
         parkBtn = binding.getRoot().findViewById(R.id.park);
         parkingBtn = binding.getRoot().findViewById(R.id.parking);
-        sinceAWeekBtn = binding.getRoot().findViewById(R.id.sinceAweek);
+        lastWeekBtn = binding.getRoot().findViewById(R.id.sinceAweek);
         moreThan3PictureBtn = binding.getRoot().findViewById(R.id.plus3pictures);
         soldBtn = binding.getRoot().findViewById(R.id.sold);
         //RANGEBAR
-        rubberRangePicker = new RubberRangePicker(requireContext());
-        rubberRangePicker = binding.getRoot().findViewById(R.id.rangeBar);
-        rangeBarValue = binding.getRoot().findViewById(R.id.rangeBarValue);
-        //rangeBarInfo = binding.getRoot().findViewById(R.id.rangeBarInfo);
+        //          --DATE
+        formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
+        //          --PRICE
+        priceRangeBar = new RubberRangePicker(requireContext());
+        priceRangeBar = binding.getRoot().findViewById(R.id.rangeBarPrice);
+        priceMaxValue = binding.getRoot().findViewById(R.id.maxValue_price);
+        priceMinValue = binding.getRoot().findViewById(R.id.minValue_price);
+        //          --SURFACE
+        surfaceRangeBar = new RubberRangePicker(requireContext());
+        surfaceRangeBar = binding.getRoot().findViewById(R.id.rangeBarSurface);
+        surfaceMaxValue = binding.getRoot().findViewById(R.id.maxValue_surface);
+        surfaceMinValue = binding.getRoot().findViewById(R.id.minValue_surface);
 
     }
 
@@ -197,7 +218,7 @@ public class EstateListFragment extends Fragment {
     }
 
     private void resetOtherButtonsState(Button clickedButton) {
-        Button[] allButtons = {noFilterBtn, schoolBtn, storeBtn, parkBtn, parkingBtn, sinceAWeekBtn, moreThan3PictureBtn, soldBtn};
+        Button[] allButtons = {noFilterBtn, schoolBtn, storeBtn, parkBtn, parkingBtn, lastWeekBtn, moreThan3PictureBtn, soldBtn};
         for (Button button : allButtons) {
             if (button != clickedButton) {
                 button.setSelected(false);
@@ -212,6 +233,9 @@ public class EstateListFragment extends Fragment {
             boolean isButtonClicked = !button.isSelected();
             button.setSelected(isButtonClicked);
             if (isButtonClicked) {
+                if ("noFilter".equals(filterCriteria)) {
+                    selectedFilters.clear();
+                }
                 selectedFilters.add(filterCriteria);
             } else {
                 selectedFilters.remove(filterCriteria);
@@ -231,9 +255,6 @@ public class EstateListFragment extends Fragment {
 
                 for (String filterCriteria : selectedFilters) {
                     switch (filterCriteria) {
-                        case "noFilter":
-                            getAllEstates();
-                            break;
                         case "school":
                             isFiltered = estate.getSchool();
                             break;
@@ -249,20 +270,65 @@ public class EstateListFragment extends Fragment {
                         case "picture":
                             isFiltered = estate.getPictures().size() >= 3;
                             break;
+                        case "lastWeek":
+                            try {
+                                Date date = formatter.parse(estate.getEntryDate());
+                                isFiltered = date.after(lastWeek.getTime());
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                            break;
                     }
                 }
-                int startThumbValue = rubberRangePicker.getCurrentStartValue();
-                int endThumbValue = rubberRangePicker.getCurrentEndValue();
-                if (isFiltered){
-                    isFiltered =  (estate.getPrice() >= Long.parseLong(String.valueOf(startThumbValue))
+
+                int startThumbValue = priceRangeBar.getCurrentStartValue();
+                int endThumbValue = priceRangeBar.getCurrentEndValue();
+                if (isFiltered) {
+                    isFiltered = (estate.getPrice() >= Long.parseLong(String.valueOf(startThumbValue))
                             && estate.getPrice() <= Long.parseLong(String.valueOf(endThumbValue)));
                 }
 
+                int startThumbValue2 = surfaceRangeBar.getCurrentStartValue();
+                int endThumbValue2 = surfaceRangeBar.getCurrentEndValue();
+
+                if (isFiltered) {
+                    isFiltered = (estate.getSurface() >= Long.parseLong(String.valueOf(startThumbValue2))
+                            && estate.getSurface() <= Long.parseLong(String.valueOf(endThumbValue2)));
+                }
+                if (spinner.getSelectedItemPosition() != 0) {
+                    if (isFiltered) {
+                        isFiltered = Objects.equals(estate.getEstateType(), spinner.getSelectedItem().toString());
+                    }
+                }
                 if (isFiltered) {
                     filteredEstates.add(estate);
                 }
             }
             setupRecyclerView(filteredEstates);
+        });
+    }
+
+    public void setUpDate() {
+        Date referenceDate = new Date();
+        lastWeek.setTime(referenceDate);
+        lastWeek.add(Calendar.DAY_OF_MONTH, -7);
+    }
+
+    private void setUpSpinner() {
+        spinner = binding.getRoot().findViewById(R.id.filter_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.requireContext(),
+                R.array.type_of_property_spinner, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                applyFilters();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
     }
 
@@ -283,7 +349,6 @@ public class EstateListFragment extends Fragment {
 
     }
 
-
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireActivity());
         this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
@@ -292,9 +357,10 @@ public class EstateListFragment extends Fragment {
     private void getAllEstates() {
         estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
             setupRecyclerView(estates);
-            initRangeBar(estates);
+            initPriceRangeBar(estates);
+            initSurfaceRangeBar(estates);
+            setUpSpinner();
         });
-
     }
 
     void setupRecyclerView(List<Estate> estates) {
@@ -330,7 +396,6 @@ public class EstateListFragment extends Fragment {
         });
     }
 
-
     //Update list when an estate is added
     @Override
     public void onResume() {
@@ -338,36 +403,33 @@ public class EstateListFragment extends Fragment {
         getAllEstates();
     }
 
-    private void initRangeBar(List<Estate> estates) {
+    private void initPriceRangeBar(List<Estate> estates) {
         Collections.sort(estates, (estate1, estate2) -> {
             return Long.compare(estate1.getPrice(), estate2.getPrice());
         });
-
-        long minPrice = Long.MAX_VALUE;
-        long maxPrice = Long.MIN_VALUE;
+        long minValue = Long.MAX_VALUE;
+        long maxValue = Long.MIN_VALUE;
         for (Estate estate : estates) {
             long price = estate.getPrice(); //Each estate price
-            if (price < minPrice) { //if the current price is smaller than the minPrice
-                minPrice = price; // then we update the min price with the current price
+            if (price < minValue) { //if the current price is smaller than the minPrice
+                minValue = price; // then we update the min price with the current price
             }
-            if (price > maxPrice) {
-                maxPrice = price;
+            if (price > maxValue) {
+                maxValue = price;
             }
         }
 
-        if (minPrice == maxPrice){
-            minPrice = 0;
+        if (minValue == maxValue) {
+            minValue = 0;
         }
 
-        if (!estates.isEmpty()){
-            rubberRangePicker.setMax((int) maxPrice);
-            rubberRangePicker.setMin((int) minPrice);
-            rubberRangePicker.setCurrentStartValue((int)minPrice);
-            rubberRangePicker.setCurrentEndValue((int) maxPrice);
+        if (!estates.isEmpty()) {
+            priceRangeBar.setMax((int) maxValue);
+            priceRangeBar.setMin((int) minValue);
+            priceRangeBar.setCurrentStartValue((int) minValue);
+            priceRangeBar.setCurrentEndValue((int) maxValue);
         }
-        rubberRangePicker.setHighlightThumbOnTouchColor(Color.CYAN);
-
-
+        priceRangeBar.setHighlightThumbOnTouchColor(Color.CYAN);
 
 
         //COMBIEN DE BIEN ONT LE MEME PRIX
@@ -379,10 +441,59 @@ public class EstateListFragment extends Fragment {
                 countMap.put(estate.getPrice(), 1);
             }
         }
-        rubberRangePicker.setOnRubberRangePickerChangeListener(new RubberRangePicker.OnRubberRangePickerChangeListener() {
+        setUpPriceRangeBar();
+    }
+
+    private void initSurfaceRangeBar(List<Estate> estates) {
+        Collections.sort(estates, (estate1, estate2) -> {
+            return Long.compare(estate1.getSurface(), estate2.getSurface());
+        });
+        long minValue = Long.MAX_VALUE;
+        long maxValue = Long.MIN_VALUE;
+        for (Estate estate : estates) {
+            long surface = estate.getSurface();
+            if (surface < minValue) {
+                minValue = surface;
+            }
+            if (surface > maxValue) {
+                maxValue = surface;
+            }
+        }
+
+        if (minValue == maxValue) {
+            minValue = 0;
+        }
+
+        if (!estates.isEmpty()) {
+            surfaceRangeBar.setMax((int) maxValue);
+            surfaceRangeBar.setMin((int) minValue);
+            surfaceRangeBar.setCurrentStartValue((int) minValue);
+            surfaceRangeBar.setCurrentEndValue((int) maxValue);
+        }
+        surfaceRangeBar.setHighlightThumbOnTouchColor(Color.CYAN);
+
+        Map<Long, Integer> countMap = new TreeMap<>();
+        for (Estate estate : estates) {
+            if (countMap.containsKey(estate.getSurface())) {
+                countMap.put(estate.getSurface(), countMap.get(estate.getSurface()) + 1);
+            } else {
+                countMap.put(estate.getSurface(), 1);
+            }
+        }
+        setUpSurfaceRangeBar();
+    }
+
+    private void setUpPriceRangeBar() {
+        priceRangeBar.setOnRubberRangePickerChangeListener(new RubberRangePicker.OnRubberRangePickerChangeListener() {
             @Override
             public void onProgressChanged(@NonNull RubberRangePicker rangePicker, int startValue, int endValue, boolean fromUser) {
-                rangeBarValue.setText(String.format("%s - %s", startValue, endValue));
+                DecimalFormatSymbols customSymbols = new DecimalFormatSymbols();
+                customSymbols.setGroupingSeparator(' ');
+                DecimalFormat decimalFormat = new DecimalFormat("#,###", customSymbols);
+                String formattedStartValue = decimalFormat.format(startValue);
+                String formattedEndValue = decimalFormat.format(endValue);
+                priceMinValue.setText((formattedStartValue));
+                priceMaxValue.setText((formattedEndValue));
                 applyFilters();
             }
 
@@ -395,5 +506,28 @@ public class EstateListFragment extends Fragment {
 
             }
         });
+
     }
+
+    private void setUpSurfaceRangeBar() {
+        surfaceRangeBar.setOnRubberRangePickerChangeListener(new RubberRangePicker.OnRubberRangePickerChangeListener() {
+            @Override
+            public void onProgressChanged(@NonNull RubberRangePicker rangePicker, int startValue, int endValue, boolean fromUser) {
+                surfaceMinValue.setText(String.valueOf(startValue));
+                surfaceMaxValue.setText(String.valueOf(endValue));
+                applyFilters();
+            }
+
+            @Override
+            public void onStartTrackingTouch(@NonNull RubberRangePicker rangePicker, boolean isStartThumb) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(@NonNull RubberRangePicker rangePicker, boolean isStartThumb) {
+
+            }
+        });
+
+    }
+
 }

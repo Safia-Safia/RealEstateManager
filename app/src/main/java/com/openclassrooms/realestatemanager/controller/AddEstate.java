@@ -16,6 +16,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -215,10 +216,9 @@ public class AddEstate extends AppCompatActivity {
                 price.getText().toString().isEmpty() ||
                 nbrOfRoom.getText().toString().isEmpty() ||
                 textDescription.getText().toString().isEmpty() ||
-                estate.getPictures().size() == 0 ||
-                estate.getAddress().isEmpty() ||
+                property_picture.size() == 0 ||
+                        estate.getAddress().isEmpty() ||
                 spinner.getSelectedItemPosition() == 0;
-
         if (isFieldEmpty) {
             Snackbar.make(findViewById(android.R.id.content), "Vérifiez les champs.", Snackbar.LENGTH_LONG).show();
             return false;

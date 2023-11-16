@@ -171,29 +171,6 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/x"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_marginVertical="10dp"
-        android:layout_marginStart="2dp"
-        app:cardCornerRadius="20dp"
-        app:layout_constraintStart_toEndOf="@id/plus3picturescadview"
-        app:layout_constraintTop_toBottomOf="@id/parkcardview">
-
-        <Button
-            android:id="@+id/xy"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/filter_boder_blue"
-            android:gravity="center"
-            android:text="Plus de 3 photos"
-            android:textAlignment="gravity"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="12sp" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
         android:id="@+id/plus3picturescadview"
         android:layout_width="120dp"
         android:layout_height="30dp"
@@ -216,40 +193,61 @@
             android:textSize="12sp" />
     </androidx.cardview.widget.CardView>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="18dp"
+        app:cardBackgroundColor="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sincecardview">
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/filter_spinner"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+    </androidx.cardview.widget.CardView>
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/price_rangebar_layout"
         android:layout_width="400dp"
         android:layout_height="match_parent"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sincecardview"
+        app:layout_constraintTop_toBottomOf="@id/cardview_spinner"
         tools:context=".MainActivity">
 
 
         <TextView
-            android:id="@+id/rangeBarTitle"
+            android:id="@+id/rangeBarPriceTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="21dp"
+            android:layout_marginStart="16dp"
             android:text="Prix"
             android:textColor="@color/navy"
             android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/rangeBarValue"
+            android:id="@+id/maxValue_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
             android:layout_marginEnd="25dp"
+            android:textColor="@color/colorPrimary"
             android:textSize="10sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rangeBarTitle"
+            app:layout_constraintTop_toBottomOf="@+id/rangeBarPriceTitle"
             tools:text="1" />
 
         <TextView
-            android:id="@+id/minPrice"
+            android:id="@+id/minValue_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="21dp"
@@ -257,14 +255,15 @@
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rangeBarTitle"
+            app:layout_constraintTop_toBottomOf="@+id/rangeBarPriceTitle"
             tools:text="0" />
 
         <com.jem.rubberpicker.RubberRangePicker
-            android:id="@+id/rangeBar"
+            android:id="@+id/rangeBarPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="10dp"
             app:dampingRatio="0.2"
             app:defaultThumbInsideColor="@color/grey"
             app:defaultThumbRadius="12dp"
@@ -273,12 +272,79 @@
             app:highlightTrackColor="@color/colorPrimaryDark"
             app:highlightTrackWidth="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/minPrice"
+            app:layout_constraintTop_toBottomOf="@+id/minValue_price"
+            app:normalTrackColor="@color/colorAccentDark"
+            app:normalTrackWidth="4dp"
+            app:stiffness="400"
+            app:stretchRange="36dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/price_rangebar_layout"
+        tools:context=".MainActivity">
+
+
+        <TextView
+            android:id="@+id/rangeBarSurfaceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:text="Surface"
+            android:textColor="@color/navy"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/maxValue_surface"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rangeBarSurfaceTitle"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/minValue_surface"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="21dp"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rangeBarSurfaceTitle"
+            tools:text="0" />
+
+        <com.jem.rubberpicker.RubberRangePicker
+            android:id="@+id/rangeBarSurface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="10dp"
+            app:dampingRatio="0.2"
+            app:defaultThumbInsideColor="@color/colorAccent"
+            app:defaultThumbRadius="12dp"
+            app:elasticBehavior="linear"
+            app:highlightDefaultThumbOnTouchColor="@color/colorAccent"
+            app:highlightTrackColor="@color/grey"
+            app:highlightTrackWidth="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/minValue_surface"
             app:normalTrackColor="#AAAAAA"
             app:normalTrackWidth="4dp"
             app:stiffness="400"
             app:stretchRange="36dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
