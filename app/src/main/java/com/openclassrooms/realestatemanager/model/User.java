@@ -1,11 +1,11 @@
 package com.openclassrooms.realestatemanager.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     public String uid;
     public String username;
     @Nullable

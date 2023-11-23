@@ -5,6 +5,7 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.Task;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.repository.EstateRepository;
 
@@ -21,6 +22,10 @@ public class EstateViewModel extends ViewModel {
 
     public LiveData<Boolean> createEstate(Estate estate) {
         return estateRepository.createEstate(estate);
+    }
+
+    public Task<Void> updateUsername(Estate estate,String id){
+        return estateRepository.updateEstate(estate,id);
     }
 
     public LiveData<List<Estate>> getEstates() {

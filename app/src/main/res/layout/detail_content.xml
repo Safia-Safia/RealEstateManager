@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp">
-
+    >
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <TextView
         android:id="@+id/type_detail_text"
         android:layout_width="match_parent"
@@ -45,10 +47,10 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
+        android:contentDescription="@string/location"
         android:src="@drawable/baseline_location_on_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/localisation"
-        android:contentDescription="@string/location" />
+        app:layout_constraintTop_toBottomOf="@id/localisation" />
 
     <TextView
         android:id="@+id/localisation"
@@ -72,7 +74,6 @@
         app:layout_constraintStart_toEndOf="@+id/location_imageview"
         app:layout_constraintTop_toBottomOf="@id/localisation"
         tools:text="88 rue des rigoles 75020, Paris" />
-
 
     <View
         android:id="@+id/view_1"
@@ -99,8 +100,8 @@
             android:id="@+id/map_snapshot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/title_activity_maps" />
+            android:contentDescription="@string/title_activity_maps"
+            android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
 
 
@@ -255,7 +256,7 @@
         android:id="@+id/entryDate_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_margin="20dp"
         android:textColor="@color/navy"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -267,16 +268,16 @@
         android:layout_width="38dp"
         android:layout_height="39dp"
         android:layout_margin="10dp"
+        android:contentDescription="@string/adding_property_picture"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/entryDate_detail"
-        android:contentDescription="@string/adding_property_picture" />
+        app:layout_constraintTop_toBottomOf="@id/entryDate_detail" />
 
     <TextView
         android:id="@+id/sellerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:textColor="@color/navy"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@id/sellerPic"
@@ -289,8 +290,41 @@
         android:layout_height="39dp"
         android:layout_margin="10dp"
         android:background="@null"
+        android:contentDescription="@string/fui_sign_in_with_email"
         android:src="@drawable/baseline_email_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/entryDate_detail"
-        android:contentDescription="@string/fui_sign_in_with_email" />
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_switch"
+        app:layout_constraintTop_toBottomOf="@id/mail_imageButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/updateEstate"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/search_border"
+            android:src="@drawable/edit_svgrepo_com"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/thumb_layerlist"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:showText="false"
+            app:track="@drawable/track_backgrounds" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

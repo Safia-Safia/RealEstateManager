@@ -11,16 +11,20 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controller.UpdateEstate;
 import com.openclassrooms.realestatemanager.controller.placeholder.ViewPagerAdapter;
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateDetailBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -33,7 +37,10 @@ import me.relex.circleindicator.CircleIndicator;
  */
 public class EstateDetailFragment extends Fragment {
     public static final String KEY_ESTATE = "ESTATE";
+    public static final String KEY_ESTATE_EDIT = "ESTATE_EDIT";
+
     private Estate estate;
+    ImageButton edit_estate;
     ImageView coverPicture, mapImage, userPicture, mailButton;
     TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
             pointStore, pointSchool, pointParking, pointPark, sellerName, entryDate;
@@ -62,6 +69,13 @@ public class EstateDetailFragment extends Fragment {
         if (bundle != null && bundle.containsKey(KEY_ESTATE)) {
             estate = (Estate) bundle.getSerializable(KEY_ESTATE);
         }
+
+        edit_estate = binding.getRoot().findViewById(R.id.updateEstate);
+        edit_estate.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), UpdateEstate.class);
+            intent.putExtra(KEY_ESTATE_EDIT, estate);
+            startActivity(intent);
+        });
 
         mViewPager = (ViewPager) binding.viewPagerMain;
 
@@ -106,8 +120,19 @@ public class EstateDetailFragment extends Fragment {
         entryDate = binding.getRoot().findViewById(R.id.entryDate_detail);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateContent();
+    }
+
     private void updateContent() {
         String apiKey = getString(R.string.maps_api_key);
+
+        DecimalFormatSymbols customSymbols = new DecimalFormatSymbols();
+        customSymbols.setGroupingSeparator(' ');
+        DecimalFormat decimalFormat = new DecimalFormat("#,###", customSymbols);
+        String formattedNumber = decimalFormat.format(estate.getPrice());
 
         isFieldChecked(estate.getSchool(), school, pointSchool);
         isFieldChecked(estate.getPark(), park, pointPark);
@@ -115,12 +140,13 @@ public class EstateDetailFragment extends Fragment {
         isFieldChecked(estate.getStore(), store, pointStore);
 
         surface.setText(String.format("%s m²", estate.getSurface()));
-        price.setText(String.format("%s €", estate.getPrice()));
+        price.setText(String.format("%s €", formattedNumber));
         nbrOfPiece.setText(String.valueOf(estate.getNumberOfRoom()));
         detail.setText(estate.getDescription());
         address.setText(estate.getAddress());
         type.setText(estate.getEstateType());
         entryDate.setText(estate.getEntryDate());
+        sellerName.setText(estate.getUser().getUsername());
 
         Glide.with(this).load(estate.getCoverPictureUrl()).into(coverPicture);
         double latitude = estate.getLatitude();

@@ -7,9 +7,11 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -61,10 +63,11 @@ public class EstateRepository {
             int finalI = i; //Valeur finale de la variable I
             uploadImage(estate.getPictures().get(i).getImageUri()).addOnSuccessListener(taskSnapshot -> {
                 taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(url -> {
+                    estate.setId(getEstateCollection().document().getId());
                     estate.getPictures().get(finalI).setImageUrl(url.toString());
                     if (finalI == estate.getPictures().size() - 1) {
                         estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
-                        getEstateCollection().document().set(estate);
+                        getEstateCollection().document(estate.getId()).set(estate);
                         result.setValue(true);
                     }
                 });
@@ -88,4 +91,23 @@ public class EstateRepository {
                 });
         return result;
     }
+
+    public Task<Void> updateEstate(Estate estate, String estateId) {
+        Map<String, Object> updatedFields = new HashMap<>();
+        updatedFields.put("description", estate.getDescription());
+        updatedFields.put("estateType", estate.getEstateType());
+        updatedFields.put("address", estate.getAddress());
+        updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
+        updatedFields.put("city", estate.getCity());
+        updatedFields.put("school", estate.getSchool());
+        updatedFields.put("store", estate.getStore());
+        updatedFields.put("park", estate.getPark());
+        updatedFields.put("parking", estate.getParking());
+        updatedFields.put("price", estate.getPrice());
+        updatedFields.put("surface", estate.getSurface());
+        updatedFields.put("numberOfRoom", estate.getNumberOfRoom());
+        return getEstateCollection().document(estateId).update(updatedFields);
+    }
+
+
 }

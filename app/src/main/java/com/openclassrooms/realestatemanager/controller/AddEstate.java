@@ -213,12 +213,12 @@ public class AddEstate extends AppCompatActivity {
     public boolean checkValid() {
         boolean isFieldEmpty =
                 surface.getText().toString().isEmpty() ||
-                price.getText().toString().isEmpty() ||
-                nbrOfRoom.getText().toString().isEmpty() ||
-                textDescription.getText().toString().isEmpty() ||
-                property_picture.size() == 0 ||
-                        estate.getAddress().isEmpty() ||
-                spinner.getSelectedItemPosition() == 0;
+                        price.getText().toString().isEmpty() ||
+                        nbrOfRoom.getText().toString().isEmpty() ||
+                        textDescription.getText().toString().isEmpty() ||
+                        property_picture.size() == 0 ||
+                        ( estate.getAddress() != null && estate.getAddress().isEmpty()) ||
+                        spinner.getSelectedItemPosition() == 0;
         if (isFieldEmpty) {
             Snackbar.make(findViewById(android.R.id.content), "Vérifiez les champs.", Snackbar.LENGTH_LONG).show();
             return false;

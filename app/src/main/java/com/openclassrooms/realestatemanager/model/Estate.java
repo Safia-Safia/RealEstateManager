@@ -6,8 +6,9 @@ import java.util.List;
 
 public class Estate implements Serializable {
 
-    String description, coverPictureUrl, estateType, address, entryDate, soldDate, city;
 
+
+    String id,description, coverPictureUrl, estateType, address, entryDate, soldDate, city;
     long price, surface, numberOfRoom;
     Boolean isEstatesAvailable = true;
     Boolean school = false;
@@ -167,7 +168,13 @@ public class Estate implements Serializable {
     public Double getLongitude() {
         return longitude;
     }
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }

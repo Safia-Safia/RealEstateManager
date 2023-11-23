@@ -71,9 +71,6 @@ public class EstateListFragment extends Fragment {
     RecyclerView recyclerView;
     EstateListAdapter adapter;
     View v;
-    SimpleDateFormat formatter;
-    Calendar lastWeek= Calendar.getInstance();
-
     ConstraintLayout filterOptionsLayout;
     FloatingActionButton fabAddEstates;
     ImageButton filterBtn, signOutBtn;
@@ -126,10 +123,8 @@ public class EstateListFragment extends Fragment {
         initListOnButtonClick(parkBtn, "park");
         initListOnButtonClick(moreThan3PictureBtn, "picture");
         initListOnButtonClick(lastWeekBtn, "lastWeek");
-        ;
         initSearchBar();
         getAllEstates();
-        setUpDate();
 
     }
 
@@ -179,8 +174,6 @@ public class EstateListFragment extends Fragment {
         moreThan3PictureBtn = binding.getRoot().findViewById(R.id.plus3pictures);
         soldBtn = binding.getRoot().findViewById(R.id.sold);
         //RANGEBAR
-        //          --DATE
-        formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
         //          --PRICE
         priceRangeBar = new RubberRangePicker(requireContext());
         priceRangeBar = binding.getRoot().findViewById(R.id.rangeBarPrice);
@@ -271,6 +264,11 @@ public class EstateListFragment extends Fragment {
                             isFiltered = estate.getPictures().size() >= 3;
                             break;
                         case "lastWeek":
+                            Calendar lastWeek= Calendar.getInstance();
+                            Date referenceDate = new Date();
+                            lastWeek.setTime(referenceDate);
+                            lastWeek.add(Calendar.DAY_OF_MONTH, -7);
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
                             try {
                                 Date date = formatter.parse(estate.getEntryDate());
                                 isFiltered = date.after(lastWeek.getTime());
@@ -308,11 +306,6 @@ public class EstateListFragment extends Fragment {
         });
     }
 
-    public void setUpDate() {
-        Date referenceDate = new Date();
-        lastWeek.setTime(referenceDate);
-        lastWeek.add(Calendar.DAY_OF_MONTH, -7);
-    }
 
     private void setUpSpinner() {
         spinner = binding.getRoot().findViewById(R.id.filter_spinner);

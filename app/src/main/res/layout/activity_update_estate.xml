@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_property"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_app"
+    tools:context=".controller.AddEstate">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/add_estate_toolbar_edit"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/type_of_property_layout_edit"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/cancel_btn_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:src="@drawable/baseline_arrow_back_24"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Modifier"
+                android:textColor="#FFF"
+                android:textSize="20sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/type_of_property_layout_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@id/price_layout_edit"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Spinner
+                android:id="@+id/type_of_property_spinner_edit"
+                android:textAlignment="center"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_margin="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/type_of_property_layout_edit" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/price_layout_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="15dp"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/type_of_property_layout_edit">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/house_price_image_edit"
+                android:layout_width="41dp"
+                android:layout_height="44dp"
+                android:src="@drawable/ic_house_price"
+                app:layout_constraintEnd_toStartOf="@+id/edittext_house_price_edit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edittext_house_price_edit"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:inputType="number"
+                android:hint="@string/_0"
+                android:textAlignment="textEnd"
+                app:layout_constraintStart_toEndOf="@+id/house_price_image_edit"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Prix du bien"
+                android:textSize="10sp"
+                app:layout_constraintStart_toEndOf="@+id/house_price_image_edit"
+                app:layout_constraintTop_toBottomOf="@id/edittext_house_price_edit" />
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/house_surface_image_edit"
+                android:layout_width="48dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/ic_house_m2"
+                app:layout_constraintStart_toEndOf="@id/edittext_house_price_edit"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edittext_surface_edit"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:inputType="number"
+                android:textAlignment="textEnd"
+                android:textSize="15sp"
+                android:hint="@string/_0"
+                app:layout_constraintStart_toEndOf="@+id/house_surface_image_edit"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textview_surface_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:text="Surface en m²"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="@id/house_surface_image_edit"
+                app:layout_constraintTop_toBottomOf="@id/edittext_surface_edit" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/house_nbr_of_piece_image_edit"
+                android:layout_width="48dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/ic_nbr_of_pieces"
+                app:layout_constraintStart_toEndOf="@+id/edittext_surface_edit"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edittext_nbr_of_piece_edit"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:hint="@string/_0"
+                android:inputType="number"
+                app:layout_constraintStart_toEndOf="@+id/house_nbr_of_piece_image_edit"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:text="Nbr de pièces"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="@id/house_nbr_of_piece_image_edit"
+                app:layout_constraintTop_toBottomOf="@id/edittext_nbr_of_piece_edit" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/view_1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="10dp"
+            android:background="#605D5D"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/price_layout_edit" />
+
+        <TextView
+            android:id="@+id/text_description_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:text="Description"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_1" />
+
+        <EditText
+            android:id="@+id/edit_description_edit"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="10dp"
+            android:background="@drawable/rectangle_border"
+            android:gravity="top"
+            android:padding="2dp"
+            android:hint="   Décrivez le logement."
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            android:text=""
+            android:textAlignment="gravity"
+            android:textColorHint="@color/quantum_grey"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_description_edit" />
+
+        <LinearLayout
+            android:id="@+id/layout_property_image_edit"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="15dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_description_edit">
+
+            <ImageButton
+                android:id="@+id/addPictureBtn_edit"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/search_border"
+                android:src="@drawable/baseline_add_a_photo_24"
+                android:text="Sélectionner des images" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_description_edit">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal"
+                    tools:listitem="@layout/create_property_picture_recyclerview_content" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view_2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="10dp"
+            android:background="#605D5D"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_property_image_edit" />
+
+        <TextView
+            android:id="@+id/textview_nearby_places_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Point de proximité"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardview_search_location_btn_edit" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview_search_location_btn_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_2">
+
+            <Button
+                android:id="@+id/search_location_btn_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/baseline_location_on_24"
+                android:text="Rechercher"
+                android:background="@color/quantum_white_100"
+                android:scaleType="centerCrop"
+                android:textAlignment="textStart" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/autocomplete_fragment"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <CheckBox
+            android:id="@+id/school_checkBox_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:padding="5dp"
+            android:text="School"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places_edit" />
+
+        <CheckBox
+            android:id="@+id/store_checkBox_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Store"
+            app:layout_constraintStart_toEndOf="@id/school_checkBox_edit"
+            app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places_edit" />
+
+        <CheckBox
+            android:id="@+id/park_checkBox_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Park"
+            app:layout_constraintStart_toEndOf="@id/store_checkBox_edit"
+            app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places_edit" />
+
+        <CheckBox
+            android:id="@+id/parking_checkBox_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Parking"
+            app:layout_constraintStart_toEndOf="@id/park_checkBox_edit"
+            app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places_edit" />
+
+        <View
+            android:id="@+id/view_3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="15dp"
+            android:background="#605D5D"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/store_checkBox_edit" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_3"
+            android:layout_margin="15dp"
+            app:cardCornerRadius="10dp" >
+
+            <Button
+                android:id="@+id/save_btn_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:text="Sauvegarder"
+                android:scaleType="centerCrop"
+                android:textColor="#FFEBEB"
+                android:textStyle="bold"/>
+
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>
