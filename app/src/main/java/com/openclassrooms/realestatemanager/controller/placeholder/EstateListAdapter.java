@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.controller.placeholder;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.databinding.EstateDetailFragment;
 import com.openclassrooms.realestatemanager.databinding.EstateListContentBinding;
@@ -49,7 +47,7 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
         customSymbols.setGroupingSeparator(' ');
         DecimalFormat decimalFormat = new DecimalFormat("#,###", customSymbols);
         String formattedNumber = decimalFormat.format(estate.getPrice());
-        holder.price.setText(formattedNumber);
+        holder.price.setText(formattedNumber + " €");
 
         holder.description.setText(estate.getDescription());
         holder.typeOfEstate.setText(estate.getEstateType());

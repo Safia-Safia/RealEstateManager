@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controller.placeholder;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.model.Picture;
 
@@ -32,7 +34,17 @@ public class EstateAdapter extends RecyclerView.Adapter<EstateAdapter.PropertyVi
     @Override
     public void onBindViewHolder(@NonNull PropertyViewHolder holder, int position) {
         Picture picture = imageUris.get(position);
-        holder.imageView.setImageURI(picture.getImageUri());
+        if (picture.getImageUri() != null){
+            Glide.with(holder.imageView.getContext())
+                    .load(picture.getImageUri())
+                    .centerCrop()
+                    .into(holder.imageView);
+        }else {
+            Glide.with(holder.imageView.getContext())
+                    .load(picture.getImageUrl())
+                    .centerCrop()
+                    .into(holder.imageView);
+        }
         holder.pictureDescriptionView.setText(picture.getDescription());
         holder.deleteButton.setOnClickListener(v -> {
             int position1 =holder.getBindingAdapterPosition();

@@ -74,4 +74,24 @@
     <string name="entry_date">Date d\'entrée</string>
     <string name="find_you_re_property">find you\'re property</string>
     <string name="_0">0</string>
+    <string name="select_image">Sélectionner une image</string>
+    <string name="logout_message">Souhaitez vous déconnecté ?</string>
+    <string name="select_picture">Sélectionner une image</string>
+    <string name="describe_picture">Décrivez la photo</string>
+    <string name="check_field">Vérifiez les champs.</string>
+    <string name="email">email</string>
+    <string name="gmail">Gmail</string>
+    <string name="create_announce">Créer une annonce</string>
+    <string name="estate_pricec_increate">Prix du bien</string>
+    <string name="surface_m">Surface en m²</string>
+    <string name="describe_estate">Décrivez le logement.</string>
+    <string name="proximity_point">Point de proximité</string>
+    <string name="search_location">Rechercher</string>
+    <string name="school">Ecole</string>
+    <string name="store">Magasin</string>
+    <string name="park">Parc</string>
+    <string name="save">Enregistrer</string>
+    <string name="edit">Modifier</string>
+    <string name="number_rooms">Nbr de pièces</string>
+    <string name="euros">€</string>
 </resources>

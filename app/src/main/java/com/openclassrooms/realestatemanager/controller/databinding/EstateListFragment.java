@@ -378,7 +378,7 @@ public class EstateListFragment extends Fragment {
     private void setLogOutBtn() {
         signOutBtn.setOnClickListener(view -> {
             new AlertDialog.Builder(this.requireContext())
-                    .setMessage("Souhaitez vous déconnecté ?")
+                    .setMessage(R.string.logout_message)
                     .setCancelable(true)
                     .setPositiveButton("Oui", (dialog, which) -> {
                         ((EstateHostActivity) EstateListFragment.this.requireActivity()).userViewModel.signOut(EstateListFragment.this.requireContext());

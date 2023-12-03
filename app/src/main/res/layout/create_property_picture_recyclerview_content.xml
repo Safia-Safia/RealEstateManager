@@ -22,9 +22,9 @@
         android:layout_width="100dp"
         android:layout_height="25dp"
         android:layout_gravity="bottom"
-        android:text="Description"
+        android:text="@string/description"
         android:gravity="center"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:background="#CD2B2A2A"
         android:textColor="@color/quantum_white_100" />
     <ImageButton

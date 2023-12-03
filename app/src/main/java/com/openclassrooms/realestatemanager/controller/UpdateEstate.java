@@ -4,29 +4,34 @@ import static com.openclassrooms.realestatemanager.controller.databinding.Estate
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controller.databinding.EstateHostActivity;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateAdapter;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
@@ -37,8 +42,11 @@ import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,7 +61,6 @@ public class UpdateEstate extends AppCompatActivity {
     private EstateAdapter propertyAdapter;
     private List<Picture> property_picture;
     EstateViewModel estateViewModel;
-
     UserViewModel userViewModel;
     CheckBox schoolCheckBox, parkCheckBox, parkingCheckBox, storeCheckBox;
 
@@ -62,23 +69,27 @@ public class UpdateEstate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_estate);
         setUpView();
-
         estate = (Estate) getIntent().getSerializableExtra(KEY_ESTATE_EDIT);
         getInfo();
-
         setUpSpinner();
+        openPicturePicker();
         setSearchLocation();
+        setUpEstateViewModel();
+        setCancelBtn();
+
         saveBtn.setOnClickListener(view -> {
             setInfo();
-            EstateRepository.getInstance().updateEstate(estate, estate.getId())
-                    .addOnSuccessListener(aVoid -> {
+            estateViewModel.updateEstate(estate, estate.getId())
+                    .observe(this,aBoolean -> {
+                        Intent intent = new Intent(this,  EstateHostActivity.class);
+                        startActivity(intent);
                         finish();
                     });
         });
     }
 
     private void getInfo() {
-        estate.setPictures(property_picture);
+        property_picture.addAll(estate.getPictures());
         textDescription.setText(estate.getDescription());
         searchLocationBtn.setText(estate.getAddress());
         estate.setEstateType(estate.getEstateType());
@@ -86,42 +97,34 @@ public class UpdateEstate extends AppCompatActivity {
         surface.setText(Long.toString(estate.getSurface()));
         nbrOfRoom.setText(Long.toString(estate.getSurface()));
         if (estate.getSchool()) {
-            estate.setSchool(true);
             schoolCheckBox.setChecked(true);
         }
         if (estate.getStore()) {
-            estate.setStore(true);
             storeCheckBox.setChecked(true);
         }
         if (estate.getPark()) {
-            estate.setPark(true);
             parkCheckBox.setChecked(true);
         }
-        if (estate.getPark()) {
-            estate.setParking(true);
+        if (estate.getParking()) {
             parkingCheckBox.setChecked(true);
         }
     }
+
     private void setInfo() {
+
         estate.setDescription(textDescription.getText().toString());
         estate.setPictures(property_picture);
-        //estate.setEstateType(spinner.getSelectedItem().toString());
+        estate.setEstateType(spinner.getSelectedItem().toString());
         estate.setPrice(Integer.parseInt(price.getText().toString()));
         estate.setNumberOfRoom(Integer.parseInt(nbrOfRoom.getText().toString()));
         estate.setSurface(Integer.parseInt(surface.getText().toString()));
         estate.setDescription(textDescription.getText().toString());
-        if (schoolCheckBox.isChecked()) {
-            estate.setSchool(true);
-        }
-        if (storeCheckBox.isChecked()) {
-            estate.setStore(true);
-        }
-        if (parkCheckBox.isChecked()) {
-            estate.setPark(true);
-        }
-        if (parkingCheckBox.isChecked()) {
-            estate.setParking(true);
-        }
+        estate.setEstateType(spinner.getSelectedItem().toString());
+
+        estate.setSchool(schoolCheckBox.isChecked());
+        estate.setStore(storeCheckBox.isChecked());
+        estate.setParking(parkingCheckBox.isChecked());
+        estate.setPark(parkCheckBox.isChecked());
     }
 
 
@@ -162,6 +165,11 @@ public class UpdateEstate extends AppCompatActivity {
                 R.array.type_of_property_spinner, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        for (int i=0; i<adapter.getCount(); i++){
+            if (adapter.getItem(i).toString().equals(estate.getEstateType())){
+                spinner.setSelection(i);
+            }
+        }
     }
 
     private void setSearchLocation() {
@@ -206,5 +214,65 @@ public class UpdateEstate extends AppCompatActivity {
                 }
             }
     );
+
+    private void openPicturePicker() {
+        addPictureBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/jpg");
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_image)), PICK_IMAGE_REQUEST);
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();
+            showAlertDialog();
+
+        }
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        final View customLayout = getLayoutInflater().inflate(R.layout.custom_alert_dialog, null);
+        pictureDescription = customLayout.findViewById(R.id.edittext_alert_dialog_picture);
+        alertDialog.setView(customLayout);
+        alertDialog.setTitle(getString(R.string.describe_picture));
+        alertDialog.setPositiveButton("OK", (dialog, which) -> {
+            Picture picture = new Picture();
+            picture.setImageUri(imageUri);
+            picture.setDescription(pictureDescription.getText().toString());
+            property_picture.add(picture);
+            propertyAdapter.notifyDataSetChanged();
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+
+
+    }
+
+
+    public void setUpEntryDate() {
+        Calendar currentDate = Calendar.getInstance();
+        SimpleDateFormat formatter;
+        Date date;
+
+        int year = currentDate.get(Calendar.YEAR);
+        int month = currentDate.get(Calendar.MONTH);
+        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+        formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
+        currentDate.set(Calendar.YEAR, year);
+        currentDate.set(Calendar.MONTH, month);
+        currentDate.set(Calendar.DAY_OF_MONTH, day);
+        date = currentDate.getTime();
+        String format = formatter.format(date.getTime());
+        estate.setSoldDate(format);
+    }
+    public void setCancelBtn() {
+        cancelBtn.setOnClickListener(view -> finish());
+    }
+
 
 }

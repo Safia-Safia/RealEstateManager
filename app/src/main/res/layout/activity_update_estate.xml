@@ -5,7 +5,7 @@
     android:id="@+id/add_property"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_app"
+    android:background="@drawable/background_2"
     tools:context=".controller.AddEstate">
 
 
@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Modifier"
+                android:text="@string/edit"
                 android:textColor="#FFF"
                 android:textSize="20sp" />
         </androidx.appcompat.widget.Toolbar>
@@ -91,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Prix du bien"
+                android:text="@string/estate_pricec_increate"
                 android:textSize="10sp"
                 app:layout_constraintStart_toEndOf="@+id/house_price_image_edit"
                 app:layout_constraintTop_toBottomOf="@id/edittext_house_price_edit" />
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:text="Surface en m²"
+                android:text="@string/surface_m"
                 android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="@id/house_surface_image_edit"
                 app:layout_constraintTop_toBottomOf="@id/edittext_surface_edit" />
@@ -139,7 +139,7 @@
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edittext_nbr_of_piece_edit"
-                android:layout_width="30dp"
+                android:layout_width="48dp"
                 android:layout_height="40dp"
                 android:hint="@string/_0"
                 android:inputType="number"
@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:text="Nbr de pièces"
+                android:text="@string/number_rooms"
                 android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="@id/house_nbr_of_piece_image_edit"
                 app:layout_constraintTop_toBottomOf="@id/edittext_nbr_of_piece_edit" />
@@ -176,7 +176,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:padding="10dp"
-            android:text="Description"
+            android:text="@string/description"
             android:textColor="@color/colorPrimary"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -192,7 +192,7 @@
             android:background="@drawable/rectangle_border"
             android:gravity="top"
             android:padding="2dp"
-            android:hint="   Décrivez le logement."
+            android:hint="@string/describe_estate"
             android:inputType="textMultiLine"
             android:maxLines="5"
             android:text=""
@@ -219,7 +219,7 @@
                 android:layout_height="100dp"
                 android:background="@drawable/search_border"
                 android:src="@drawable/baseline_add_a_photo_24"
-                android:text="Sélectionner des images" />
+                 />
 
 
             <LinearLayout
@@ -257,10 +257,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Point de proximité"
+            android:text="@string/proximity_point"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:padding="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cardview_search_location_btn_edit" />
 
@@ -278,7 +279,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawableStart="@drawable/baseline_location_on_24"
-                android:text="Rechercher"
+                android:text="@string/search_location"
                 android:background="@color/quantum_white_100"
                 android:scaleType="centerCrop"
                 android:textAlignment="textStart" />
@@ -297,7 +298,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:padding="5dp"
-            android:text="School"
+            android:text="@string/school"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places_edit" />
 
@@ -306,7 +307,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Store"
+            android:text="@string/store"
             app:layout_constraintStart_toEndOf="@id/school_checkBox_edit"
             app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places_edit" />
 
@@ -315,7 +316,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Park"
+            android:text="@string/park"
             app:layout_constraintStart_toEndOf="@id/store_checkBox_edit"
             app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places_edit" />
 
@@ -324,7 +325,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Parking"
+            android:text="@string/parking"
             app:layout_constraintStart_toEndOf="@id/park_checkBox_edit"
             app:layout_constraintTop_toBottomOf="@+id/textview_nearby_places_edit" />
 
@@ -353,11 +354,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
-                android:text="Sauvegarder"
+                android:text="@string/save"
                 android:scaleType="centerCrop"
                 android:textColor="#FFEBEB"
                 android:textStyle="bold"/>
-
 
         </androidx.cardview.widget.CardView>
 

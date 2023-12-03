@@ -120,7 +120,6 @@ public class AddEstate extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.type_of_property_spinner, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setPrompt("Choose the type");
         spinner.setAdapter(adapter);
     }
 
@@ -128,7 +127,7 @@ public class AddEstate extends AppCompatActivity {
         addPictureBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/jpg");
-            startActivityForResult(Intent.createChooser(intent, "Sélectionner une image"), PICK_IMAGE_REQUEST);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), PICK_IMAGE_REQUEST);
         });
     }
 
@@ -195,7 +194,7 @@ public class AddEstate extends AppCompatActivity {
         final View customLayout = getLayoutInflater().inflate(R.layout.custom_alert_dialog, null);
         pictureDescription = customLayout.findViewById(R.id.edittext_alert_dialog_picture);
         alertDialog.setView(customLayout);
-        alertDialog.setTitle("Décrivez la photo");
+        alertDialog.setTitle(R.string.describe_picture);
         alertDialog.setPositiveButton("OK", (dialog, which) -> {
             Picture picture = new Picture();
             picture.setImageUri(imageUri);
@@ -220,7 +219,7 @@ public class AddEstate extends AppCompatActivity {
                         ( estate.getAddress() != null && estate.getAddress().isEmpty()) ||
                         spinner.getSelectedItemPosition() == 0;
         if (isFieldEmpty) {
-            Snackbar.make(findViewById(android.R.id.content), "Vérifiez les champs.", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content),R.string.check_field, Snackbar.LENGTH_LONG).show();
             return false;
         } else {
             return true;

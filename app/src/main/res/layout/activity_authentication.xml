@@ -86,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/ic_email"
-                    android:text="email"
+                    android:text="@string/email"
                     android:background="#2C3443"
                     android:textColor="#fff" />
             </RelativeLayout>
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/ic_google"
                     android:background="#DB4437"
-                    android:text="Gmail"
+                    android:text="@string/gmail"
                     android:textColor="#fff" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>

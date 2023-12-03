@@ -92,12 +92,14 @@ public class EstateRepository {
         return result;
     }
 
-    public Task<Void> updateEstate(Estate estate, String estateId) {
+    public LiveData<Boolean> updateEstate(Estate estate, String estateId) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
         Map<String, Object> updatedFields = new HashMap<>();
         updatedFields.put("description", estate.getDescription());
         updatedFields.put("estateType", estate.getEstateType());
         updatedFields.put("address", estate.getAddress());
-        updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
+        updatedFields.put("latitude", estate.getLatitude());
+        updatedFields.put("longitude", estate.getLongitude());
         updatedFields.put("city", estate.getCity());
         updatedFields.put("school", estate.getSchool());
         updatedFields.put("store", estate.getStore());
@@ -106,7 +108,37 @@ public class EstateRepository {
         updatedFields.put("price", estate.getPrice());
         updatedFields.put("surface", estate.getSurface());
         updatedFields.put("numberOfRoom", estate.getNumberOfRoom());
-        return getEstateCollection().document(estateId).update(updatedFields);
+
+        for (int i = 0; i < estate.getPictures().size(); i++) {
+            int finalI = i; //Valeur finale de la variable I
+            if ( estate.getPictures().get(i).getImageUri() != null){
+                uploadImage(estate.getPictures().get(i).getImageUri()).addOnSuccessListener(taskSnapshot -> {
+                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(url -> {
+                        estate.getPictures().get(finalI).setImageUrl(url.toString());
+                        if (finalI == estate.getPictures().size() - 1) {
+                            estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
+                            updatedFields.put("pictures", estate.getPictures());
+                            updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
+                            getEstateCollection().document(estateId).update(updatedFields);
+                            result.setValue(true);
+                        }
+                    });
+                });
+            }else if ( estate.getPictures().get(i).getImageUrl() != null){
+                if (finalI == estate.getPictures().size() - 1) {
+                    estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
+                    updatedFields.put("pictures", estate.getPictures());
+                    updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
+                    getEstateCollection().document(estateId).update(updatedFields);
+                    result.setValue(true);
+                }
+            }else {
+                Log.e("if error",""+ i);
+                //En cas de souci
+            }
+
+        }
+        return result;
     }
 
 
