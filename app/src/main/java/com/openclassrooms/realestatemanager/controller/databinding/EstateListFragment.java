@@ -123,6 +123,8 @@ public class EstateListFragment extends Fragment {
         initListOnButtonClick(parkBtn, "park");
         initListOnButtonClick(moreThan3PictureBtn, "picture");
         initListOnButtonClick(lastWeekBtn, "lastWeek");
+        initListOnButtonClick(soldBtn, "sold");
+
         initSearchBar();
         getAllEstates();
 
@@ -263,6 +265,9 @@ public class EstateListFragment extends Fragment {
                         case "picture":
                             isFiltered = estate.getPictures().size() >= 3;
                             break;
+                        case "sold":
+                            isFiltered = estate.getSoldDate() != null && !estate.getSoldDate().isEmpty();
+                            break;
                         case "lastWeek":
                             Calendar lastWeek= Calendar.getInstance();
                             Date referenceDate = new Date();
@@ -352,12 +357,13 @@ public class EstateListFragment extends Fragment {
             setupRecyclerView(estates);
             initPriceRangeBar(estates);
             initSurfaceRangeBar(estates);
+            ConstraintLayout constraintLayout = getActivity().findViewById(R.id.list_item_color);
             setUpSpinner();
         });
     }
 
     void setupRecyclerView(List<Estate> estates) {
-        adapter = new EstateListAdapter(estates, v);
+        adapter = new EstateListAdapter(estates, v, this.requireContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }

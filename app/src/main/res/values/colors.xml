@@ -7,17 +7,17 @@
     <color name="grey">#ACB2B3</color>
     <color name="colorAccentDark">#731A1A</color>
     <color name="colorAccent">#FF4040</color>
+    <color name="green">#7B8072</color>
 
-    <!-- <resources>
+
+    <!--<resources>
     <color name="colorPrimary">#629FA8</color>
-    <color name="colorPrimaryDark">#437A81</color>
-    <color name="darkBlue">#0D4852</color>
+    <color name="colorPrimaryDark">#31646A</color>
+    <color name="darkBlue">#613C3C</color>
     <color name="navy">#0C3035</color>
     <color name="grey">#ACB2B3</color>
+    <color name="green">#7B8072</color>
     <color name="colorAccentDark">#AF8C8C</color>
-    <color name="colorAccent">#EC9E9E</color>
-
-</resources>
-!-->
+    <color name="colorAccent">#D18080</color>!-->
 </resources>
 

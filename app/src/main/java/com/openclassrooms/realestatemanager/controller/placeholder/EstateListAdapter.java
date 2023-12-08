@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controller.placeholder;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,10 +28,12 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
     private final View view;
     private final List<Estate> estateList;
     Estate estate;
+    Context context;
 
 
-    public EstateListAdapter(List<Estate> estates, View view) {
+    public EstateListAdapter(List<Estate> estates, View view, Context context) {
         estateList = estates;
+        this.context = context;
         this.view = view;
     }
 
@@ -48,16 +53,20 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
         DecimalFormat decimalFormat = new DecimalFormat("#,###", customSymbols);
         String formattedNumber = decimalFormat.format(estate.getPrice());
         holder.price.setText(formattedNumber + " €");
+        if (estate.getSoldDate() != null) {
+            holder.editOptionsLayout.setVisibility(View.VISIBLE);
+        } else{
+            holder.editOptionsLayout.setVisibility(View.GONE);
+        }
 
         holder.description.setText(estate.getDescription());
         holder.typeOfEstate.setText(estate.getEstateType());
         holder.city.setText(estate.getCity());
-        Glide.with(holder.coverPicture.getContext())
-                .load(estate.getCoverPictureUrl())
-                .centerCrop()
-                .into(holder.coverPicture);
+        Glide.with(holder.coverPicture.getContext()).
+                load(estate.getCoverPictureUrl()).centerCrop().into(holder.coverPicture);
 
-        holder.itemView.setOnClickListener(itemView -> {
+        holder.itemView.setOnClickListener(itemView ->
+        {
             estate = estateList.get(position);
             Bundle bundle = new Bundle();
             bundle.putSerializable(EstateDetailFragment.KEY_ESTATE, estate);
@@ -69,6 +78,7 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
             }
         });
 
+
     }
 
     @Override
@@ -79,14 +89,18 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
     public static class EstateViewHolder extends RecyclerView.ViewHolder {
         TextView price, typeOfEstate, description, city;
         ImageView coverPicture;
+        ConstraintLayout constraintLayout;
+        ConstraintLayout editOptionsLayout;
 
         EstateViewHolder(EstateListContentBinding binding) {
             super(binding.getRoot());
+            constraintLayout = binding.listItemColor;
             price = binding.recyclerviewContentEstatePrice;
             coverPicture = binding.recyclerviewcontentPropertyPicture;
             typeOfEstate = binding.recyclerviewContentEstateType;
             description = binding.recyclerviewContentDescription;
             city = binding.cityTextView;
+            editOptionsLayout = binding.getRoot().findViewById(R.id.sold_layout);
         }
     }
 

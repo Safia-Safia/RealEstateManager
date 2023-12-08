@@ -5,7 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
@@ -13,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,10 +28,19 @@ import com.openclassrooms.realestatemanager.controller.placeholder.ViewPagerAdap
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateDetailBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
+import com.openclassrooms.realestatemanager.repository.UserRepository;
+import com.openclassrooms.realestatemanager.utils.Injection.Injection;
+import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
+import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -41,11 +56,14 @@ public class EstateDetailFragment extends Fragment {
 
     private Estate estate;
     ImageButton edit_estate;
+    EstateViewModel estateViewModel;
+
     ImageView coverPicture, mapImage, userPicture, mailButton;
     TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
             pointStore, pointSchool, pointParking, pointPark, sellerName, entryDate;
     private FragmentEstateDetailBinding binding;
 
+    SwitchCompat sold;
     ViewPager mViewPager;
 
     // images array
@@ -84,11 +102,14 @@ public class EstateDetailFragment extends Fragment {
         mViewPager.setAdapter(mViewPagerAdapter);
 
         setUpView();
+        setUpEstateViewModel();
         updateContent();
-
+        editEstateLayout();
+        setUpEntryDate();
         CircleIndicator indicator = binding.getRoot().findViewById(R.id.indicator);
         indicator.setViewPager(mViewPager);
         return rootView;
+
     }
 
     @Override
@@ -118,6 +139,7 @@ public class EstateDetailFragment extends Fragment {
         sellerName = binding.getRoot().findViewById(R.id.sellerName);
         mailButton = binding.getRoot().findViewById(R.id.mail_imageButton);
         entryDate = binding.getRoot().findViewById(R.id.entryDate_detail);
+        sold = binding.getRoot().findViewById(R.id.switchButton);
     }
 
     @Override
@@ -162,7 +184,6 @@ public class EstateDetailFragment extends Fragment {
 
         Glide.with(this).load(imageUrl).into(mapImage);
         setUpMailButton();
-
         Glide.with(this).load(estate.getUser().getUrlPicture()).circleCrop().into(userPicture);
     }
 
@@ -180,4 +201,61 @@ public class EstateDetailFragment extends Fragment {
             point.setTextColor(getResources().getColor(R.color.grey));
         }
     }
+
+    public void setUpEntryDate() {
+        Calendar currentDate = Calendar.getInstance();
+        SimpleDateFormat formatter;
+        Date date;
+        int year = currentDate.get(Calendar.YEAR);
+        int month = currentDate.get(Calendar.MONTH);
+        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+        formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
+        currentDate.set(Calendar.YEAR, year);
+        currentDate.set(Calendar.MONTH, month);
+        currentDate.set(Calendar.DAY_OF_MONTH, day);
+        date = currentDate.getTime();
+        String format = formatter.format(date.getTime());
+        sold.setChecked(estate.getSoldDate() != null);
+
+
+        sold.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                estate.setSoldDate(format);
+               // editOptionsLayout.setVisibility(View.VISIBLE);
+                estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
+                    Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                });
+
+            }else {
+                estate.setSoldDate(null);
+                estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
+                    Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                });
+
+            }
+        });
+    }
+
+
+    public void editEstateLayout() {
+        ConstraintLayout editOptionsLayout;
+        editOptionsLayout =binding.getRoot().findViewById(R.id.layout_switch);
+        if (Objects.equals(estate.getUser().getUid(),
+                Objects.requireNonNull(UserRepository.getInstance().getCurrentUser()).getUid())){
+            editOptionsLayout.setVisibility(View.VISIBLE);
+        }else {
+            editOptionsLayout.setVisibility(View.GONE);
+
+        }
+    }
+
+    private void setUpEstateViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireContext());
+        this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
+    }
+
 }

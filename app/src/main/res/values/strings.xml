@@ -94,4 +94,6 @@
     <string name="edit">Modifier</string>
     <string name="number_rooms">Nbr de pièces</string>
     <string name="euros">€</string>
+    <string name="update">Modifier</string>
+    <string name="sold">Vendu</string>
 </resources>

@@ -108,9 +108,9 @@ public class EstateRepository {
         updatedFields.put("price", estate.getPrice());
         updatedFields.put("surface", estate.getSurface());
         updatedFields.put("numberOfRoom", estate.getNumberOfRoom());
-
+        updatedFields.put("soldDate", estate.getSoldDate());
         for (int i = 0; i < estate.getPictures().size(); i++) {
-            int finalI = i; //Valeur finale de la variable I
+            int finalI = i;
             if ( estate.getPictures().get(i).getImageUri() != null){
                 uploadImage(estate.getPictures().get(i).getImageUri()).addOnSuccessListener(taskSnapshot -> {
                     taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(url -> {

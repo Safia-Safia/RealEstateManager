@@ -249,27 +249,8 @@ public class UpdateEstate extends AppCompatActivity {
         AlertDialog alert = alertDialog.create();
         alert.setCanceledOnTouchOutside(false);
         alert.show();
-
-
     }
 
-
-    public void setUpEntryDate() {
-        Calendar currentDate = Calendar.getInstance();
-        SimpleDateFormat formatter;
-        Date date;
-
-        int year = currentDate.get(Calendar.YEAR);
-        int month = currentDate.get(Calendar.MONTH);
-        int day = currentDate.get(Calendar.DAY_OF_MONTH);
-        formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
-        currentDate.set(Calendar.YEAR, year);
-        currentDate.set(Calendar.MONTH, month);
-        currentDate.set(Calendar.DAY_OF_MONTH, day);
-        date = currentDate.getTime();
-        String format = formatter.format(date.getTime());
-        estate.setSoldDate(format);
-    }
     public void setCancelBtn() {
         cancelBtn.setOnClickListener(view -> finish());
     }
