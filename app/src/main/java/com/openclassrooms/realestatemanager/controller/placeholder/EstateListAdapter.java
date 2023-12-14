@@ -52,10 +52,10 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
         customSymbols.setGroupingSeparator(' ');
         DecimalFormat decimalFormat = new DecimalFormat("#,###", customSymbols);
         String formattedNumber = decimalFormat.format(estate.getPrice());
-        holder.price.setText(formattedNumber + " €");
+        holder.price.setText(formattedNumber + " $");
         if (estate.getSoldDate() != null) {
             holder.editOptionsLayout.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             holder.editOptionsLayout.setVisibility(View.GONE);
         }
 
@@ -65,11 +65,11 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
         Glide.with(holder.coverPicture.getContext()).
                 load(estate.getCoverPictureUrl()).centerCrop().into(holder.coverPicture);
 
-        holder.itemView.setOnClickListener(itemView ->
-        {
+        holder.itemView.setOnClickListener(itemView -> {
             estate = estateList.get(position);
             Bundle bundle = new Bundle();
             bundle.putSerializable(EstateDetailFragment.KEY_ESTATE, estate);
+
             if (view != null) {
                 Navigation.findNavController(view)
                         .navigate(R.id.fragment_estate_detail, bundle);
@@ -77,10 +77,7 @@ public class EstateListAdapter extends RecyclerView.Adapter<EstateListAdapter.Es
                 Navigation.findNavController(itemView).navigate(R.id.show_estate_detail, bundle);
             }
         });
-
-
     }
-
     @Override
     public int getItemCount() {
         return estateList.size();

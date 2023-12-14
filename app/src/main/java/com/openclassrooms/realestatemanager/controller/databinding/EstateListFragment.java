@@ -33,6 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jem.rubberpicker.RubberRangePicker;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.AddEstate;
+import com.openclassrooms.realestatemanager.controller.MapsActivity;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateListAdapter;
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateListBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
@@ -73,7 +74,7 @@ public class EstateListFragment extends Fragment {
     View v;
     ConstraintLayout filterOptionsLayout;
     FloatingActionButton fabAddEstates;
-    ImageButton filterBtn, signOutBtn;
+    ImageButton filterBtn, signOutBtn, mapsButton;
     Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, moreThan3PictureBtn, lastWeekBtn, soldBtn;
     private RubberRangePicker priceRangeBar, surfaceRangeBar;
 
@@ -115,6 +116,7 @@ public class EstateListFragment extends Fragment {
         setUpFilterButton();
         setLogOutBtn();
         setUpAddEstate();
+        setUpMaps();
         initListOnButtonClick(noFilterBtn, "noFilter");
         initListOnButtonClick(schoolBtn, "school");
         initListOnButtonClick(storeBtn, "store");
@@ -127,10 +129,12 @@ public class EstateListFragment extends Fragment {
 
         initSearchBar();
         getAllEstates();
-
     }
 
 
+    public static EstateListFragment newInstance() {
+        return (new EstateListFragment());
+    }
     private void initSearchBar() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -161,6 +165,8 @@ public class EstateListFragment extends Fragment {
     private void setUpView() {
         recyclerView = binding.estateListRecyclerview;
         fabAddEstates = binding.getRoot().findViewById(R.id.button_create_property);
+        mapsButton = binding.getRoot().findViewById(R.id.button_maps);
+
         signOutBtn = binding.getRoot().findViewById(R.id.sign_out_btn);
         filterBtn = binding.getRoot().findViewById(R.id.filter_button);
         filterOptionsLayout = binding.includeFilter.getRoot();
@@ -378,6 +384,13 @@ public class EstateListFragment extends Fragment {
         fabAddEstates.setOnClickListener(view -> {
             Intent addEstateIntent = new Intent(this.requireContext(), AddEstate.class);
             startActivity(addEstateIntent);
+        });
+    }
+
+    private void setUpMaps() {
+        mapsButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this.requireContext(), MapsActivity.class);
+            startActivity(intent);
         });
     }
 

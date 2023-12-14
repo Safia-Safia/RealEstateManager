@@ -7,24 +7,21 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
+
 import com.openclassrooms.realestatemanager.model.Estate;
-import com.openclassrooms.realestatemanager.model.Picture;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
 
 public class EstateRepository {
     public static final String COLLECTION_ESTATES = "estates";
@@ -140,6 +137,4 @@ public class EstateRepository {
         }
         return result;
     }
-
-
 }

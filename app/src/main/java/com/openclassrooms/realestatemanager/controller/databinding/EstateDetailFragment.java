@@ -60,7 +60,7 @@ public class EstateDetailFragment extends Fragment {
 
     ImageView coverPicture, mapImage, userPicture, mailButton;
     TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
-            pointStore, pointSchool, pointParking, pointPark, sellerName, entryDate;
+            pointStore, pointSchool, pointParking, pointPark, sellerName, entryDate, soldDate;
     private FragmentEstateDetailBinding binding;
 
     SwitchCompat sold;
@@ -83,6 +83,21 @@ public class EstateDetailFragment extends Fragment {
         binding = FragmentEstateDetailBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
         rootView.findViewById(R.id.toolbar_layout);
+        getCurrentEstate();
+        setUpView();
+        setUpEstateViewModel();
+        editEstateLayout();
+        setUpEntryDate();
+        updateContent();
+        CircleIndicator indicator = binding.getRoot().findViewById(R.id.indicator);
+        indicator.setViewPager(mViewPager);
+        imageViewPager();
+        return rootView;
+
+    }
+
+    public void getCurrentEstate() {
+
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(KEY_ESTATE)) {
             estate = (Estate) bundle.getSerializable(KEY_ESTATE);
@@ -95,20 +110,15 @@ public class EstateDetailFragment extends Fragment {
             startActivity(intent);
         });
 
+    }
+
+    public void imageViewPager() {
+
         mViewPager = (ViewPager) binding.viewPagerMain;
 
         pictureList = estate.getPictures();
         mViewPagerAdapter = new ViewPagerAdapter(this.requireContext(), pictureList);
         mViewPager.setAdapter(mViewPagerAdapter);
-
-        setUpView();
-        setUpEstateViewModel();
-        updateContent();
-        editEstateLayout();
-        setUpEntryDate();
-        CircleIndicator indicator = binding.getRoot().findViewById(R.id.indicator);
-        indicator.setViewPager(mViewPager);
-        return rootView;
 
     }
 
@@ -139,6 +149,7 @@ public class EstateDetailFragment extends Fragment {
         sellerName = binding.getRoot().findViewById(R.id.sellerName);
         mailButton = binding.getRoot().findViewById(R.id.mail_imageButton);
         entryDate = binding.getRoot().findViewById(R.id.entryDate_detail);
+        soldDate = binding.getRoot().findViewById(R.id.soldDate_detail);
         sold = binding.getRoot().findViewById(R.id.switchButton);
     }
 
@@ -162,7 +173,7 @@ public class EstateDetailFragment extends Fragment {
         isFieldChecked(estate.getStore(), store, pointStore);
 
         surface.setText(String.format("%s m²", estate.getSurface()));
-        price.setText(String.format("%s €", formattedNumber));
+        price.setText(String.format("%s $", formattedNumber));
         nbrOfPiece.setText(String.valueOf(estate.getNumberOfRoom()));
         detail.setText(estate.getDescription());
         address.setText(estate.getAddress());
@@ -185,6 +196,7 @@ public class EstateDetailFragment extends Fragment {
         Glide.with(this).load(imageUrl).into(mapImage);
         setUpMailButton();
         Glide.with(this).load(estate.getUser().getUrlPicture()).circleCrop().into(userPicture);
+        soldDate.setText(estate.getSoldDate());
     }
 
     public void setUpMailButton() {
@@ -216,26 +228,24 @@ public class EstateDetailFragment extends Fragment {
         date = currentDate.getTime();
         String format = formatter.format(date.getTime());
         sold.setChecked(estate.getSoldDate() != null);
-
-
+        ConstraintLayout editOptionsLayout = binding.getRoot().findViewById(R.id.soldDateLayout_detail);
         sold.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked){
+            if (isChecked) {
                 estate.setSoldDate(format);
-               // editOptionsLayout.setVisibility(View.VISIBLE);
                 estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
                     Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
                     startActivity(intent);
                     getActivity().finish();
                 });
-
-            }else {
+                editOptionsLayout.setVisibility(View.VISIBLE);
+            } else {
                 estate.setSoldDate(null);
                 estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
                     Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
                     startActivity(intent);
                     getActivity().finish();
                 });
-
+                editOptionsLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -243,13 +253,12 @@ public class EstateDetailFragment extends Fragment {
 
     public void editEstateLayout() {
         ConstraintLayout editOptionsLayout;
-        editOptionsLayout =binding.getRoot().findViewById(R.id.layout_switch);
+        editOptionsLayout = binding.getRoot().findViewById(R.id.layout_switch);
         if (Objects.equals(estate.getUser().getUid(),
-                Objects.requireNonNull(UserRepository.getInstance().getCurrentUser()).getUid())){
+                Objects.requireNonNull(UserRepository.getInstance().getCurrentUser()).getUid())) {
             editOptionsLayout.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             editOptionsLayout.setVisibility(View.GONE);
-
         }
     }
 

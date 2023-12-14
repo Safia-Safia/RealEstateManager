@@ -28,8 +28,8 @@ public class EstateHostActivity extends AppCompatActivity {
         ActivityEstateDetailBinding binding = ActivityEstateDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment_property_detail);
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_property_detail);
         NavController navController = navHostFragment.getNavController();
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         setUpView();
