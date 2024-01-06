@@ -4,19 +4,24 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,15 +29,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controller.databinding.EstateHostActivity;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateAdapter;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
@@ -58,11 +62,13 @@ public class AddEstate extends AppCompatActivity {
     ImageButton addPictureBtn, cancelBtn;
     Button searchLocationBtn, saveBtn;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String NOTIFICATION_CHANNEL = "NOTIFICATION_CHANNEL";
+    public static final String NOTIFICATION_TAG = "NOTIFICATION";
+    public static final int NOTIFICATION_ID = 0;
     EditText textDescription, pictureDescription, price, surface, nbrOfRoom;
     private EstateAdapter propertyAdapter;
     private List<Picture> property_picture;
     EstateViewModel estateViewModel;
-
     UserViewModel userViewModel;
     CheckBox schoolCheckBox, parkCheckBox, parkingCheckBox, storeCheckBox;
 
@@ -107,12 +113,12 @@ public class AddEstate extends AppCompatActivity {
 
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
+        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
     }
 
     private void setUpUserViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
+        this.userViewModel = new ViewModelProvider(this, viewModelFactory).get(UserViewModel.class);
     }
 
     private void spinner() {
@@ -216,10 +222,10 @@ public class AddEstate extends AppCompatActivity {
                         nbrOfRoom.getText().toString().isEmpty() ||
                         textDescription.getText().toString().isEmpty() ||
                         property_picture.size() == 0 ||
-                        ( estate.getAddress() != null && estate.getAddress().isEmpty()) ||
+                        (estate.getAddress() != null && estate.getAddress().isEmpty()) ||
                         spinner.getSelectedItemPosition() == 0;
         if (isFieldEmpty) {
-            Snackbar.make(findViewById(android.R.id.content),R.string.check_field, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), R.string.check_field, Snackbar.LENGTH_LONG).show();
             return false;
         } else {
             return true;
@@ -274,12 +280,47 @@ public class AddEstate extends AppCompatActivity {
             if (parkingCheckBox.isChecked()) {
                 estate.setParking(true);
             }
+
             estateViewModel.createEstate(estate).observe(this, aBoolean -> {
+                sendNotification();
                 finish();
             });
 
         });
 
     }
+
+    private void sendNotification() {
+        String title = "Bien créé";
+        String body = "Votre bien a été enregistré.";
+        int smallIconResId = R.drawable.thumb_icon;
+        String channelId = NOTIFICATION_CHANNEL;
+        Intent intent = new Intent(this, EstateHostActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, channelId)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setSmallIcon(smallIconResId)
+                        .setAutoCancel(true)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                        .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Support Version >= Android 8
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence channelName = "Firebase Messages";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(channelId, channelName, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+
+        // Show notification
+        notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+
 }
 

@@ -9,6 +9,13 @@
     tools:context=".controller.databinding.EstateHostActivity"
     tools:ignore="MergeRootFrame">
 
+    <TextView
+        android:id="@+id/noEstateSelected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:text="AAA"
+        />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"

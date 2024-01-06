@@ -1,9 +1,12 @@
 package com.openclassrooms.realestatemanager.controller;
 
+import static com.openclassrooms.realestatemanager.controller.databinding.EstateDetailFragment.KEY_ESTATE;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
@@ -39,9 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     public static final String TAG = "MapActivity";
-
     private Boolean mLocationPermissionsGranted = false;
     FusedLocationProviderClient fusedLocationProviderClient;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -51,8 +52,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final float DEFAULT_ZOOM = 5.5f;
     Marker marker;
     Map<String, Estate> mMarkerMap = new HashMap<>();
-
     EstateViewModel estateViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void  initMap(){
+    public void initMap() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -72,13 +73,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap =googleMap;
+        mMap = googleMap;
         setUpEstateViewModel();
         getDeviceLocation();
+
+        if (mLocationPermissionsGranted) {
+            getDeviceLocation();
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mMap.setMyLocationEnabled(true);
+        }
+
+
         mMap.setOnMarkerClickListener(marker -> {
             Estate estate = mMarkerMap.get(marker.getId());
-            Intent intent = new Intent(MapsActivity.this, EstateDetailFragment.class);
-            intent.putExtra(EstateDetailFragment.KEY_ESTATE, estate);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(KEY_ESTATE, estate);
+            Intent intent = new Intent(MapsActivity.this, DetailActivity.class);
+            intent.putExtras(bundle);
             startActivity(intent);
             return false;
         });
@@ -89,30 +104,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onPointerCaptureChanged(hasCapture);
     }
 
-    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            mMap =googleMap;
-            setUpEstateViewModel();
-
-            if (mLocationPermissionsGranted) {
-                getDeviceLocation();
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                mMap.setMyLocationEnabled(true);
-            }
-            mMap.setOnMarkerClickListener(marker -> {
-                Estate estate = mMarkerMap.get(marker.getId());
-                Intent intent = new Intent(MapsActivity.this, EstateHostActivity.class);
-                intent.putExtra(EstateDetailFragment.KEY_ESTATE, estate);
-                startActivity(intent);
-                return false;
-            });
-        }
-    };
 
     private void getAllEstates() {
         estateViewModel.getEstates().observe(this, this::setUpMarker);
@@ -120,10 +111,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
+        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
     }
 
     public void setUpMarker(List<Estate> estates) {
+
         for (Estate estate : estates) {
             marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(estate.getLatitude(), estate.getLongitude()))
@@ -139,12 +131,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     public void getDeviceLocation() {
         try {
             if (mLocationPermissionsGranted) {
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
                 final Task location = fusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -152,7 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (currentLocation != null) {
                             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             moveCamera(latLng);
-                           getAllEstates();
+                            getAllEstates();
                         }
                     }
                 });
@@ -170,7 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void moveCamera(LatLng latLng) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
     private void getLocationPermission() {

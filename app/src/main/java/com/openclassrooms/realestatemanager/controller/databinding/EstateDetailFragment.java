@@ -6,20 +6,19 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
@@ -57,7 +56,6 @@ public class EstateDetailFragment extends Fragment {
     private Estate estate;
     ImageButton edit_estate;
     EstateViewModel estateViewModel;
-
     ImageView coverPicture, mapImage, userPicture, mailButton;
     TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
             pointStore, pointSchool, pointParking, pointPark, sellerName, entryDate, soldDate;
@@ -66,10 +64,7 @@ public class EstateDetailFragment extends Fragment {
     SwitchCompat sold;
     ViewPager mViewPager;
 
-    // images array
     List<Picture> pictureList;
-
-    // Creating Object of ViewPagerAdapter
     ViewPagerAdapter mViewPagerAdapter;
 
     public EstateDetailFragment() {
@@ -83,44 +78,46 @@ public class EstateDetailFragment extends Fragment {
         binding = FragmentEstateDetailBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
         rootView.findViewById(R.id.toolbar_layout);
-        getCurrentEstate();
-        setUpView();
-        setUpEstateViewModel();
-        editEstateLayout();
-        setUpEntryDate();
-        updateContent();
-        CircleIndicator indicator = binding.getRoot().findViewById(R.id.indicator);
-        indicator.setViewPager(mViewPager);
-        imageViewPager();
-        return rootView;
-
-    }
-
-    public void getCurrentEstate() {
 
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey(KEY_ESTATE)) {
             estate = (Estate) bundle.getSerializable(KEY_ESTATE);
         }
+        setUpView();
+        setUpEstateViewModel();
+        Log.e(" estateDetailFragment", "1 " + edit_estate);
+        if (estate != null) {
+            Log.e(" estateDetailFragment", "2 " + estate.getEstateType());
+            setUpEditButton();
+            editEstateLayout();
+            imageViewPager();
+            setUpEntryDate();
+            updateContent();
 
-        edit_estate = binding.getRoot().findViewById(R.id.updateEstate);
+        } else {
+            Toast.makeText(requireContext(),R.string.large_text,Toast.LENGTH_LONG).show();
+        }
+        return rootView;
+    }
+
+    public void imageViewPager() {
+        mViewPager = (ViewPager) binding.viewPagerMain;
+        pictureList = estate.getPictures();
+        mViewPagerAdapter = new ViewPagerAdapter(this.requireContext(), pictureList);
+        mViewPager.setAdapter(mViewPagerAdapter);
+        CircleIndicator indicator = binding.getRoot().findViewById(R.id.indicator);
+        indicator.setViewPager(mViewPager);
+    }
+
+    public void setUpEditButton() {
         edit_estate.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), UpdateEstate.class);
             intent.putExtra(KEY_ESTATE_EDIT, estate);
             startActivity(intent);
         });
-
     }
 
-    public void imageViewPager() {
 
-        mViewPager = (ViewPager) binding.viewPagerMain;
-
-        pictureList = estate.getPictures();
-        mViewPagerAdapter = new ViewPagerAdapter(this.requireContext(), pictureList);
-        mViewPager.setAdapter(mViewPagerAdapter);
-
-    }
 
     @Override
     public void onDestroyView() {
@@ -129,6 +126,7 @@ public class EstateDetailFragment extends Fragment {
     }
 
     public void setUpView() {
+        edit_estate = binding.getRoot().findViewById(R.id.updateEstate);
         coverPicture = binding.getRoot().findViewById(R.id.collapsing_image);
         mapImage = binding.getRoot().findViewById(R.id.map_snapshot);
         surface = binding.surfaceDetailText;
@@ -156,7 +154,11 @@ public class EstateDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateContent();
+        if (estate!= null){
+            updateContent();
+            Log.e(" estateDetailFragment", "3 ");
+
+        }
     }
 
     private void updateContent() {
@@ -229,24 +231,22 @@ public class EstateDetailFragment extends Fragment {
         String format = formatter.format(date.getTime());
         sold.setChecked(estate.getSoldDate() != null);
         ConstraintLayout editOptionsLayout = binding.getRoot().findViewById(R.id.soldDateLayout_detail);
+        if (estate.getSoldDate() != null){
+            editOptionsLayout.setVisibility(View.VISIBLE);
+        }else {
+            editOptionsLayout.setVisibility(View.GONE);
+        }
         sold.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 estate.setSoldDate(format);
-                estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
-                    Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
-                });
-                editOptionsLayout.setVisibility(View.VISIBLE);
             } else {
                 estate.setSoldDate(null);
-                estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
-                    Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
-                });
-                editOptionsLayout.setVisibility(View.GONE);
             }
+            estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
+                Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            });
         });
     }
 
