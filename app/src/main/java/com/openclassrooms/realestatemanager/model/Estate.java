@@ -6,8 +6,6 @@ import java.util.List;
 
 public class Estate implements Serializable {
 
-
-
     String id,description, coverPictureUrl, estateType, address, entryDate, soldDate, city;
     long price, surface, numberOfRoom;
     Boolean isEstatesAvailable = true;

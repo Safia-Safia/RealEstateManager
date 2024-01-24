@@ -6,65 +6,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
+    <!-- Sign Out Button -->
+    <ImageButton
+        android:id="@+id/sign_out_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginVertical="12dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/baseline_logout_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <include
         android:id="@+id/include_filter"
         android:layout_marginTop="15dp"
         android:layout_margin="2dp"
         layout="@layout/filterbutton"
         app:layout_constraintTop_toBottomOf="@id/search_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/estate_list_recyclerview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/estate_list_recyclerview"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 
-    <ImageButton
-        android:id="@+id/button_maps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/google_maps"
-        android:background="@color/fui_transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-    <ImageButton
-        android:id="@+id/sign_out_btn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/baseline_logout_24"
-        app:layout_constraintStart_toEndOf="@+id/estate_list_recyclerview"
-        app:layout_constraintEnd_toStartOf="@id/search_bar"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <!-- Filter Button -->
     <ImageButton
         android:id="@+id/filter_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:padding="10dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/ic_filter_24"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sign_out_btn"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/button_create_property"
-        android:layout_width="wrap_content"
-        android:layout_height="64dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="2dp"
-        android:padding="20dp"
-        android:src="@drawable/baseline_edit_24"
-        android:background="@drawable/search_border"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+    <!-- Search Bar -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_bar"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_marginTop="12dp"
@@ -73,25 +53,53 @@
         app:closeIcon="@drawable/baseline_clear_24"
         app:iconifiedByDefault="false"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/sign_out_btn"
+        app:layout_constraintStart_toEndOf="@id/filter_button"
         app:layout_constraintEnd_toStartOf="@id/button_create_property"
         android:gravity="center_vertical"
-        app:queryHint="Search..."
+        app:queryHint="Chercher par ville..."
         app:searchHintIcon="@null"
         app:searchIcon="@drawable/baseline_search_24" />
+
+    <!-- Create Property Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_create_property"
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="2dp"
+        android:padding="20dp"
+        android:src="@drawable/baseline_edit_24"
+        android:background="@drawable/search_border"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/search_bar"
+        app:layout_constraintEnd_toEndOf="@id/estate_list_recyclerview"
+        />
+
+    <!-- Map Button -->
+    <ImageButton
+        android:id="@+id/button_maps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:elevation="4dp"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/google_maps"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/estate_list_recyclerview"
         android:name="com.openclassrooms.realestatemanager.controller.PropertyListFragment"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/container_margin"
         android:layout_marginEnd="@dimen/container_margin"
         app:layoutManager="LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include_filter"
         tools:context="com.openclassrooms.realestatemanager.controller.databinding.EstateHostActivity"
         tools:listitem="@layout/estate_list_content" />
 
@@ -109,10 +117,9 @@
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/container_margin"
         app:defaultNavHost="false"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_bar"
         app:navGraph="@navigation/primary_details_sub_nav_graph4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

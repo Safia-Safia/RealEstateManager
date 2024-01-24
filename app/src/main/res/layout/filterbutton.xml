@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/filter_button_layout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="5dp"
@@ -13,7 +13,8 @@
         android:id="@+id/noFilterCardView"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:layout_margin="10dp"
+        android:layout_marginVertical="10dp"
+        android:layout_marginStart="30dp"
         app:cardCornerRadius="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -62,8 +63,8 @@
         android:layout_marginVertical="10dp"
         android:layout_marginStart="2dp"
         app:cardCornerRadius="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/schoolcardview">
+        app:layout_constraintStart_toEndOf="@id/parkingcardview"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/sinceAweek"
@@ -155,7 +156,7 @@
         android:layout_marginTop="10dp"
         app:cardCornerRadius="20dp"
         app:layout_constraintStart_toEndOf="@id/sincecardview"
-        app:layout_constraintTop_toBottomOf="@id/parkcardview">
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/sold"
@@ -175,10 +176,10 @@
         android:layout_width="120dp"
         android:layout_height="30dp"
         android:layout_marginVertical="10dp"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="20dp"
         app:cardCornerRadius="20dp"
-        app:layout_constraintStart_toEndOf="@id/soldcardview"
-        app:layout_constraintTop_toBottomOf="@id/parkcardview">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/noFilterCardView">
 
         <Button
             android:id="@+id/plus3pictures"
@@ -201,7 +202,7 @@
         app:cardCornerRadius="18dp"
         app:cardBackgroundColor="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/plus3picturescadview"
         app:layout_constraintTop_toBottomOf="@+id/sincecardview">
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -215,7 +216,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/price_rangebar_layout"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -282,7 +283,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/price_rangebar_layout"

@@ -19,7 +19,6 @@ public class UserViewModel extends ViewModel {
 
     // -- USER'S METHODS --
 
-
     public FirebaseUser getCurrentUser() {
         return userRepository.getCurrentUser();
     }

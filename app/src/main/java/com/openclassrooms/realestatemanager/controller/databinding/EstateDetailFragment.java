@@ -31,6 +31,7 @@ import com.openclassrooms.realestatemanager.repository.UserRepository;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
+import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -56,8 +57,10 @@ public class EstateDetailFragment extends Fragment {
     private Estate estate;
     ImageButton edit_estate;
     EstateViewModel estateViewModel;
+
+    UserViewModel userViewModel;
     ImageView coverPicture, mapImage, userPicture, mailButton;
-    TextView detail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
+    TextView detail, pictureDetail, address, price, nbrOfPiece, surface, type, school, store, park, parking,
             pointStore, pointSchool, pointParking, pointPark, sellerName, entryDate, soldDate;
     private FragmentEstateDetailBinding binding;
 
@@ -76,7 +79,7 @@ public class EstateDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         binding = FragmentEstateDetailBinding.inflate(inflater, container, false);
-        View rootView = binding.getRoot();
+        ViewGroup rootView = binding.getRoot();
         rootView.findViewById(R.id.toolbar_layout);
 
         Bundle bundle = getArguments();
@@ -85,28 +88,48 @@ public class EstateDetailFragment extends Fragment {
         }
         setUpView();
         setUpEstateViewModel();
-        Log.e(" estateDetailFragment", "1 " + edit_estate);
+        setUpUserViewModel();
+
         if (estate != null) {
-            Log.e(" estateDetailFragment", "2 " + estate.getEstateType());
             setUpEditButton();
             editEstateLayout();
             imageViewPager();
             setUpEntryDate();
             updateContent();
-
+            if (pictureList.size() > 0) {
+                String description = pictureList.get(0).getDescription();
+                pictureDetail.setText(description);
+            }
         } else {
-            Toast.makeText(requireContext(),R.string.large_text,Toast.LENGTH_LONG).show();
+            return inflater.inflate(R.layout.no_estate_selected, container, false);
         }
         return rootView;
     }
 
     public void imageViewPager() {
-        mViewPager = (ViewPager) binding.viewPagerMain;
+        mViewPager = binding.viewPagerMain;
         pictureList = estate.getPictures();
         mViewPagerAdapter = new ViewPagerAdapter(this.requireContext(), pictureList);
         mViewPager.setAdapter(mViewPagerAdapter);
         CircleIndicator indicator = binding.getRoot().findViewById(R.id.indicator);
         indicator.setViewPager(mViewPager);
+
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+            @Override
+            public void onPageSelected(int position) {
+                if (position < pictureList.size()) {
+                    String description = pictureList.get(position).getDescription();
+                    pictureDetail.setText(description);
+                }
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     public void setUpEditButton() {
@@ -149,6 +172,7 @@ public class EstateDetailFragment extends Fragment {
         entryDate = binding.getRoot().findViewById(R.id.entryDate_detail);
         soldDate = binding.getRoot().findViewById(R.id.soldDate_detail);
         sold = binding.getRoot().findViewById(R.id.switchButton);
+        pictureDetail = binding.getRoot().findViewById(R.id.pictureDescription_detail);
     }
 
     @Override
@@ -156,8 +180,6 @@ public class EstateDetailFragment extends Fragment {
         super.onResume();
         if (estate!= null){
             updateContent();
-            Log.e(" estateDetailFragment", "3 ");
-
         }
     }
 
@@ -255,7 +277,7 @@ public class EstateDetailFragment extends Fragment {
         ConstraintLayout editOptionsLayout;
         editOptionsLayout = binding.getRoot().findViewById(R.id.layout_switch);
         if (Objects.equals(estate.getUser().getUid(),
-                Objects.requireNonNull(UserRepository.getInstance().getCurrentUser()).getUid())) {
+                Objects.requireNonNull(userViewModel.getCurrentUser()).getUid())) {
             editOptionsLayout.setVisibility(View.VISIBLE);
         } else {
             editOptionsLayout.setVisibility(View.GONE);
@@ -265,6 +287,11 @@ public class EstateDetailFragment extends Fragment {
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireContext());
         this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
+    }
+
+    private void setUpUserViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireContext());
+        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
     }
 
 }

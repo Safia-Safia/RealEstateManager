@@ -142,8 +142,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (currentLocation != null) {
                             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             moveCamera(latLng);
+                            Log.d(TAG, "Device location: " + latLng.toString());
                             getAllEstates();
+                        } else {
+                            Log.e(TAG, "Current location is null");
                         }
+                    } else {
+                        Log.e(TAG, "Error getting device location: " + task.getException());
                     }
                 });
             }

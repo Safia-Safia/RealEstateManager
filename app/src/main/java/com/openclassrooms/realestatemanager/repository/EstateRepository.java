@@ -35,19 +35,6 @@ public class EstateRepository {
         return FirebaseFirestore.getInstance().collection(COLLECTION_ESTATES);
     }
 
-    public static EstateRepository getInstance() {
-        EstateRepository result = instance;
-        if (result != null) {
-            return result;
-        }
-        synchronized (UserRepository.class) {
-            if (instance == null) {
-                instance = new EstateRepository();
-            }
-            return instance;
-        }
-    }
-
     public UploadTask uploadImage(Uri imageUri) {
         String uuid = UUID.randomUUID().toString(); // GENERATE UNIQUE STRING
         StorageReference mImageRef = FirebaseStorage.getInstance().getReference("/" + uuid);

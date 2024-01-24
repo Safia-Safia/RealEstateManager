@@ -25,20 +25,6 @@ public class UserRepository {
     public UserRepository() {
     }
 
-    public static UserRepository getInstance() {
-        UserRepository result = instance;
-        if (result != null) {
-            return result;
-        }
-        synchronized (UserRepository.class) {
-            if (instance == null) {
-                instance = new UserRepository();
-            }
-            return instance;
-        }
-    }
-
-
     //--- CREATE ---
     public void createUser() {
         FirebaseUser user = getCurrentUser();
@@ -66,14 +52,6 @@ public class UserRepository {
     public FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
-
-    //--- GET ---
-    @Nullable
-    public String getCurrentUserUID() {
-        FirebaseUser user = getCurrentUser();
-        return (user != null) ? user.getUid() : null;
-    }
-
 
 }
 
