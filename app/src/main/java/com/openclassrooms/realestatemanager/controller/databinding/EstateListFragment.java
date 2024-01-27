@@ -236,6 +236,9 @@ public class EstateListFragment extends Fragment {
             if (isButtonClicked) {
                 if ("noFilter".equals(filterCriteria)) {
                     selectedFilters.clear();
+                    searchView.setQuery("", false);
+                    searchView.clearFocus();
+                    spinner.setSelection(0);
                 }
                 selectedFilters.add(filterCriteria);
             } else {
@@ -257,22 +260,22 @@ public class EstateListFragment extends Fragment {
                 for (String filterCriteria : selectedFilters) {
                     switch (filterCriteria) {
                         case "school":
-                            isFiltered = estate.getSchool();
+                            isFiltered = isFiltered && estate.getSchool();
                             break;
                         case "store":
-                            isFiltered = estate.getStore();
+                            isFiltered = isFiltered && estate.getStore();
                             break;
                         case "park":
-                            isFiltered = estate.getPark();
+                            isFiltered = isFiltered && estate.getPark();
                             break;
                         case "parking":
-                            isFiltered = estate.getParking();
+                            isFiltered = isFiltered && estate.getParking();
                             break;
                         case "picture":
-                            isFiltered = estate.getPictures().size() >= 3;
+                            isFiltered = isFiltered && (estate.getPictures().size() >= 3);
                             break;
                         case "sold":
-                            isFiltered = estate.getSoldDate() != null && !estate.getSoldDate().isEmpty();
+                            isFiltered = isFiltered && (estate.getSoldDate() != null && !estate.getSoldDate().isEmpty());
                             break;
                         case "lastWeek":
                             Calendar lastWeek= Calendar.getInstance();

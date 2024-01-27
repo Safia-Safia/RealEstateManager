@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,7 +16,6 @@ import static org.mockito.Mockito.when;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
 import com.openclassrooms.realestatemanager.model.User;
@@ -27,24 +27,19 @@ import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
+public class EstateManagerUnitTest {
     @Mock
     private EstateViewModel estateViewModel;
     @Mock
     private EstateRepository estateRepository;
     @Mock
     private UserViewModel userViewModel;
-
-    @Mock
-    private FirebaseAuth firebaseAuth;
-
     @Mock
     private UserRepository userRepository;
 
@@ -54,9 +49,6 @@ public class ExampleUnitTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
-    /*TODO Creer les deux biens ici et les appeler des que besoin
-       Crer une methode pour réinitialiser les valeurs des tests au besoin
-       @Before avant chaque test @After après chaque test*/
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -66,6 +58,7 @@ public class ExampleUnitTest {
         Estate estate2 = new Estate();
         User user1 = new User();
         User user2 = new User();
+
         // USER
         user1.setUid("1");
         user1.setUsername("Jean Dupont");
@@ -158,19 +151,14 @@ public class ExampleUnitTest {
 
     @Test
     public void createEstate() {
-        System.out.println("Before adding Estate: " + estateList.size());
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         Estate newEstate = new Estate();
 
         newEstate.setId(String.valueOf(1));
-        estateList.add(newEstate);
         result.setValue(true);
 
         when(estateRepository.createEstate(Mockito.any(Estate.class))).thenReturn(result);
-        estateViewModel.createEstate(newEstate).observeForever(success -> {
-            assertEquals(estateList.size(),3);
-            System.out.println("After adding new Estate: " + estateList.size());
-        });
+        estateViewModel.createEstate(newEstate).observeForever(Assert::assertTrue);
     }
 
     @Test
@@ -195,11 +183,12 @@ public class ExampleUnitTest {
                 " Description: " + estateList.get(0).getDescription() + " Price: " + estateList.get(0).getPrice()
                 + " userName : " + estateList.get(0).getUser().getUsername());
 
+        estateList.get(0).setSoldDate("2024-01-12");
+        estateList.get(0).setDescription("Updated");
+        estateList.get(0).setPrice(12345);
+
         Mockito.when(estateRepository.updateEstate(estateList.get(0), estateList.get(0).getId())).thenReturn(result);
         estateViewModel.updateEstate(estateList.get(0), estateList.get(0).getId()).observeForever(success -> {
-            estateList.get(0).setSoldDate("2024-01-12");
-            estateList.get(0).setDescription("Updated");
-            estateList.get(0).setPrice(12345);
             assertEquals(true, success);
 
             System.out.println("After update: Sold Date: " + estateList.get(0).getSoldDate() +

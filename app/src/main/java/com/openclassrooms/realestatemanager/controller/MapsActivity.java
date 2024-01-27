@@ -65,7 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void initMap() {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -75,7 +74,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         setUpEstateViewModel();
-        getDeviceLocation();
 
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
@@ -125,12 +123,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void moveCameraToFrance() {
-        LatLng franceLatLng = new LatLng(46.6031, 1.8883);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(franceLatLng, DEFAULT_ZOOM));
-    }
-
-
     public void getDeviceLocation() {
         try {
             if (mLocationPermissionsGranted) {
@@ -142,7 +134,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (currentLocation != null) {
                             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             moveCamera(latLng);
-                            Log.d(TAG, "Device location: " + latLng.toString());
                             getAllEstates();
                         } else {
                             Log.e(TAG, "Current location is null");
@@ -172,17 +163,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            if (ContextCompat.checkSelfPermission(getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mLocationPermissionsGranted = true;
-                initMap();
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(permissions, LOCATION_PERMISSION_REQUEST_CODE);
-                }
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionsGranted = true;
+            initMap();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
         }
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
