@@ -1,13 +1,18 @@
 package com.openclassrooms.realestatemanager;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import android.net.wifi.WifiManager;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
+
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -16,11 +21,22 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
-    @Test
-    public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.openclassrooms.go4lunch", appContext.getPackageName());
+    Context context;
+    @Before
+    public void setUp()  {
+        context = ApplicationProvider.getApplicationContext();
+    }
+
+
+    @Test
+    public void isWifiAvailable() {
+        assertTrue(Utils.isInternet_Available(context));
+    }
+
+    @Test
+    public void isWifiUnavailable() {
+        assertFalse(Utils.isInternet_Available(context));
+
     }
 }

@@ -108,7 +108,6 @@ public class AddEstate extends AppCompatActivity {
         cancelBtn = findViewById(R.id.cancel_btn);
         estate = new Estate();
 
-
     }
 
     private void setUpEstateViewModel() {
@@ -291,8 +290,6 @@ public class AddEstate extends AppCompatActivity {
     }
 
     private void sendNotification() {
-        String title = "Bien créé";
-        String body = "Votre bien a été enregistré.";
         int smallIconResId = R.drawable.thumb_icon;
         String channelId = NOTIFICATION_CHANNEL;
         Intent intent = new Intent(this, EstateHostActivity.class);
@@ -300,8 +297,8 @@ public class AddEstate extends AppCompatActivity {
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setContentTitle(title)
-                        .setContentText(body)
+                        .setContentTitle(getString(R.string.title_estate_saved))
+                        .setContentText(getString(R.string.estate_saved_notification))
                         .setSmallIcon(smallIconResId)
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))

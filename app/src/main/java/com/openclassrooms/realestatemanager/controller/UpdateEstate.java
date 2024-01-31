@@ -6,7 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +24,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -35,18 +34,13 @@ import com.openclassrooms.realestatemanager.controller.databinding.EstateHostAct
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateAdapter;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
-import com.openclassrooms.realestatemanager.repository.EstateRepository;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
-import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,7 +55,6 @@ public class UpdateEstate extends AppCompatActivity {
     private EstateAdapter propertyAdapter;
     private List<Picture> property_picture;
     EstateViewModel estateViewModel;
-    UserViewModel userViewModel;
     CheckBox schoolCheckBox, parkCheckBox, parkingCheckBox, storeCheckBox;
 
     @Override
@@ -151,12 +144,7 @@ public class UpdateEstate extends AppCompatActivity {
 
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
-    }
-
-    private void setUpUserViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
+        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
     }
 
     private void setUpSpinner() {

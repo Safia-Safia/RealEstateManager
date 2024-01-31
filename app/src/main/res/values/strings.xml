@@ -189,4 +189,6 @@
     <string name="action_settings">Settings</string>
     <string name="soldDate">Date de vente</string>
     <string name="de_3_photos">+ de 3 photos</string>
+    <string name="estate_saved_notification">Votre bien a été enregistré.</string>
+    <string name="title_estate_saved">Bien créé</string>
 </resources>

@@ -9,12 +9,15 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+
 import static org.mockito.Mockito.when;
+
+import android.content.Context;
+import android.net.wifi.WifiManager;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
+import androidx.test.core.app.ApplicationProvider;
 
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
@@ -24,7 +27,6 @@ import com.openclassrooms.realestatemanager.repository.UserRepository;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,6 @@ public class EstateManagerUnitTest {
     private UserRepository userRepository;
 
     ArrayList<Estate> estateList = new ArrayList<>();
-
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();

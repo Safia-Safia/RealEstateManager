@@ -1,7 +1,10 @@
 package com.openclassrooms.realestatemanager.viewModel;
 
 import android.content.Context;
+import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.firebase.ui.auth.AuthUI;
@@ -27,8 +30,14 @@ public class UserViewModel extends ViewModel {
         return (this.getCurrentUser() != null);
     }
 
-    public void signOut(Context context) {
-        AuthUI.getInstance().signOut(context);
+    public LiveData<Boolean> signOut(Context context) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+        AuthUI.getInstance().signOut(context).addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                result.postValue(true);
+            }
+        });
+        return result;
     }
 
     public void createUser() {

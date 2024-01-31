@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
@@ -59,7 +60,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
+        this.userViewModel = new ViewModelProvider(this, viewModelFactory).get(UserViewModel.class);
     }
 
     private void signInBuilder(List<AuthUI.IdpConfig> providers) {

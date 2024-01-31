@@ -9,10 +9,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 
@@ -33,6 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jem.rubberpicker.RubberRangePicker;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.AddEstate;
+import com.openclassrooms.realestatemanager.controller.AuthenticationActivity;
 import com.openclassrooms.realestatemanager.controller.MapsActivity;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateListAdapter;
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateListBinding;
@@ -135,6 +138,7 @@ public class EstateListFragment extends Fragment {
     public static EstateListFragment newInstance() {
         return (new EstateListFragment());
     }
+
     private void initSearchBar() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -278,7 +282,7 @@ public class EstateListFragment extends Fragment {
                             isFiltered = isFiltered && (estate.getSoldDate() != null && !estate.getSoldDate().isEmpty());
                             break;
                         case "lastWeek":
-                            Calendar lastWeek= Calendar.getInstance();
+                            Calendar lastWeek = Calendar.getInstance();
                             Date referenceDate = new Date();
                             lastWeek.setTime(referenceDate);
                             lastWeek.add(Calendar.DAY_OF_MONTH, -7);
@@ -358,7 +362,7 @@ public class EstateListFragment extends Fragment {
 
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireActivity());
-        this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
+        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
     }
 
     private void getAllEstates() {
@@ -403,8 +407,19 @@ public class EstateListFragment extends Fragment {
                     .setMessage(R.string.logout_message)
                     .setCancelable(true)
                     .setPositiveButton("Oui", (dialog, which) -> {
-                        ((EstateHostActivity) EstateListFragment.this.requireActivity()).userViewModel.signOut(EstateListFragment.this.requireContext());
-                        EstateListFragment.this.requireActivity().finish();
+                        ((EstateHostActivity) EstateListFragment.this.requireActivity())
+                                .userViewModel.signOut(EstateListFragment.this.requireContext()).observe(getViewLifecycleOwner(), isSuccessful -> {
+
+                                    if (isSuccessful) {
+                                        Intent intent = new Intent(EstateListFragment.this.requireActivity(), AuthenticationActivity.class);
+                                        startActivity(intent);
+                                        EstateListFragment.this.requireActivity().finish();
+                                    }
+                                });
+
+                    })
+                    .setNegativeButton("Non", (dialogInterface, i) -> {
+
                     })
                     .create()
                     .show();
