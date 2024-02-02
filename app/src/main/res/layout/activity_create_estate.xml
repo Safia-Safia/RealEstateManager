@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/estate_pricec_increate"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 app:layout_constraintStart_toEndOf="@+id/house_price_image"
                 app:layout_constraintTop_toBottomOf="@id/edittext_house_price" />
 
@@ -125,7 +125,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/surface_m"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="@id/house_surface_image"
                 app:layout_constraintTop_toBottomOf="@id/edittext_surface" />
 
@@ -152,8 +152,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:text="Nbr de pièces"
-                android:textSize="10sp"
+                android:text="@string/nbr_piece"
+                android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="@id/house_nbr_of_piece_image"
                 app:layout_constraintTop_toBottomOf="@id/edittext_nbr_of_piece" />
 

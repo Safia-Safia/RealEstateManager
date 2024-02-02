@@ -8,17 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
@@ -27,7 +25,6 @@ import com.openclassrooms.realestatemanager.controller.placeholder.ViewPagerAdap
 import com.openclassrooms.realestatemanager.databinding.FragmentEstateDetailBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
-import com.openclassrooms.realestatemanager.repository.UserRepository;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
@@ -286,12 +283,12 @@ public class EstateDetailFragment extends Fragment {
 
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireContext());
-        this.estateViewModel = ViewModelProviders.of(this, viewModelFactory).get(EstateViewModel.class);
+        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
     }
 
     private void setUpUserViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireContext());
-        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
+        this.userViewModel = new ViewModelProvider(this, viewModelFactory).get(UserViewModel.class);
     }
 
 }

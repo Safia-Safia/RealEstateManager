@@ -11,7 +11,6 @@ import com.openclassrooms.realestatemanager.controller.databinding.EstateDetailF
 import com.openclassrooms.realestatemanager.model.Estate;
 
 public class DetailActivity extends AppCompatActivity {
-    private Estate estate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +19,7 @@ public class DetailActivity extends AppCompatActivity {
 
         EstateDetailFragment fragment = new EstateDetailFragment();
 
-        estate = (Estate) getIntent().getSerializableExtra(KEY_ESTATE);
+        Estate estate = (Estate) getIntent().getSerializableExtra(KEY_ESTATE);
         Bundle bundle = new Bundle();
         bundle.putSerializable(EstateDetailFragment.KEY_ESTATE, estate);
         fragment.setArguments(bundle);

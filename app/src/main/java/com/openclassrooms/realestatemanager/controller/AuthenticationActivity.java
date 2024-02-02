@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -93,11 +92,11 @@ public class AuthenticationActivity extends AppCompatActivity {
             // SUCCESS
             if (resultCode == RESULT_OK) {
                 userViewModel.createUser();
-                showToast("Connecté");
+                showToast(getString(R.string.connected));
                 startPropertyListFragment();
                 progressBar.setVisibility(View.INVISIBLE);
             } else if (response == null) {
-                showToast("Pas connecté");
+                showToast(getString(R.string.not_connected));
             }
         }
     }

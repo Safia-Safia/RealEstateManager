@@ -191,4 +191,12 @@
     <string name="de_3_photos">+ de 3 photos</string>
     <string name="estate_saved_notification">Votre bien a été enregistré.</string>
     <string name="title_estate_saved">Bien créé</string>
+    <string name="not_connected">Pas connecté</string>
+    <string name="connected">Connecté</string>
+    <string name="nbr_piece">Nbr de pièces</string>
+    <string name="pieces">pieces</string>
+    <string name="prix">Prix</string>
+    <string name="none">Aucun</string>
+    <string name="less_a_week">Depuis moins d\'une semaine</string>
+    <string name="surface">Surface</string>
 </resources>

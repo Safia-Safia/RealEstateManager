@@ -14,7 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginVertical="10dp"
-        android:layout_marginStart="30dp"
         app:cardCornerRadius="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,7 +26,7 @@
             android:background="@drawable/filter_boder_blue"
             android:gravity="center"
             android:onClick="allFilterTapped"
-            android:text="Aucun"
+            android:text="@string/none"
             android:textAlignment="gravity"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
@@ -50,7 +49,7 @@
             android:layout_weight="1"
             android:background="@drawable/filter_boder_blue"
             android:gravity="center"
-            android:text="Ecole"
+            android:text="@string/school"
             android:textAlignment="gravity"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
@@ -74,7 +73,7 @@
             android:layout_weight="1"
             android:background="@drawable/filter_boder_blue"
             android:gravity="center"
-            android:text="Magasin"
+            android:text="@string/store"
             android:textAlignment="gravity"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
@@ -98,7 +97,7 @@
             android:layout_weight="1"
             android:background="@drawable/filter_boder_blue"
             android:gravity="center"
-            android:text="Parc"
+            android:text="@string/park"
             android:textAlignment="gravity"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
@@ -110,6 +109,7 @@
         android:layout_marginVertical="10dp"
         android:layout_marginStart="5dp"
         app:cardCornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/parkcardview"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -120,7 +120,7 @@
             android:layout_weight="1"
             android:background="@drawable/filter_boder_blue"
             android:gravity="center"
-            android:text="Parking"
+            android:text="@string/parking"
             android:textAlignment="gravity"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
@@ -143,7 +143,7 @@
             android:layout_weight="1"
             android:background="@drawable/filter_boder_blue"
             android:gravity="center"
-            android:text="Depuis moins d'une semaine"
+            android:text="@string/less_a_week"
             android:textAlignment="gravity"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
@@ -156,6 +156,7 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="10dp"
         app:cardCornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/sincecardview"
         app:layout_constraintTop_toBottomOf="@id/noFilterCardView">
 
@@ -166,7 +167,7 @@
             android:layout_weight="1"
             android:background="@drawable/filter_boder_blue"
             android:gravity="center"
-            android:text="Vendu"
+            android:text="@string/sold"
             android:textAlignment="gravity"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
@@ -177,7 +178,7 @@
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:layout_marginVertical="10dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         app:cardCornerRadius="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/noFilterCardView">
@@ -230,7 +231,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Prix"
+            android:text="@string/prix"
             android:textColor="@color/navy"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -243,7 +244,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="25dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rangeBarPriceTitle"
@@ -296,7 +297,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="21dp"
-            android:text="Surface"
+            android:text="@string/surface"
             android:textColor="@color/navy"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -309,7 +310,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="25dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rangeBarSurfaceTitle"

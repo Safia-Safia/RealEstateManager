@@ -7,7 +7,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 import android.content.Intent;
@@ -29,8 +28,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.databinding.EstateDetailFragment;
-import com.openclassrooms.realestatemanager.controller.databinding.EstateHostActivity;
 import com.openclassrooms.realestatemanager.databinding.ActivityMapsBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
@@ -162,14 +159,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getLocationPermission() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
-        Log.e("getLocationPermission", "1");
         if (ContextCompat.checkSelfPermission(getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionsGranted = true;
-            Log.e("getLocationPermission", "2");
             initMap();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.e("getLocationPermission", "3");
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
         }

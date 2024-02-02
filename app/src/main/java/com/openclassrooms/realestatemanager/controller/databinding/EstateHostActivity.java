@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -44,7 +44,7 @@ public class EstateHostActivity extends AppCompatActivity {
 
     private void setUserViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
+        this.userViewModel =new ViewModelProvider(this, viewModelFactory).get(UserViewModel.class);
     }
 
     @Override

@@ -26,8 +26,6 @@ import java.util.UUID;
 public class EstateRepository {
     public static final String COLLECTION_ESTATES = "estates";
 
-    private static volatile EstateRepository instance;
-
     public EstateRepository() {
     }
 
@@ -117,8 +115,7 @@ public class EstateRepository {
                     result.setValue(true);
                 }
             }else {
-                Log.e("if error",""+ i);
-                //En cas de souci
+                Log.e("if error"," "+ i);
             }
 
         }
