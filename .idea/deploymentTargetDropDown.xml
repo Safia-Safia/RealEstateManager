@@ -10,12 +10,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\safsa\.android\avd\Pixel_Tablet_API_29.avd" />
+                  <value value="C:\Users\safsa\.android\avd\Pixel_7_API_29.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-02T22:09:08.709923Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-02-03T12:50:56.372492100Z" />
         </State>
       </entry>
       <entry key="isWifiAvailable()">

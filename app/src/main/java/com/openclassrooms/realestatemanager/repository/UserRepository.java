@@ -41,6 +41,7 @@ public class UserRepository {
                 String randomUserImage = images[randomIndex];
                 urlPicture = randomUserImage;
             }
+            //TODO créer que si ça n'existe pas
             User userToCreate = new User(uid, username, urlPicture, email);
             getUsersCollection().add(userToCreate);
         }

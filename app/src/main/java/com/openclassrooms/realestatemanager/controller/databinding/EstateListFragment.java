@@ -240,6 +240,10 @@ public class EstateListFragment extends Fragment {
                     selectedFilters.clear();
                     searchView.setQuery("", false);
                     searchView.clearFocus();
+                    priceRangeBar.setCurrentStartValue(priceRangeBar.getMin());
+                    priceRangeBar.setCurrentEndValue(priceRangeBar.getMax());
+                    surfaceRangeBar.setCurrentStartValue(surfaceRangeBar.getMin());
+                    surfaceRangeBar.setCurrentEndValue(surfaceRangeBar.getMax());
                     spinner.setSelection(0);
                 }
                 selectedFilters.add(filterCriteria);

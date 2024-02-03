@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,9 +150,9 @@ public class EstateDetailFragment extends Fragment {
         edit_estate = binding.getRoot().findViewById(R.id.updateEstate);
         coverPicture = binding.getRoot().findViewById(R.id.collapsing_image);
         mapImage = binding.getRoot().findViewById(R.id.map_snapshot);
-        surface = binding.surfaceDetailText;
-        price = binding.priceDetailTextView;
-        nbrOfPiece = binding.houseNbrOfPieceTextDetail;
+        surface = binding.getRoot().findViewById(R.id.surface_detail_text);
+        price = binding.getRoot().findViewById(R.id.price_detail_textView);
+        nbrOfPiece = binding.getRoot().findViewById(R.id.house_nbr_of_piece_text_detail);
         detail = binding.getRoot().findViewById(R.id.description_detail);
         address = binding.getRoot().findViewById(R.id.address_detail);
         type = binding.getRoot().findViewById(R.id.type_detail_text);
@@ -217,6 +218,7 @@ public class EstateDetailFragment extends Fragment {
         Glide.with(this).load(imageUrl).into(mapImage);
         setUpMailButton();
         Glide.with(this).load(estate.getUser().getUrlPicture()).circleCrop().into(userPicture);
+        Log.e("current user", estate.getUser().getUrlPicture());
         soldDate.setText(estate.getSoldDate());
     }
 

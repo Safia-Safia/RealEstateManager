@@ -22,6 +22,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,6 +36,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.databinding.EstateHostActivity;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateAdapter;
@@ -262,10 +264,16 @@ public class AddEstate extends AppCompatActivity {
             estate.setSurface(Integer.parseInt(surface.getText().toString()));
             estate.setDescription(textDescription.getText().toString());
             User newUser = new User();
+            FirebaseUser user = userViewModel.getCurrentUser();
+           // user.getUid()
+        //TODO récupérer le current user de firebase
             newUser.setUid(userViewModel.getCurrentUser().getUid());
             newUser.setEmail(userViewModel.getCurrentUser().getEmail());
             newUser.setUsername(userViewModel.getCurrentUser().getDisplayName());
-            newUser.setUrlPicture(String.valueOf(userViewModel.getCurrentUser().getPhotoUrl()));
+            newUser.setUrlPicture(String.valueOf(estate.getUser().getUrlPicture()));
+            Log.e("photourl", userViewModel.getCurrentUser().getPhotoUrl() + "");
+            Log.e("photourl 2", estate.getUser().getUrlPicture());
+
             estate.setUser(newUser);
             if (schoolCheckBox.isChecked()) {
                 estate.setSchool(true);
