@@ -218,7 +218,6 @@ public class EstateDetailFragment extends Fragment {
         Glide.with(this).load(imageUrl).into(mapImage);
         setUpMailButton();
         Glide.with(this).load(estate.getUser().getUrlPicture()).circleCrop().into(userPicture);
-        Log.e("current user", estate.getUser().getUrlPicture());
         soldDate.setText(estate.getSoldDate());
     }
 

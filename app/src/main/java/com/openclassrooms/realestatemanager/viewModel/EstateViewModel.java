@@ -1,11 +1,8 @@
 package com.openclassrooms.realestatemanager.viewModel;
 
-import android.net.Uri;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.Task;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.repository.EstateRepository;
 

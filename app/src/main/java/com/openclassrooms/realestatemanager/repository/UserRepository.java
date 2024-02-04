@@ -27,23 +27,30 @@ public class UserRepository {
     public void createUser() {
         FirebaseUser user = getCurrentUser();
         if (user != null) {
-            String urlPicture = (user.getPhotoUrl() != null) ? user.getPhotoUrl().toString() : null;
-            String username = user.getDisplayName();
-            String uid = user.getUid();
             String email = user.getEmail();
-            if (urlPicture == null){
-                String[] images = {"https://i.pravatar.cc/150?u=a042581f4e29026704a",
-                        "https://i.pravatar.cc/150?u=a042581f4e29026704b",
-                        "https://i.pravatar.cc/150?u=a042581f4e29026704c",
-                        "https://i.pravatar.cc/150?u=a042581f4e29026704d"};
+            CollectionReference usersCollection = getUsersCollection();
 
-                int randomIndex = new Random().nextInt(images.length);
-                String randomUserImage = images[randomIndex];
-                urlPicture = randomUserImage;
+            // Check if user with the same email already exists
+            boolean userExists = usersCollection.whereEqualTo("email", email).get().getResult().size() > 0;
+
+            if (!userExists) {
+                String urlPicture = (user.getPhotoUrl() != null) ? user.getPhotoUrl().toString() : null;
+                String username = user.getDisplayName();
+                String uid = user.getUid();
+
+                if (urlPicture == null){
+                    String[] images = {"https://i.pravatar.cc/150?u=a042581f4e29026704a",
+                            "https://i.pravatar.cc/150?u=a042581f4e29026704b",
+                            "https://i.pravatar.cc/150?u=a042581f4e29026704c",
+                            "https://i.pravatar.cc/150?u=a042581f4e29026704d"};
+
+                    int randomIndex = new Random().nextInt(images.length);
+                    urlPicture = images[randomIndex];
+                }
+
+                User userToCreate = new User(uid, username, urlPicture, email);
+                usersCollection.add(userToCreate);
             }
-            //TODO créer que si ça n'existe pas
-            User userToCreate = new User(uid, username, urlPicture, email);
-            getUsersCollection().add(userToCreate);
         }
     }
 

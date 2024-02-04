@@ -408,7 +408,7 @@ public class EstateListFragment extends Fragment {
             new AlertDialog.Builder(this.requireContext())
                     .setMessage(R.string.logout_message)
                     .setCancelable(true)
-                    .setPositiveButton("Oui", (dialog, which) -> {
+                    .setPositiveButton(getResources().getString(R.string.oui), (dialog, which) -> {
                         ((EstateHostActivity) EstateListFragment.this.requireActivity())
                                 .userViewModel.signOut(EstateListFragment.this.requireContext()).observe(getViewLifecycleOwner(), isSuccessful -> {
 
@@ -420,7 +420,7 @@ public class EstateListFragment extends Fragment {
                                 });
 
                     })
-                    .setNegativeButton("Non", (dialogInterface, i) -> {
+                    .setNegativeButton(getResources().getString(R.string.non), (dialogInterface, i) -> {
 
                     })
                     .create()
@@ -464,7 +464,7 @@ public class EstateListFragment extends Fragment {
         priceRangeBar.setHighlightThumbOnTouchColor(Color.CYAN);
 
 
-        //COMBIEN DE BIEN ONT LE MEME PRIX
+        //How many estates has the same price
         Map<Long, Integer> countMap = new TreeMap<>();
         for (Estate estate : estates) {
             if (countMap.containsKey(estate.getPrice())) {

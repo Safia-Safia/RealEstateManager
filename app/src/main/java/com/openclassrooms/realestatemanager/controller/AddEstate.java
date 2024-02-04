@@ -22,7 +22,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,7 +35,6 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseUser;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controller.databinding.EstateHostActivity;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateAdapter;
@@ -56,6 +54,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class AddEstate extends AppCompatActivity {
     Uri imageUri;
@@ -264,16 +263,18 @@ public class AddEstate extends AppCompatActivity {
             estate.setSurface(Integer.parseInt(surface.getText().toString()));
             estate.setDescription(textDescription.getText().toString());
             User newUser = new User();
-            FirebaseUser user = userViewModel.getCurrentUser();
-           // user.getUid()
-        //TODO récupérer le current user de firebase
             newUser.setUid(userViewModel.getCurrentUser().getUid());
             newUser.setEmail(userViewModel.getCurrentUser().getEmail());
             newUser.setUsername(userViewModel.getCurrentUser().getDisplayName());
-            newUser.setUrlPicture(String.valueOf(estate.getUser().getUrlPicture()));
-            Log.e("photourl", userViewModel.getCurrentUser().getPhotoUrl() + "");
-            Log.e("photourl 2", estate.getUser().getUrlPicture());
 
+            String urlPicture;
+            if (userViewModel.getCurrentUser().getPhotoUrl() != null) {
+                urlPicture = String.valueOf(userViewModel.getCurrentUser().getPhotoUrl());
+            } else {
+                urlPicture = getRandomImageUrl();
+            }
+
+            newUser.setUrlPicture(urlPicture);
             estate.setUser(newUser);
             if (schoolCheckBox.isChecked()) {
                 estate.setSchool(true);
@@ -295,6 +296,18 @@ public class AddEstate extends AppCompatActivity {
 
         });
 
+    }
+
+    private String getRandomImageUrl() {
+        String[] images = {
+                "https://i.pravatar.cc/150?u=a042581f4e29026704a",
+                "https://i.pravatar.cc/150?u=a042581f4e29026704b",
+                "https://i.pravatar.cc/150?u=a042581f4e29026704c",
+                "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+        };
+
+        int randomIndex = new Random().nextInt(images.length);
+        return images[randomIndex];
     }
 
     private void sendNotification() {

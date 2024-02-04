@@ -42,7 +42,7 @@ public class EstateRepository {
     public LiveData<Boolean> createEstate(Estate estate) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         for (int i = 0; i < estate.getPictures().size(); i++) {
-            int finalI = i; //Valeur finale de la variable I
+            int finalI = i; //Final value de la variable I
             uploadImage(estate.getPictures().get(i).getImageUri()).addOnSuccessListener(taskSnapshot -> {
                 taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(url -> {
                     estate.setId(getEstateCollection().document().getId());

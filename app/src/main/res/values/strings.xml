@@ -72,7 +72,7 @@
     <string name="parc">Parc</string>
     <string name="magasin">Magasin</string>
     <string name="entry_date">Date d\'entrée</string>
-    <string name="find_you_re_property">find you\'re property</string>
+    <string name="find_you_re_property">Find you\'re property</string>
     <string name="_0">0</string>
     <string name="select_image">Sélectionner une image</string>
     <string name="logout_message">Souhaitez vous déconnecté ?</string>
@@ -199,4 +199,8 @@
     <string name="none">Aucun</string>
     <string name="less_a_week">Depuis moins d\'une semaine</string>
     <string name="surface">Surface</string>
+    <string name="oui">Oui</string>
+    <string name="non">Non</string>
+    <string name="ok">OK</string>
+    <string name="no_estate_selected">Pas de bien sélectionné</string>
 </resources>

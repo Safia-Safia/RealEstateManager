@@ -227,7 +227,7 @@ public class UpdateEstate extends AppCompatActivity {
         pictureDescription = customLayout.findViewById(R.id.edittext_alert_dialog_picture);
         alertDialog.setView(customLayout);
         alertDialog.setTitle(getString(R.string.describe_picture));
-        alertDialog.setPositiveButton("OK", (dialog, which) -> {
+        alertDialog.setPositiveButton(getResources().getString(R.string.ok), (dialog, which) -> {
             Picture picture = new Picture();
             picture.setImageUri(imageUri);
             picture.setDescription(pictureDescription.getText().toString());

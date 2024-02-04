@@ -5,8 +5,6 @@ import android.net.Uri;
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Picture implements Serializable {
 
