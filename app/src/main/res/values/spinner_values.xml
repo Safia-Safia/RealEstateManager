@@ -2,11 +2,9 @@
 <resources>
 <string-array name="type_of_property_spinner">
     <item>Selectionner le type de bien</item>
+    <item>Studio</item>
     <item>Appartement</item>
     <item>Maison</item>
-    <item>Pavillon</item>
-    <item>Loft</item>
     <item>Manoir</item>
-    <item>Studio</item>
 </string-array>
 </resources>

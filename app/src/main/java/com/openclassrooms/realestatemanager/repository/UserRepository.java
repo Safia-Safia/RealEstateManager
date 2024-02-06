@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.repository;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,29 +32,36 @@ public class UserRepository {
             String email = user.getEmail();
             CollectionReference usersCollection = getUsersCollection();
 
-            // Check if user with the same email already exists
-            boolean userExists = usersCollection.whereEqualTo("email", email).get().getResult().size() > 0;
+            usersCollection.whereEqualTo("email", email).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    boolean userExists = task.getResult().size() > 0;
 
-            if (!userExists) {
-                String urlPicture = (user.getPhotoUrl() != null) ? user.getPhotoUrl().toString() : null;
-                String username = user.getDisplayName();
-                String uid = user.getUid();
+                    if (!userExists) {
+                        String urlPicture = (user.getPhotoUrl() != null) ? user.getPhotoUrl().toString() : null;
+                        String username = user.getDisplayName();
+                        String uid = user.getUid();
 
-                if (urlPicture == null){
-                    String[] images = {"https://i.pravatar.cc/150?u=a042581f4e29026704a",
-                            "https://i.pravatar.cc/150?u=a042581f4e29026704b",
-                            "https://i.pravatar.cc/150?u=a042581f4e29026704c",
-                            "https://i.pravatar.cc/150?u=a042581f4e29026704d"};
+                        if (urlPicture == null) {
+                            String[] images = {"https://i.pravatar.cc/150?u=a042581f4e29026704a",
+                                    "https://i.pravatar.cc/150?u=a042581f4e29026704b",
+                                    "https://i.pravatar.cc/150?u=a042581f4e29026704c",
+                                    "https://i.pravatar.cc/150?u=a042581f4e29026704d"};
 
-                    int randomIndex = new Random().nextInt(images.length);
-                    urlPicture = images[randomIndex];
+                            int randomIndex = new Random().nextInt(images.length);
+                            urlPicture = images[randomIndex];
+                        }
+
+                        User userToCreate = new User(uid, username, urlPicture, email);
+                        usersCollection.add(userToCreate);
+                    }
+                } else {
+                    // Gérer l'erreur ici, si nécessaire
+                    Log.e("UserRepository", "Error checking user existence", task.getException());
                 }
-
-                User userToCreate = new User(uid, username, urlPicture, email);
-                usersCollection.add(userToCreate);
-            }
+            });
         }
     }
+
 
     @Nullable
     public FirebaseUser getCurrentUser() {
