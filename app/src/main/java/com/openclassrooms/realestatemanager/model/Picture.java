@@ -10,10 +10,8 @@ import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
 
-@Entity
 public class Picture implements Serializable {
-    @PrimaryKey
-    @NonNull
+
     private String id;
     String imageUrl, description;
 
@@ -22,8 +20,6 @@ public class Picture implements Serializable {
 
     public Picture() {
     }
-
-    ;
 
     public String getImageUrl() {
         return imageUrl;

@@ -27,7 +27,6 @@ import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
-import com.openclassrooms.realestatemanager.viewModel.EstateDataViewModel;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
@@ -64,7 +63,6 @@ public class EstateDetailFragment extends Fragment {
 
     SwitchCompat sold;
     ViewPager mViewPager;
-    EstateDataViewModel estateDataViewModel;
 
     List<Picture> pictureList;
     ViewPagerAdapter mViewPagerAdapter;
@@ -88,7 +86,6 @@ public class EstateDetailFragment extends Fragment {
         setUpView();
         setUpEstateViewModel();
         setUpUserViewModel();
-        configureViewModel();
 
         if (estate != null) {
             setUpEditButton();
@@ -283,11 +280,6 @@ public class EstateDetailFragment extends Fragment {
         } else {
             editOptionsLayout.setVisibility(View.GONE);
         }
-    }
-
-    public void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireContext());
-        this.estateDataViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateDataViewModel.class);
     }
 
     private void setUpEstateViewModel() {

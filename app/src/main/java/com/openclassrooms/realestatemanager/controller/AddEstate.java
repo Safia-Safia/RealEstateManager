@@ -43,7 +43,6 @@ import com.openclassrooms.realestatemanager.model.Picture;
 import com.openclassrooms.realestatemanager.model.User;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
-import com.openclassrooms.realestatemanager.viewModel.EstateDataViewModel;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
@@ -73,7 +72,6 @@ public class AddEstate extends AppCompatActivity {
     EstateViewModel estateViewModel;
     UserViewModel userViewModel;
 
-    EstateDataViewModel estateDataViewModel;
     CheckBox schoolCheckBox, parkCheckBox, parkingCheckBox, storeCheckBox;
 
     @Override
@@ -86,7 +84,6 @@ public class AddEstate extends AppCompatActivity {
         setSearchLocation();
         setUpEstateViewModel();
         setUpUserViewModel();
-        configureViewModel();
         setUpEntryDate();
         saveEstate();
         setCancelBtn();
@@ -125,10 +122,6 @@ public class AddEstate extends AppCompatActivity {
         this.userViewModel = new ViewModelProvider(this, viewModelFactory).get(UserViewModel.class);
     }
 
-    public void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.estateDataViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateDataViewModel.class);
-    }
 
     private void spinner() {
         spinner = findViewById(R.id.type_of_property_spinner);
@@ -296,12 +289,9 @@ public class AddEstate extends AppCompatActivity {
             if (parkingCheckBox.isChecked()) {
                 estate.setParking(true);
             }
-
-            estateViewModel.createEstate(estate).observe(this, aBoolean -> {
+            estateViewModel.createEstate(estate);
                 sendNotification();
                 finish();
-            });
-
         });
 
     }

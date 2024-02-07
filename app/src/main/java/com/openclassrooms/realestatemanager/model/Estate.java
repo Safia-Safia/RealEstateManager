@@ -2,22 +2,19 @@ package com.openclassrooms.realestatemanager.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(tableName = "estates",
-        foreignKeys = @ForeignKey(entity = User.class,
-                parentColumns = "uid",
-                childColumns = "userId",
-                onDelete = ForeignKey.CASCADE),
-        indices = {@Index("userId")})
+@Entity(tableName = "estates")
 public class Estate implements Serializable {
 
     @PrimaryKey
@@ -33,12 +30,9 @@ public class Estate implements Serializable {
     Boolean parking = false;
     @Ignore
     User user;
-
-    private long userId;
-
     @Ignore
     List<Picture> pictures = new ArrayList<>();
-    Double latitude, longitude;
+    private Double latitude, longitude;
 
     public Estate() {
     }
@@ -203,12 +197,5 @@ public class Estate implements Serializable {
         this.longitude = longitude;
     }
 
-    // Getter et setter pour userId
-    public long getUserId() {
-        return userId;
-    }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
 }

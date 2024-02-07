@@ -42,8 +42,13 @@ public class EstateRepository {
         StorageReference mImageRef = FirebaseStorage.getInstance().getReference("/" + uuid);
         return mImageRef.putFile(imageUri);
     }
-
-    public LiveData<Boolean> createEstate(Estate estate) {
+    public void createEstate(Estate estate) {
+        estateDao.createEstate(estate);
+    }
+    public LiveData<List<Estate>> getEstate() {
+        return this.estateDao.getEstates();
+    }
+   /*public LiveData<Boolean> createEstate(Estate estate) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         for (int i = 0; i < estate.getPictures().size(); i++) {
             int finalI = i; //Final value de la variable I
@@ -54,29 +59,28 @@ public class EstateRepository {
                     if (finalI == estate.getPictures().size() - 1) {
                         estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                         getEstateCollection().document().set(estate);
-                       estateDao.createEstate(estate);
                        result.setValue(true);
                     }
                 });
             });
         }
-
+        estateDao.createEstate(estate);
         return result;
-    }
+    }*/
 
     public LiveData<List<Estate>> getEstates() {
         MutableLiveData<List<Estate>> result = new MutableLiveData<>();
-        getEstateCollection().get().addOnCompleteListener(task -> {
+        estateDao.getEstates();
+        /*getEstateCollection().get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<Estate> estateList= new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Estate estate = document.toObject(Estate.class);
                             estateList.add(estate);
                         }
-                        estateDao.getEstates();
                         result.postValue(estateList);
                     }
-                });
+                });*/
         return result;
     }
 
@@ -107,8 +111,9 @@ public class EstateRepository {
                             estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                             updatedFields.put("pictures", estate.getPictures());
                             updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
+
                             estateDao.updateEstate(estate);
-                            getEstateCollection().document().update(updatedFields);
+                            getEstateCollection().document(estateId).update(updatedFields);
                             result.setValue(true);
                         }
                     });
@@ -118,8 +123,8 @@ public class EstateRepository {
                     estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                     updatedFields.put("pictures", estate.getPictures());
                     updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
-                    getEstateCollection().document().update(updatedFields);
                     estateDao.updateEstate(estate);
+                    getEstateCollection().document(estateId).update(updatedFields);
                     result.setValue(true);
                 }
             }else {

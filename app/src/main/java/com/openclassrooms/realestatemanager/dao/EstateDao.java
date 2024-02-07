@@ -19,7 +19,6 @@ public interface EstateDao {
     @Query("SELECT * FROM estates ")
     LiveData<List<Estate>> getEstates();
 
-    @Transaction
     @Update
     void updateEstate(Estate estate);
 }
