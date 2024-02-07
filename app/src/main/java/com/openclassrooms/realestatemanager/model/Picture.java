@@ -2,18 +2,29 @@ package com.openclassrooms.realestatemanager.model;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
 
+@Entity
 public class Picture implements Serializable {
-
+    @PrimaryKey
+    @NonNull
+    private String id;
     String imageUrl, description;
 
     @Exclude
     public Uri imageUri;
 
-    public Picture(){};
+    public Picture() {
+    }
+
+    ;
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -29,6 +40,7 @@ public class Picture implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
     @Exclude
     public Uri getImageUri() {
         return imageUri;
