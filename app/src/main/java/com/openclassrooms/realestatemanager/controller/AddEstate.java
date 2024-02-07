@@ -43,6 +43,7 @@ import com.openclassrooms.realestatemanager.model.Picture;
 import com.openclassrooms.realestatemanager.model.User;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
+import com.openclassrooms.realestatemanager.viewModel.EstateDataViewModel;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
@@ -71,6 +72,8 @@ public class AddEstate extends AppCompatActivity {
     private List<Picture> property_picture;
     EstateViewModel estateViewModel;
     UserViewModel userViewModel;
+
+    EstateDataViewModel estateDataViewModel;
     CheckBox schoolCheckBox, parkCheckBox, parkingCheckBox, storeCheckBox;
 
     @Override
@@ -83,6 +86,7 @@ public class AddEstate extends AppCompatActivity {
         setSearchLocation();
         setUpEstateViewModel();
         setUpUserViewModel();
+        configureViewModel();
         setUpEntryDate();
         saveEstate();
         setCancelBtn();
@@ -119,6 +123,11 @@ public class AddEstate extends AppCompatActivity {
     private void setUpUserViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         this.userViewModel = new ViewModelProvider(this, viewModelFactory).get(UserViewModel.class);
+    }
+
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        this.estateDataViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateDataViewModel.class);
     }
 
     private void spinner() {
@@ -289,13 +298,17 @@ public class AddEstate extends AppCompatActivity {
                 estate.setParking(true);
             }
 
-            estateViewModel.createEstate(estate).observe(this, aBoolean -> {
-                sendNotification();
-                finish();
-            });
+            createEstate(estate);
+            estateViewModel.createEstate(estate).observe(this, aBoolean -> finish());
 
         });
 
+    }
+
+    private void createEstate(Estate estate) {
+        estateDataViewModel.createEstate(estate);
+        sendNotification();
+        finish();
     }
 
     private String getRandomImageUrl() {
