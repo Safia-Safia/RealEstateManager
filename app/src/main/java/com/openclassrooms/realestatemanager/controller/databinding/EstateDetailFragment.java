@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
+import com.openclassrooms.realestatemanager.viewModel.EstateDataViewModel;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 
@@ -64,6 +64,7 @@ public class EstateDetailFragment extends Fragment {
 
     SwitchCompat sold;
     ViewPager mViewPager;
+    EstateDataViewModel estateDataViewModel;
 
     List<Picture> pictureList;
     ViewPagerAdapter mViewPagerAdapter;
@@ -87,6 +88,7 @@ public class EstateDetailFragment extends Fragment {
         setUpView();
         setUpEstateViewModel();
         setUpUserViewModel();
+        configureViewModel();
 
         if (estate != null) {
             setUpEditButton();
@@ -117,6 +119,7 @@ public class EstateDetailFragment extends Fragment {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
+
             @Override
             public void onPageSelected(int position) {
                 if (position < pictureList.size()) {
@@ -124,6 +127,7 @@ public class EstateDetailFragment extends Fragment {
                     pictureDetail.setText(description);
                 }
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
             }
@@ -137,7 +141,6 @@ public class EstateDetailFragment extends Fragment {
             startActivity(intent);
         });
     }
-
 
 
     @Override
@@ -176,7 +179,7 @@ public class EstateDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (estate!= null){
+        if (estate != null) {
             updateContent();
         }
     }
@@ -251,9 +254,9 @@ public class EstateDetailFragment extends Fragment {
         String format = formatter.format(date.getTime());
         sold.setChecked(estate.getSoldDate() != null);
         ConstraintLayout editOptionsLayout = binding.getRoot().findViewById(R.id.soldDateLayout_detail);
-        if (estate.getSoldDate() != null){
+        if (estate.getSoldDate() != null) {
             editOptionsLayout.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             editOptionsLayout.setVisibility(View.GONE);
         }
         sold.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -262,12 +265,17 @@ public class EstateDetailFragment extends Fragment {
             } else {
                 estate.setSoldDate(null);
             }
-            estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
-                Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
-                startActivity(intent);
-                getActivity().finish();
-            });
+
+            updateEstate(estate);
+            estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {});
         });
+    }
+
+    private void updateEstate(Estate estate){
+        estateDataViewModel.updateEstate(estate);
+        Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 
 
@@ -280,6 +288,11 @@ public class EstateDetailFragment extends Fragment {
         } else {
             editOptionsLayout.setVisibility(View.GONE);
         }
+    }
+
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireContext());
+        this.estateDataViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateDataViewModel.class);
     }
 
     private void setUpEstateViewModel() {

@@ -40,6 +40,7 @@ import com.openclassrooms.realestatemanager.databinding.FragmentEstateListBindin
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
+import com.openclassrooms.realestatemanager.viewModel.EstateDataViewModel;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 
 import java.text.DecimalFormat;
@@ -78,7 +79,7 @@ public class EstateListFragment extends Fragment {
     ImageButton filterBtn, signOutBtn, mapsButton;
     Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, moreThan3PictureBtn, lastWeekBtn, soldBtn;
     private RubberRangePicker priceRangeBar, surfaceRangeBar;
-
+    EstateDataViewModel estateDataViewModel;
     Spinner spinner;
     ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
@@ -132,36 +133,8 @@ public class EstateListFragment extends Fragment {
         getAllEstates();
     }
 
-
     public static EstateListFragment newInstance() {
         return (new EstateListFragment());
-    }
-
-    private void initSearchBar() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                String searchStr = newText.toLowerCase();
-                List<Estate> filteredEstates = new ArrayList<>();
-                estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
-
-                    for (Estate estate : estates) {
-                        if (estate.getAddress().toLowerCase().contains(searchStr)) {
-                            filteredEstates.add(estate);
-                        }
-                    }
-                    setupRecyclerView(filteredEstates);
-                });
-                return true;
-            }
-
-        });
     }
 
     private void setUpView() {
@@ -197,6 +170,110 @@ public class EstateListFragment extends Fragment {
 
     }
 
+    public void setUpFilterButton() {
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            boolean visibility = false;
+
+            @Override
+            public void onClick(View view) {
+                visibility = !visibility;
+                if (visibility) {
+                    filterOptionsLayout.setVisibility(View.VISIBLE);
+                } else {
+                    filterOptionsLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+    }
+
+    private void setUpEstateViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireActivity());
+        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
+    }
+    public void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireContext());
+        this.estateDataViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateDataViewModel.class);
+    }
+    private void getAllEstates() {
+        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+            setupRecyclerView(estates);
+            initPriceRangeBar(estates);
+            initSurfaceRangeBar(estates);
+            ConstraintLayout constraintLayout = getActivity().findViewById(R.id.list_item_color);
+            setUpSpinner();
+        });
+
+        estateDataViewModel.getEstates().observe(getViewLifecycleOwner(),estates -> {
+            setupRecyclerView(estates);
+            initPriceRangeBar(estates);
+            initSurfaceRangeBar(estates);
+            ConstraintLayout constraintLayout = getActivity().findViewById(R.id.list_item_color);
+            setUpSpinner();
+        });
+    }
+
+    void setupRecyclerView(List<Estate> estates) {
+        adapter = new EstateListAdapter(estates, v, this.requireContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    private void setUpAddEstate() {
+        fabAddEstates.setOnClickListener(view -> {
+            Intent addEstateIntent = new Intent(this.requireContext(), AddEstate.class);
+            startActivity(addEstateIntent);
+        });
+    }
+
+    private void setUpMaps() {
+        mapsButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this.requireContext(), MapsActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    private void setLogOutBtn() {
+        signOutBtn.setOnClickListener(view -> {
+            new AlertDialog.Builder(this.requireContext())
+                    .setMessage(R.string.logout_message)
+                    .setCancelable(true)
+                    .setPositiveButton(getResources().getString(R.string.oui), (dialog, which) -> {
+                        ((EstateHostActivity) EstateListFragment.this.requireActivity())
+                                .userViewModel.signOut(EstateListFragment.this.requireContext()).observe(getViewLifecycleOwner(), isSuccessful -> {
+
+                                    if (isSuccessful) {
+                                        Intent intent = new Intent(EstateListFragment.this.requireActivity(), AuthenticationActivity.class);
+                                        startActivity(intent);
+                                        EstateListFragment.this.requireActivity().finish();
+                                    }
+                                });
+
+                    })
+                    .setNegativeButton(getResources().getString(R.string.non), (dialogInterface, i) -> {
+
+                    })
+                    .create()
+                    .show();
+        });
+    }
+
+    //Update list when an estate is added
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAllEstates();
+    }
+
+
+    // --- FILTER ---
+        //-----BUTTON -----
     public void changeButtonColor(Button button) {
         boolean clicked = button.isSelected();
         if (button.getId() == R.id.noFilter) {
@@ -256,8 +333,9 @@ public class EstateListFragment extends Fragment {
 
     }
 
+
     private void applyFilters() {
-        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+        estateDataViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
             List<Estate> filteredEstates = new ArrayList<>();
 
             for (Estate estate : estates) {
@@ -326,115 +404,7 @@ public class EstateListFragment extends Fragment {
         });
     }
 
-
-    private void setUpSpinner() {
-        spinner = binding.getRoot().findViewById(R.id.filter_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.requireContext(),
-                R.array.type_of_property_spinner, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                applyFilters();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-    }
-
-    public void setUpFilterButton() {
-        filterBtn.setOnClickListener(new View.OnClickListener() {
-            boolean visibility = false;
-
-            @Override
-            public void onClick(View view) {
-                visibility = !visibility;
-                if (visibility) {
-                    filterOptionsLayout.setVisibility(View.VISIBLE);
-                } else {
-                    filterOptionsLayout.setVisibility(View.GONE);
-                }
-            }
-        });
-
-    }
-
-    private void setUpEstateViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this.requireActivity());
-        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
-    }
-
-    private void getAllEstates() {
-        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
-            setupRecyclerView(estates);
-            initPriceRangeBar(estates);
-            initSurfaceRangeBar(estates);
-            ConstraintLayout constraintLayout = getActivity().findViewById(R.id.list_item_color);
-            setUpSpinner();
-        });
-    }
-
-    void setupRecyclerView(List<Estate> estates) {
-        adapter = new EstateListAdapter(estates, v, this.requireContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    private void setUpAddEstate() {
-        fabAddEstates.setOnClickListener(view -> {
-            Intent addEstateIntent = new Intent(this.requireContext(), AddEstate.class);
-            startActivity(addEstateIntent);
-        });
-    }
-
-    private void setUpMaps() {
-        mapsButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this.requireContext(), MapsActivity.class);
-            startActivity(intent);
-        });
-    }
-
-    private void setLogOutBtn() {
-        signOutBtn.setOnClickListener(view -> {
-            new AlertDialog.Builder(this.requireContext())
-                    .setMessage(R.string.logout_message)
-                    .setCancelable(true)
-                    .setPositiveButton(getResources().getString(R.string.oui), (dialog, which) -> {
-                        ((EstateHostActivity) EstateListFragment.this.requireActivity())
-                                .userViewModel.signOut(EstateListFragment.this.requireContext()).observe(getViewLifecycleOwner(), isSuccessful -> {
-
-                                    if (isSuccessful) {
-                                        Intent intent = new Intent(EstateListFragment.this.requireActivity(), AuthenticationActivity.class);
-                                        startActivity(intent);
-                                        EstateListFragment.this.requireActivity().finish();
-                                    }
-                                });
-
-                    })
-                    .setNegativeButton(getResources().getString(R.string.non), (dialogInterface, i) -> {
-
-                    })
-                    .create()
-                    .show();
-        });
-    }
-
-    //Update list when an estate is added
-    @Override
-    public void onResume() {
-        super.onResume();
-        getAllEstates();
-    }
-
+    //---- BAR  --
     private void initPriceRangeBar(List<Estate> estates) {
         Collections.sort(estates, (estate1, estate2) -> {
             return Long.compare(estate1.getPrice(), estate2.getPrice());
@@ -560,6 +530,50 @@ public class EstateListFragment extends Fragment {
             }
         });
 
+    }
+    private void setUpSpinner() {
+        spinner = binding.getRoot().findViewById(R.id.filter_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.requireContext(),
+                R.array.type_of_property_spinner, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                applyFilters();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
+
+    private void initSearchBar() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String searchStr = newText.toLowerCase();
+                List<Estate> filteredEstates = new ArrayList<>();
+                estateDataViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+
+                    for (Estate estate : estates) {
+                        if (estate.getAddress().toLowerCase().contains(searchStr)) {
+                            filteredEstates.add(estate);
+                        }
+                    }
+                    setupRecyclerView(filteredEstates);
+                });
+                return true;
+            }
+
+        });
     }
 
 }

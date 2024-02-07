@@ -32,6 +32,7 @@ import com.openclassrooms.realestatemanager.databinding.ActivityMapsBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
+import com.openclassrooms.realestatemanager.viewModel.EstateDataViewModel;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 
 import java.util.HashMap;
@@ -50,6 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker marker;
     Map<String, Estate> mMarkerMap = new HashMap<>();
     EstateViewModel estateViewModel;
+    EstateDataViewModel estateDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        setUpEstateViewModel();
+      //  setUpEstateViewModel();
+        configureViewModel();
 
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
@@ -101,13 +104,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void getAllEstates() {
-        estateViewModel.getEstates().observe(this, this::setUpMarker);
+        estateDataViewModel.getEstates().observe(this, this::setUpMarker);
     }
 
-    private void setUpEstateViewModel() {
+    public void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
+        this.estateDataViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateDataViewModel.class);
     }
+
 
     public void setUpMarker(List<Estate> estates) {
 
