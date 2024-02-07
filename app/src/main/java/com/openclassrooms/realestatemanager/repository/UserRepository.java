@@ -16,7 +16,6 @@ import java.util.Random;
 public class UserRepository {
 
     public static final String COLLECTION_USERS = "users";
-    private static volatile UserRepository instance;
 
     public CollectionReference getUsersCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_USERS);

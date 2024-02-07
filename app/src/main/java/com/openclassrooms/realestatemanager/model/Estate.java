@@ -1,12 +1,18 @@
 package com.openclassrooms.realestatemanager.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Estate implements Serializable {
 
-    String id,description, coverPictureUrl, estateType, address, entryDate, soldDate, city;
+    @PrimaryKey
+    String id;
+    String description, coverPictureUrl, estateType, address, entryDate, soldDate, city;
     long price, surface, numberOfRoom;
     Boolean isEstatesAvailable = true;
     Boolean school = false;
@@ -19,6 +25,7 @@ public class Estate implements Serializable {
 
     public Estate() {
     }
+
     public User getUser() {
         return user;
     }
@@ -166,6 +173,7 @@ public class Estate implements Serializable {
     public Double getLongitude() {
         return longitude;
     }
+
     public String getId() {
         return id;
     }
@@ -173,6 +181,7 @@ public class Estate implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }

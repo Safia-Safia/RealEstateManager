@@ -2,10 +2,14 @@ package com.openclassrooms.realestatemanager.model;
 
 
 import androidx.annotation.Nullable;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-
+@Entity
 public class User implements Serializable {
+    @PrimaryKey
     public String uid;
     public String username;
     @Nullable
