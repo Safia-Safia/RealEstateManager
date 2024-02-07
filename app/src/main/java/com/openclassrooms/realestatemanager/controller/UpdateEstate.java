@@ -36,7 +36,6 @@ import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
-import com.openclassrooms.realestatemanager.viewModel.EstateDataViewModel;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 
 import java.io.IOException;
@@ -57,7 +56,6 @@ public class UpdateEstate extends AppCompatActivity {
     private List<Picture> property_picture;
     EstateViewModel estateViewModel;
     CheckBox schoolCheckBox, parkCheckBox, parkingCheckBox, storeCheckBox;
-    EstateDataViewModel estateDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,22 +68,17 @@ public class UpdateEstate extends AppCompatActivity {
         openPicturePicker();
         setSearchLocation();
         setUpEstateViewModel();
-        configureViewModel();
         setCancelBtn();
 
         saveBtn.setOnClickListener(view -> {
             setInfo();
-            updateEstate(estate);
             estateViewModel.updateEstate(estate, estate.getId())
-                    .observe(this,aBoolean -> {});
+                    .observe(this,aBoolean -> {
+                        Intent intent = new Intent(this,  EstateHostActivity.class);
+                        startActivity(intent);
+                        finish();
+                    });
         });
-    }
-
-    private void updateEstate(Estate estate){
-        estateDataViewModel.updateEstate(estate);
-        Intent intent = new Intent(this,  EstateHostActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void getInfo() {
@@ -152,11 +145,6 @@ public class UpdateEstate extends AppCompatActivity {
     private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
-    }
-
-    public void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.estateDataViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateDataViewModel.class);
     }
 
     private void setUpSpinner() {
@@ -239,7 +227,7 @@ public class UpdateEstate extends AppCompatActivity {
         pictureDescription = customLayout.findViewById(R.id.edittext_alert_dialog_picture);
         alertDialog.setView(customLayout);
         alertDialog.setTitle(getString(R.string.describe_picture));
-        alertDialog.setPositiveButton(getResources().getString(R.string.ok), (dialog, which) -> {
+        alertDialog.setPositiveButton("OK", (dialog, which) -> {
             Picture picture = new Picture();
             picture.setImageUri(imageUri);
             picture.setDescription(pictureDescription.getText().toString());

@@ -11,7 +11,6 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.openclassrooms.realestatemanager.dao.EstateDao;
-import com.openclassrooms.realestatemanager.dao.UserDao;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.model.Picture;
 import com.openclassrooms.realestatemanager.model.User;
@@ -19,7 +18,7 @@ import com.openclassrooms.realestatemanager.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-@Database(entities = {Estate.class, User.class}, version = 1, exportSchema = false)
+@Database(entities = {Estate.class, User.class}, version = 1 ,exportSchema = false)
 public abstract class EstateDatabase extends RoomDatabase {
 
     // --- SINGLETON ---
@@ -27,7 +26,6 @@ public abstract class EstateDatabase extends RoomDatabase {
 
     // --- DAO ---
     public abstract EstateDao estateDao();
-    public abstract UserDao userDao();
 
     // --- INSTANCE ---
     public static EstateDatabase getInstance(Context context) {
@@ -35,7 +33,7 @@ public abstract class EstateDatabase extends RoomDatabase {
             synchronized (EstateDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    EstateDatabase.class, "EstatateDatabase.db")
+                                    EstateDatabase.class, "EstateDatabase.db")
                             .addCallback(prepopulateDatabase())
                             .build();
                 }
@@ -51,15 +49,14 @@ public abstract class EstateDatabase extends RoomDatabase {
             @Override
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
+                ContentValues estateContentValues = new ContentValues();
                 List<Picture> pictureList = new ArrayList<>();
 
                 pictureList.add(createPicture("https://cache.marieclaire.fr/data/photo/w1000_c17/5n/idees-deco-chambre-ado-sous-les-toits.webp", "Chambre"));
                 pictureList.add(createPicture("https://www.livinside.com/scripts/files/63f4c1e807b430.58281755/amenagement-salon.webp", "Salon"));
                 pictureList.add(createPicture("https://media.ma.cuisinella/-/media/bynder/cuisinella/2024/01/10/05/17/cla_cui_pure_cactus_label_styra_pimp_equateur_2/4x3-cla_cui_pure_cactus_label_styra_pimp_equateur_2.ashx?as=1&w=1920&rev=87c66d596d004573ac363732dfd66303&hash=B347F95B3F0D52DB1C598E9B0E72D269", "Cuisine"));
 
-
-                ContentValues estateContentValues = new ContentValues();
-                estateContentValues.put("id", "1");
+                estateContentValues.put("id", "143546EZZEF");
                 estateContentValues.put("description", "Un bel appartement fictif situé au 4ème étage de cet immeuble.");
                 if (!pictureList.isEmpty()) {
                     estateContentValues.put("coverPictureUrl", pictureList.get(0).getImageUrl());
@@ -80,14 +77,14 @@ public abstract class EstateDatabase extends RoomDatabase {
                 estateContentValues.put("longitude", -2.3452);
                 estateContentValues.put("city", "Paris");
 
-                db.insert("Estate", OnConflictStrategy.IGNORE, estateContentValues);
-
-
                 ContentValues userContentValues = new ContentValues();
+                userContentValues.put("userId", "AZODJNE921");
                 userContentValues.put("username", "Jean Dupont");
                 userContentValues.put("email", "dupont@email.com");
 
-                db.insert("User", OnConflictStrategy.IGNORE, userContentValues);
+                db.insert("estates", OnConflictStrategy.IGNORE, estateContentValues);
+                db.insert("users", OnConflictStrategy.IGNORE, userContentValues);
+
             }
         };
     }

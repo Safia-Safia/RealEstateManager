@@ -275,12 +275,11 @@ public class AddEstate extends AppCompatActivity {
             newUser.setUid(userViewModel.getCurrentUser().getUid());
             newUser.setEmail(userViewModel.getCurrentUser().getEmail());
             newUser.setUsername(userViewModel.getCurrentUser().getDisplayName());
-
-            String urlPicture;
-            if (userViewModel.getCurrentUser().getPhotoUrl() != null) {
-                urlPicture = String.valueOf(userViewModel.getCurrentUser().getPhotoUrl());
+            String urlPicture = String.valueOf(userViewModel.getCurrentUser().getPhotoUrl());
+            if (userViewModel.getCurrentUser().getPhotoUrl() == null) {
+                getRandomImageUrl();
             } else {
-                urlPicture = getRandomImageUrl();
+                 urlPicture = String.valueOf(userViewModel.getCurrentUser().getPhotoUrl());
             }
 
             newUser.setUrlPicture(urlPicture);
@@ -298,18 +297,15 @@ public class AddEstate extends AppCompatActivity {
                 estate.setParking(true);
             }
 
-            createEstate(estate);
-            estateViewModel.createEstate(estate).observe(this, aBoolean -> finish());
+            estateViewModel.createEstate(estate).observe(this, aBoolean -> {
+                sendNotification();
+                finish();
+            });
 
         });
 
     }
 
-    private void createEstate(Estate estate) {
-        estateDataViewModel.createEstate(estate);
-        sendNotification();
-        finish();
-    }
 
     private String getRandomImageUrl() {
         String[] images = {

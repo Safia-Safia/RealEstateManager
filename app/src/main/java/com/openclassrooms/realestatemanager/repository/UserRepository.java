@@ -54,7 +54,6 @@ public class UserRepository {
                         usersCollection.add(userToCreate);
                     }
                 } else {
-                    // Gérer l'erreur ici, si nécessaire
                     Log.e("UserRepository", "Error checking user existence", task.getException());
                 }
             });

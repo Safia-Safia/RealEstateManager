@@ -32,7 +32,6 @@ import com.openclassrooms.realestatemanager.databinding.ActivityMapsBinding;
 import com.openclassrooms.realestatemanager.model.Estate;
 import com.openclassrooms.realestatemanager.utils.Injection.Injection;
 import com.openclassrooms.realestatemanager.utils.Injection.ViewModelFactory;
-import com.openclassrooms.realestatemanager.viewModel.EstateDataViewModel;
 import com.openclassrooms.realestatemanager.viewModel.EstateViewModel;
 
 import java.util.HashMap;
@@ -51,7 +50,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker marker;
     Map<String, Estate> mMarkerMap = new HashMap<>();
     EstateViewModel estateViewModel;
-    EstateDataViewModel estateDataViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-      //  setUpEstateViewModel();
-        configureViewModel();
+        setUpEstateViewModel();
 
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
@@ -104,14 +101,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void getAllEstates() {
-        estateDataViewModel.getEstates().observe(this, this::setUpMarker);
+        estateViewModel.getEstates().observe(this, this::setUpMarker);
     }
 
-    public void configureViewModel() {
+    private void setUpEstateViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        this.estateDataViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateDataViewModel.class);
+        this.estateViewModel = new ViewModelProvider(this, viewModelFactory).get(EstateViewModel.class);
     }
-
 
     public void setUpMarker(List<Estate> estates) {
 
@@ -169,8 +165,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             initMap();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
         }
+    }
 
 
     @Override

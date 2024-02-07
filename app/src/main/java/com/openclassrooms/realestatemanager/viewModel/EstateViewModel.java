@@ -21,7 +21,7 @@ public class EstateViewModel extends ViewModel {
         return estateRepository.createEstate(estate);
     }
 
-    public LiveData<Boolean> updateEstate(Estate estate,String id){
+    public LiveData<Boolean> updateEstate(Estate estate, String id){
         return estateRepository.updateEstate(estate,id);
     }
 

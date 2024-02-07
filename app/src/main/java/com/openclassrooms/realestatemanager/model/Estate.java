@@ -1,17 +1,29 @@
 package com.openclassrooms.realestatemanager.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(tableName = "estates",
+        foreignKeys = @ForeignKey(entity = User.class,
+                parentColumns = "uid",
+                childColumns = "userId",
+                onDelete = ForeignKey.CASCADE),
+        indices = {@Index("userId")})
 public class Estate implements Serializable {
 
     @PrimaryKey
-    String id;
+    @ColumnInfo(name = "id")
+    @NonNull
+    private String id;
     String description, coverPictureUrl, estateType, address, entryDate, soldDate, city;
     long price, surface, numberOfRoom;
     Boolean isEstatesAvailable = true;
@@ -19,9 +31,14 @@ public class Estate implements Serializable {
     Boolean store = false;
     Boolean park = false;
     Boolean parking = false;
+    @Ignore
     User user;
+
+    private long userId;
+
+    @Ignore
     List<Picture> pictures = new ArrayList<>();
-    private Double latitude, longitude;
+    Double latitude, longitude;
 
     public Estate() {
     }
@@ -78,7 +95,7 @@ public class Estate implements Serializable {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 
@@ -184,5 +201,14 @@ public class Estate implements Serializable {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    // Getter et setter pour userId
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

@@ -179,7 +179,7 @@ public class EstateDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (estate != null) {
+        if (estate!= null){
             updateContent();
         }
     }
@@ -254,9 +254,9 @@ public class EstateDetailFragment extends Fragment {
         String format = formatter.format(date.getTime());
         sold.setChecked(estate.getSoldDate() != null);
         ConstraintLayout editOptionsLayout = binding.getRoot().findViewById(R.id.soldDateLayout_detail);
-        if (estate.getSoldDate() != null) {
+        if (estate.getSoldDate() != null){
             editOptionsLayout.setVisibility(View.VISIBLE);
-        } else {
+        }else {
             editOptionsLayout.setVisibility(View.GONE);
         }
         sold.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -265,17 +265,12 @@ public class EstateDetailFragment extends Fragment {
             } else {
                 estate.setSoldDate(null);
             }
-
-            updateEstate(estate);
-            estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {});
+            estateViewModel.updateEstate(estate, estate.getId()).observe(this.requireActivity(), aBoolean -> {
+                Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            });
         });
-    }
-
-    private void updateEstate(Estate estate){
-        estateDataViewModel.updateEstate(estate);
-        Intent intent = new Intent(this.requireContext(), EstateHostActivity.class);
-        startActivity(intent);
-        getActivity().finish();
     }
 
 

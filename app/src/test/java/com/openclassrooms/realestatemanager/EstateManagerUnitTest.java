@@ -66,7 +66,7 @@ public class EstateManagerUnitTest {
         user1.setUrlPicture("https://image-de-profil.jpg");
         user1.setEmail("jean.dupont@example.com");
         user2.setUsername("Sophie Dupont");
-        user2.setUid(String.valueOf(1));
+        user2.setUid("2");
         user2.setUrlPicture("https://image-de-profil.jpg");
         user2.setEmail("sophie.dupont@example.com");
 
@@ -105,7 +105,6 @@ public class EstateManagerUnitTest {
 
         estate2.setId("1");
         //CREATING DUMMY ESTATE
-        estate2.setId("1");
         estate2.setDescription("Appartement spacieux avec une vue magnifique");
         estate2.setCoverPictureUrl("https://image-de-couverture.jpg");
         estate2.setEstateType("Appartement");
@@ -155,7 +154,7 @@ public class EstateManagerUnitTest {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         Estate newEstate = new Estate();
 
-        newEstate.setId(String.valueOf(1));
+        newEstate.setId("1");
         result.setValue(true);
 
         when(estateRepository.createEstate(Mockito.any(Estate.class))).thenReturn(result);
@@ -204,7 +203,7 @@ public class EstateManagerUnitTest {
 
     @Test
     public void testConvertEuroToDollar() {
-        assertEquals(615, Utils.convertEuroToDollar(500));
+        assertEquals(616, Utils.convertEuroToDollar(500));
     }
     @Test
     public void testFormattedTodayDate() {

@@ -14,6 +14,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import com.openclassrooms.realestatemanager.dao.EstateDao;
 import com.openclassrooms.realestatemanager.model.Estate;
 
 import java.util.ArrayList;
@@ -25,9 +26,12 @@ import java.util.UUID;
 
 public class EstateRepository {
     public static final String COLLECTION_ESTATES = "estates";
+    private final EstateDao estateDao;
 
-    public EstateRepository() {
+    public EstateRepository(EstateDao estateDao) {
+        this.estateDao = estateDao;
     }
+
 
     public CollectionReference getEstateCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_ESTATES);
@@ -49,8 +53,9 @@ public class EstateRepository {
                     estate.getPictures().get(finalI).setImageUrl(url.toString());
                     if (finalI == estate.getPictures().size() - 1) {
                         estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
-                        getEstateCollection().document(estate.getId()).set(estate);
-                        result.setValue(true);
+                        getEstateCollection().document().set(estate);
+                       estateDao.createEstate(estate);
+                       result.setValue(true);
                     }
                 });
             });
@@ -68,6 +73,7 @@ public class EstateRepository {
                             Estate estate = document.toObject(Estate.class);
                             estateList.add(estate);
                         }
+                        estateDao.getEstates();
                         result.postValue(estateList);
                     }
                 });
@@ -101,7 +107,8 @@ public class EstateRepository {
                             estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                             updatedFields.put("pictures", estate.getPictures());
                             updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
-                            getEstateCollection().document(estateId).update(updatedFields);
+                            estateDao.updateEstate(estate);
+                            getEstateCollection().document().update(updatedFields);
                             result.setValue(true);
                         }
                     });
@@ -111,7 +118,8 @@ public class EstateRepository {
                     estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                     updatedFields.put("pictures", estate.getPictures());
                     updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
-                    getEstateCollection().document(estateId).update(updatedFields);
+                    getEstateCollection().document().update(updatedFields);
+                    estateDao.updateEstate(estate);
                     result.setValue(true);
                 }
             }else {
