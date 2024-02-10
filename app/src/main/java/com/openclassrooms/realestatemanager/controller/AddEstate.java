@@ -68,7 +68,7 @@ public class AddEstate extends AppCompatActivity {
     public static final int NOTIFICATION_ID = 0;
     EditText textDescription, pictureDescription, price, surface, nbrOfRoom;
     private EstateAdapter propertyAdapter;
-    private List<Picture> property_picture;
+    private ArrayList<Picture> property_picture;
     EstateViewModel estateViewModel;
     UserViewModel userViewModel;
 

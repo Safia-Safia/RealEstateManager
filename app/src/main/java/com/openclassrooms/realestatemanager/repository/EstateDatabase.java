@@ -34,7 +34,6 @@ public abstract class EstateDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     EstateDatabase.class, "EstateDatabase.db")
-                            .addCallback(prepopulateDatabase())
                             .build();
                 }
             }
@@ -42,25 +41,4 @@ public abstract class EstateDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    // ---
-
-    private static Callback prepopulateDatabase(){
-        return new Callback() {
-            @Override
-            public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                super.onCreate(db);
-                ContentValues estateContentValues = new ContentValues();
-
-
-                db.insert("estates", OnConflictStrategy.IGNORE, estateContentValues);
-            }
-        };
-    }
-
-    private static Picture createPicture(String imageUrl, String description) {
-        Picture picture = new Picture();
-        picture.setImageUrl(imageUrl);
-        picture.setDescription(description);
-        return picture;
-    }
 }

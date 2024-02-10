@@ -5,7 +5,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.openclassrooms.realestatemanager.model.Estate;
@@ -17,8 +16,5 @@ public interface EstateDao {
     void createEstate(Estate estate);
 
     @Query("SELECT * FROM estates ")
-    LiveData<List<Estate>> getEstates();
-
-    @Update
-    void updateEstate(Estate estate);
+    List<Estate> getEstates();
 }

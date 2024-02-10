@@ -53,7 +53,7 @@ public class UpdateEstate extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 2;
     EditText textDescription, pictureDescription, price, surface, nbrOfRoom;
     private EstateAdapter propertyAdapter;
-    private List<Picture> property_picture;
+    private ArrayList<Picture> property_picture;
     EstateViewModel estateViewModel;
     CheckBox schoolCheckBox, parkCheckBox, parkingCheckBox, storeCheckBox;
 

@@ -25,11 +25,11 @@ public class EstateViewModel extends ViewModel {
     }*/
   public void createEstate(Estate estate) { executor.execute(() -> estateRepository.createEstate(estate)); }
 
-    public LiveData<Boolean> updateEstate(Estate estate,String id){
+    public LiveData<Boolean> updateEstate(Estate estate, String id){
         return estateRepository.updateEstate(estate,id);
     }
 
     public LiveData<List<Estate>> getEstates() {
-        return estateRepository.getEstates();
+        return estateRepository.getEstates(executor);
     }
 }

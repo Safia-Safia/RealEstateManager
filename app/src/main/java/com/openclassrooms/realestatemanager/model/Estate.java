@@ -2,17 +2,15 @@ package com.openclassrooms.realestatemanager.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Ignore;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
+
+import com.openclassrooms.realestatemanager.dao.PictureListTypeConverter;
+import com.openclassrooms.realestatemanager.dao.UserTypeConverter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 @Entity(tableName = "estates")
 public class Estate implements Serializable {
@@ -28,10 +26,10 @@ public class Estate implements Serializable {
     Boolean store = false;
     Boolean park = false;
     Boolean parking = false;
-    @Ignore
+    @TypeConverters(UserTypeConverter.class)
     User user;
-    @Ignore
-    List<Picture> pictures = new ArrayList<>();
+    @TypeConverters(PictureListTypeConverter.class)
+    ArrayList<Picture> pictures = new ArrayList<>();
     private Double latitude, longitude;
 
     public Estate() {
@@ -165,11 +163,11 @@ public class Estate implements Serializable {
         this.parking = parking;
     }
 
-    public List<Picture> getPictures() {
+    public ArrayList<Picture> getPictures() {
         return pictures;
     }
 
-    public void setPictures(List<Picture> pictures) {
+    public void setPictures(ArrayList<Picture> pictures) {
         this.pictures = pictures;
     }
 

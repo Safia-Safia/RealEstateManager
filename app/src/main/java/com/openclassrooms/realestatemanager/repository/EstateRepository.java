@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executor;
 
 
 public class EstateRepository {
@@ -42,13 +43,8 @@ public class EstateRepository {
         StorageReference mImageRef = FirebaseStorage.getInstance().getReference("/" + uuid);
         return mImageRef.putFile(imageUri);
     }
-    public void createEstate(Estate estate) {
-        estateDao.createEstate(estate);
-    }
-    public LiveData<List<Estate>> getEstate() {
-        return this.estateDao.getEstates();
-    }
-   /*public LiveData<Boolean> createEstate(Estate estate) {
+
+    public LiveData<Boolean> createEstate(Estate estate) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         for (int i = 0; i < estate.getPictures().size(); i++) {
             int finalI = i; //Final value de la variable I
@@ -59,28 +55,30 @@ public class EstateRepository {
                     if (finalI == estate.getPictures().size() - 1) {
                         estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                         getEstateCollection().document().set(estate);
-                       result.setValue(true);
+                        result.setValue(true);
                     }
                 });
             });
         }
-        estateDao.createEstate(estate);
         return result;
-    }*/
+    }
 
-    public LiveData<List<Estate>> getEstates() {
+    public LiveData<List<Estate>> getEstates(Executor executor) {
         MutableLiveData<List<Estate>> result = new MutableLiveData<>();
-        estateDao.getEstates();
-        /*getEstateCollection().get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Estate> estateList= new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Estate estate = document.toObject(Estate.class);
-                            estateList.add(estate);
-                        }
-                        result.postValue(estateList);
-                    }
-                });*/
+        executor.execute(() ->{
+            result.postValue(estateDao.getEstates());
+        });
+        getEstateCollection().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<Estate> estateList = new ArrayList<>();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Estate estate = document.toObject(Estate.class);
+                    executor.execute(() -> estateDao.createEstate(estate));
+                    estateList.add(estate);
+                }
+                result.postValue(estateList);
+            }
+        });
         return result;
     }
 
@@ -103,7 +101,7 @@ public class EstateRepository {
         updatedFields.put("soldDate", estate.getSoldDate());
         for (int i = 0; i < estate.getPictures().size(); i++) {
             int finalI = i;
-            if ( estate.getPictures().get(i).getImageUri() != null){
+            if (estate.getPictures().get(i).getImageUri() != null) {
                 uploadImage(estate.getPictures().get(i).getImageUri()).addOnSuccessListener(taskSnapshot -> {
                     taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(url -> {
                         estate.getPictures().get(finalI).setImageUrl(url.toString());
@@ -112,25 +110,22 @@ public class EstateRepository {
                             updatedFields.put("pictures", estate.getPictures());
                             updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
 
-                            estateDao.updateEstate(estate);
-                            getEstateCollection().document(estateId).update(updatedFields);
+                            getEstateCollection().document(String.valueOf(estateId)).update(updatedFields);
                             result.setValue(true);
                         }
                     });
                 });
-            }else if ( estate.getPictures().get(i).getImageUrl() != null){
+            } else if (estate.getPictures().get(i).getImageUrl() != null) {
                 if (finalI == estate.getPictures().size() - 1) {
                     estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                     updatedFields.put("pictures", estate.getPictures());
                     updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
-                    estateDao.updateEstate(estate);
-                    getEstateCollection().document(estateId).update(updatedFields);
+                    getEstateCollection().document(String.valueOf(estateId)).update(updatedFields);
                     result.setValue(true);
                 }
-            }else {
-                Log.e("if error"," "+ i);
+            } else {
+                Log.e("if error", " " + i);
             }
-
         }
         return result;
     }

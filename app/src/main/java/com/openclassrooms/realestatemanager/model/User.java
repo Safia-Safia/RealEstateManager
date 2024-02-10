@@ -16,7 +16,6 @@ public class User implements Serializable {
     @Nullable
     private String urlPicture;
     public String email;
-    @Ignore
     public User() { }
 
     public User(String uid, String username, @Nullable String urlPicture, String email) {
