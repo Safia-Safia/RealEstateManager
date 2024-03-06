@@ -65,9 +65,7 @@ public class EstateRepository {
 
     public LiveData<List<Estate>> getEstates(Executor executor) {
         MutableLiveData<List<Estate>> result = new MutableLiveData<>();
-        executor.execute(() ->{
-            result.postValue(estateDao.getEstates());
-        });
+        executor.execute(() -> result.postValue(estateDao.getEstates()));
         getEstateCollection().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<Estate> estateList = new ArrayList<>();
@@ -82,7 +80,7 @@ public class EstateRepository {
         return result;
     }
 
-    public LiveData<Boolean> updateEstate(Estate estate, String estateId) {
+    public LiveData<Boolean> updateEstate(Estate estate, String estateId, Executor executor) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         Map<String, Object> updatedFields = new HashMap<>();
         updatedFields.put("description", estate.getDescription());
@@ -109,7 +107,6 @@ public class EstateRepository {
                             estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                             updatedFields.put("pictures", estate.getPictures());
                             updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
-
                             getEstateCollection().document(String.valueOf(estateId)).update(updatedFields);
                             result.setValue(true);
                         }
@@ -128,5 +125,16 @@ public class EstateRepository {
             }
         }
         return result;
+    }
+
+    public LiveData<List<Estate>> getFilteredEstates(
+            long minPrice, long maxPrice, long minSurface, long maxSurface, boolean isSchoolFilter,
+            boolean isStoreFilter, boolean isParkFilter, boolean isParkingFilter,
+            boolean isSoldFilter, boolean isLastWeekFilter, String selectedEstateType) {
+        return estateDao.getFilteredEstates(
+                minPrice, maxPrice, minSurface, maxSurface, isSchoolFilter,
+                isStoreFilter, isParkFilter, isParkingFilter,
+                isSoldFilter, isLastWeekFilter, selectedEstateType
+        );
     }
 }

@@ -20,16 +20,25 @@ public class EstateViewModel extends ViewModel {
         this.executor = executor;
     }
 
-  /*  public LiveData<Boolean> createEstate(Estate estate) {
-        return estateRepository.createEstate(estate);
-    }*/
   public void createEstate(Estate estate) { executor.execute(() -> estateRepository.createEstate(estate)); }
 
     public LiveData<Boolean> updateEstate(Estate estate, String id){
-        return estateRepository.updateEstate(estate,id);
+        return estateRepository.updateEstate(estate,id,executor);
     }
 
     public LiveData<List<Estate>> getEstates() {
         return estateRepository.getEstates(executor);
     }
+
+    public LiveData<List<Estate>> getFilteredEstates(
+            long minPrice, long maxPrice, long minSurface, long maxSurface, boolean isSchoolFilter,
+            boolean isStoreFilter, boolean isParkFilter, boolean isParkingFilter, boolean isSoldFilter,
+            boolean isLastWeekFilter, String selectedEstateType) {
+        return estateRepository.getFilteredEstates(
+                minPrice, maxPrice, minSurface, maxSurface, isSchoolFilter,
+                isStoreFilter, isParkFilter, isParkingFilter, isSoldFilter,
+                isLastWeekFilter, selectedEstateType
+        );
+    }
+
 }

@@ -73,7 +73,7 @@ public class EstateManagerUnitTest {
         user2.setUrlPicture("https://image-de-profil.jpg");
         user2.setEmail("sophie.dupont@example.com");
 
-/*
+
         estate1.setId("1");
         //CREATING DUMMY ESTATE
         estate1.setId("1");
@@ -93,7 +93,7 @@ public class EstateManagerUnitTest {
         estate1.setPark(true);
         estate1.setParking(false);
         // DUMMY PICTURES
-        List<Picture> pictures2 = new ArrayList<>();
+        ArrayList<Picture> pictures2 = new ArrayList<>();
         Picture picture3 = new Picture();
         picture3.setImageUrl("https://image1.jpg");
         Picture picture4 = new Picture();
@@ -124,7 +124,7 @@ public class EstateManagerUnitTest {
         estate2.setPark(true);
         estate2.setParking(false);
         // DUMMY PICTURES
-        List<Picture> pictures1 = new ArrayList<>();
+        ArrayList<Picture> pictures1 = new ArrayList<>();
         Picture picture1 = new Picture();
         picture1.setImageUrl("https://image1.jpg");
         Picture picture2 = new Picture();
@@ -177,7 +177,7 @@ public class EstateManagerUnitTest {
         result.setValue(estateList);
     }
 
-  /*   @Test
+   /* @Test
    public void updateEstate() {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         result.setValue(true);
@@ -198,7 +198,7 @@ public class EstateManagerUnitTest {
                     " Description: " + estateList.get(0).getDescription() + " Price: " + estateList.get(0).getPrice()
                     + " userName : " + estateList.get(0).getUser().getUsername());
         });
-    }
+    }*/
     @Test
     public void testConvertDollarToEuro() {
         assertEquals(406, Utils.convertDollarToEuro(500));
@@ -222,5 +222,5 @@ public class EstateManagerUnitTest {
         System.out.println(todayFormattedDate);
         assertTrue(todayFormattedDate.matches("\\d{4}/\\d{2}/\\d{2}"));
     }
-*/
+
 }

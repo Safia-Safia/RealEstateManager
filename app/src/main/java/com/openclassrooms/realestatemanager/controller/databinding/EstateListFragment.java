@@ -76,7 +76,7 @@ public class EstateListFragment extends Fragment {
     ConstraintLayout filterOptionsLayout;
     FloatingActionButton fabAddEstates;
     ImageButton filterBtn, signOutBtn, mapsButton;
-    Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, moreThan3PictureBtn, lastWeekBtn, soldBtn;
+    Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, pictures, lastWeekBtn, soldBtn;
     private RubberRangePicker priceRangeBar, surfaceRangeBar;
 
     Spinner spinner;
@@ -124,7 +124,7 @@ public class EstateListFragment extends Fragment {
         initListOnButtonClick(soldBtn, "sold");
         initListOnButtonClick(parkingBtn, "parking");
         initListOnButtonClick(parkBtn, "park");
-        initListOnButtonClick(moreThan3PictureBtn, "picture");
+        initListOnButtonClick(pictures, "moreThan3Picture");
         initListOnButtonClick(lastWeekBtn, "lastWeek");
         initListOnButtonClick(soldBtn, "sold");
 
@@ -181,7 +181,7 @@ public class EstateListFragment extends Fragment {
         parkBtn = binding.getRoot().findViewById(R.id.park);
         parkingBtn = binding.getRoot().findViewById(R.id.parking);
         lastWeekBtn = binding.getRoot().findViewById(R.id.sinceAweek);
-        moreThan3PictureBtn = binding.getRoot().findViewById(R.id.plus3pictures);
+        pictures = binding.getRoot().findViewById(R.id.plus3pictures);
         soldBtn = binding.getRoot().findViewById(R.id.sold);
         //RANGEBAR
         //          --PRICE
@@ -221,7 +221,7 @@ public class EstateListFragment extends Fragment {
     }
 
     private void resetOtherButtonsState(Button clickedButton) {
-        Button[] allButtons = {noFilterBtn, schoolBtn, storeBtn, parkBtn, parkingBtn, lastWeekBtn, moreThan3PictureBtn, soldBtn};
+        Button[] allButtons = {noFilterBtn, schoolBtn, storeBtn, parkBtn, parkingBtn, lastWeekBtn, pictures, soldBtn};
         for (Button button : allButtons) {
             if (button != clickedButton) {
                 button.setSelected(false);
@@ -255,63 +255,49 @@ public class EstateListFragment extends Fragment {
         });
 
     }
-
     private void applyFilters() {
-        estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
+        long minPrice = priceRangeBar.getCurrentStartValue();
+        long maxPrice = priceRangeBar.getCurrentEndValue();
+        long minSurface = surfaceRangeBar.getCurrentStartValue();
+        long maxSurface = surfaceRangeBar.getCurrentEndValue();
+        boolean isSchoolFilter = schoolBtn.isSelected();
+        boolean isStoreFilter = storeBtn.isSelected();
+        boolean isParkFilter = parkBtn.isSelected();
+        boolean isParkingFilter = parkingBtn.isSelected();
+        boolean isSoldFilter = soldBtn.isSelected();
+        boolean isLastWeekFilter = lastWeekBtn.isSelected();
+
+        String selectedEstateType = spinner.getSelectedItem().toString();
+
+        estateViewModel.getFilteredEstates(
+                minPrice, maxPrice, minSurface, maxSurface, isSchoolFilter,
+                isStoreFilter, isParkFilter, isParkingFilter, isSoldFilter,
+                isLastWeekFilter, selectedEstateType
+        ).observe(getViewLifecycleOwner(), estates -> {
+
             List<Estate> filteredEstates = new ArrayList<>();
 
             for (Estate estate : estates) {
                 boolean isFiltered = true;
+                if (pictures.isSelected()){
+                    isFiltered = isFiltered && (estate.getPictures().size() >= 2);
 
-                for (String filterCriteria : selectedFilters) {
-                    switch (filterCriteria) {
-                        case "school":
-                            isFiltered = isFiltered && estate.getSchool();
-                            break;
-                        case "store":
-                            isFiltered = isFiltered && estate.getStore();
-                            break;
-                        case "park":
-                            isFiltered = isFiltered && estate.getPark();
-                            break;
-                        case "parking":
-                            isFiltered = isFiltered && estate.getParking();
-                            break;
-                        case "picture":
-                            isFiltered = isFiltered && (estate.getPictures().size() >= 3);
-                            break;
-                        case "sold":
-                            isFiltered = isFiltered && (estate.getSoldDate() != null && !estate.getSoldDate().isEmpty());
-                            break;
-                        case "lastWeek":
-                            Calendar lastWeek = Calendar.getInstance();
-                            Date referenceDate = new Date();
-                            lastWeek.setTime(referenceDate);
-                            lastWeek.add(Calendar.DAY_OF_MONTH, -7);
-                            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
-                            try {
-                                Date date = formatter.parse(estate.getEntryDate());
-                                isFiltered = date.after(lastWeek.getTime());
-                            } catch (ParseException e) {
-                                throw new RuntimeException(e);
-                            }
-                            break;
+                }
+                if (isLastWeekFilter) {
+                    Calendar lastWeek = Calendar.getInstance();
+                    Date referenceDate = new Date();
+                    lastWeek.setTime(referenceDate);
+                    lastWeek.add(Calendar.DAY_OF_MONTH, -7);
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
+                    try {
+                        Date date = formatter.parse(estate.getEntryDate());
+                        isFiltered = date.after(lastWeek.getTime());
+                        if (isFiltered) {
+                            filteredEstates.add(estate);
+                        }
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
                     }
-                }
-
-                int startThumbValue = priceRangeBar.getCurrentStartValue();
-                int endThumbValue = priceRangeBar.getCurrentEndValue();
-                if (isFiltered) {
-                    isFiltered = (estate.getPrice() >= Long.parseLong(String.valueOf(startThumbValue))
-                            && estate.getPrice() <= Long.parseLong(String.valueOf(endThumbValue)));
-                }
-
-                int startThumbValue2 = surfaceRangeBar.getCurrentStartValue();
-                int endThumbValue2 = surfaceRangeBar.getCurrentEndValue();
-
-                if (isFiltered) {
-                    isFiltered = (estate.getSurface() >= Long.parseLong(String.valueOf(startThumbValue2))
-                            && estate.getSurface() <= Long.parseLong(String.valueOf(endThumbValue2)));
                 }
                 if (spinner.getSelectedItemPosition() != 0) {
                     if (isFiltered) {
@@ -326,7 +312,6 @@ public class EstateListFragment extends Fragment {
         });
     }
 
-
     private void setUpSpinner() {
         spinner = binding.getRoot().findViewById(R.id.filter_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.requireContext(),
@@ -336,14 +321,14 @@ public class EstateListFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                applyFilters();
-            }
+                applyFilters(); }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
     }
+
 
     public void setUpFilterButton() {
         filterBtn.setOnClickListener(new View.OnClickListener() {
@@ -372,7 +357,7 @@ public class EstateListFragment extends Fragment {
             setupRecyclerView(estates);
             initPriceRangeBar(estates);
             initSurfaceRangeBar(estates);
-            ConstraintLayout constraintLayout = getActivity().findViewById(R.id.list_item_color);
+            getActivity().findViewById(R.id.list_item_color);
             setUpSpinner();
         });
     }

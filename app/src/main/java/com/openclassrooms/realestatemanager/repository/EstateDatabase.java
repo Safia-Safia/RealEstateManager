@@ -33,8 +33,7 @@ public abstract class EstateDatabase extends RoomDatabase {
             synchronized (EstateDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    EstateDatabase.class, "EstateDatabase.db")
-                            .build();
+                                    EstateDatabase.class, "EstateDatabase.db").build();
                 }
             }
         }
