@@ -289,9 +289,11 @@ public class AddEstate extends AppCompatActivity {
             if (parkingCheckBox.isChecked()) {
                 estate.setParking(true);
             }
-            estateViewModel.createEstate(estate);
+            estateViewModel.createEstate(estate).observe(this,aBoolean -> {
                 sendNotification();
                 finish();
+            });
+
         });
 
     }

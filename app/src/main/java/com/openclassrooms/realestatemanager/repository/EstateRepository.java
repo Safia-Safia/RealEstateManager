@@ -54,7 +54,7 @@ public class EstateRepository {
                     estate.getPictures().get(finalI).setImageUrl(url.toString());
                     if (finalI == estate.getPictures().size() - 1) {
                         estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
-                        getEstateCollection().document().set(estate);
+                        getEstateCollection().document(estate.getId()).set(estate);
                         result.setValue(true);
                     }
                 });
@@ -71,6 +71,7 @@ public class EstateRepository {
                 List<Estate> estateList = new ArrayList<>();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Estate estate = document.toObject(Estate.class);
+                    // Mettre à jour la base de données locale (Room) avec le nouveau bien immobilier
                     executor.execute(() -> estateDao.createEstate(estate));
                     estateList.add(estate);
                 }
@@ -108,6 +109,8 @@ public class EstateRepository {
                             updatedFields.put("pictures", estate.getPictures());
                             updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
                             getEstateCollection().document(String.valueOf(estateId)).update(updatedFields);
+                            executor.execute(() -> estateDao.updateEstate(estate));
+
                             result.setValue(true);
                         }
                     });
@@ -117,7 +120,9 @@ public class EstateRepository {
                     estate.setCoverPictureUrl(estate.getPictures().get(0).getImageUrl());
                     updatedFields.put("pictures", estate.getPictures());
                     updatedFields.put("coverPictureUrl", estate.getCoverPictureUrl());
+                    Log.e("updateEstate", " "+ updatedFields + " " + estateId);
                     getEstateCollection().document(String.valueOf(estateId)).update(updatedFields);
+                    executor.execute(() -> estateDao.updateEstate(estate));
                     result.setValue(true);
                 }
             } else {
@@ -130,11 +135,11 @@ public class EstateRepository {
     public LiveData<List<Estate>> getFilteredEstates(
             long minPrice, long maxPrice, long minSurface, long maxSurface, boolean isSchoolFilter,
             boolean isStoreFilter, boolean isParkFilter, boolean isParkingFilter,
-            boolean isSoldFilter, boolean isLastWeekFilter, String selectedEstateType) {
+            boolean isSoldFilter, boolean isLastWeekFilter,boolean hasThreeOrMorePictures, String selectedEstateType) {
         return estateDao.getFilteredEstates(
                 minPrice, maxPrice, minSurface, maxSurface, isSchoolFilter,
                 isStoreFilter, isParkFilter, isParkingFilter,
-                isSoldFilter, isLastWeekFilter, selectedEstateType
+                isSoldFilter, isLastWeekFilter, hasThreeOrMorePictures, selectedEstateType
         );
     }
 }

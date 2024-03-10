@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 
@@ -76,7 +77,7 @@ public class EstateListFragment extends Fragment {
     ConstraintLayout filterOptionsLayout;
     FloatingActionButton fabAddEstates;
     ImageButton filterBtn, signOutBtn, mapsButton;
-    Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, pictures, lastWeekBtn, soldBtn;
+    Button noFilterBtn, schoolBtn, storeBtn, parkingBtn, parkBtn, hasThreeOrMorePicturesBtn, lastWeekBtn, soldBtn;
     private RubberRangePicker priceRangeBar, surfaceRangeBar;
 
     Spinner spinner;
@@ -124,7 +125,7 @@ public class EstateListFragment extends Fragment {
         initListOnButtonClick(soldBtn, "sold");
         initListOnButtonClick(parkingBtn, "parking");
         initListOnButtonClick(parkBtn, "park");
-        initListOnButtonClick(pictures, "moreThan3Picture");
+        initListOnButtonClick(hasThreeOrMorePicturesBtn, "moreThan3Picture");
         initListOnButtonClick(lastWeekBtn, "lastWeek");
         initListOnButtonClick(soldBtn, "sold");
 
@@ -181,7 +182,7 @@ public class EstateListFragment extends Fragment {
         parkBtn = binding.getRoot().findViewById(R.id.park);
         parkingBtn = binding.getRoot().findViewById(R.id.parking);
         lastWeekBtn = binding.getRoot().findViewById(R.id.sinceAweek);
-        pictures = binding.getRoot().findViewById(R.id.plus3pictures);
+        hasThreeOrMorePicturesBtn = binding.getRoot().findViewById(R.id.plus3pictures);
         soldBtn = binding.getRoot().findViewById(R.id.sold);
         //RANGEBAR
         //          --PRICE
@@ -221,7 +222,7 @@ public class EstateListFragment extends Fragment {
     }
 
     private void resetOtherButtonsState(Button clickedButton) {
-        Button[] allButtons = {noFilterBtn, schoolBtn, storeBtn, parkBtn, parkingBtn, lastWeekBtn, pictures, soldBtn};
+        Button[] allButtons = {noFilterBtn, schoolBtn, storeBtn, parkBtn, parkingBtn, lastWeekBtn, hasThreeOrMorePicturesBtn, soldBtn};
         for (Button button : allButtons) {
             if (button != clickedButton) {
                 button.setSelected(false);
@@ -250,8 +251,8 @@ public class EstateListFragment extends Fragment {
             } else {
                 selectedFilters.remove(filterCriteria);
             }
-            applyFilters();
             changeButtonColor(button);
+            applyFilters();
         });
 
     }
@@ -266,24 +267,24 @@ public class EstateListFragment extends Fragment {
         boolean isParkingFilter = parkingBtn.isSelected();
         boolean isSoldFilter = soldBtn.isSelected();
         boolean isLastWeekFilter = lastWeekBtn.isSelected();
+        boolean hasThreeOrMorePictures = hasThreeOrMorePicturesBtn.isSelected();
 
         String selectedEstateType = spinner.getSelectedItem().toString();
 
         estateViewModel.getFilteredEstates(
                 minPrice, maxPrice, minSurface, maxSurface, isSchoolFilter,
                 isStoreFilter, isParkFilter, isParkingFilter, isSoldFilter,
-                isLastWeekFilter, selectedEstateType
+                isLastWeekFilter,hasThreeOrMorePictures, selectedEstateType
         ).observe(getViewLifecycleOwner(), estates -> {
 
             List<Estate> filteredEstates = new ArrayList<>();
 
             for (Estate estate : estates) {
                 boolean isFiltered = true;
-                if (pictures.isSelected()){
-                    isFiltered = isFiltered && (estate.getPictures().size() >= 2);
-
+               if (hasThreeOrMorePicturesBtn.isSelected()){
+                    isFiltered =  estate.getPictures().size() >= 2;
                 }
-                if (isLastWeekFilter) {
+                if (isLastWeekFilter && isFiltered) {
                     Calendar lastWeek = Calendar.getInstance();
                     Date referenceDate = new Date();
                     lastWeek.setTime(referenceDate);
@@ -292,17 +293,12 @@ public class EstateListFragment extends Fragment {
                     try {
                         Date date = formatter.parse(estate.getEntryDate());
                         isFiltered = date.after(lastWeek.getTime());
-                        if (isFiltered) {
-                            filteredEstates.add(estate);
-                        }
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                if (spinner.getSelectedItemPosition() != 0) {
-                    if (isFiltered) {
+                if (spinner.getSelectedItemPosition() != 0 && isFiltered) {
                         isFiltered = Objects.equals(estate.getEstateType(), spinner.getSelectedItem().toString());
-                    }
                 }
                 if (isFiltered) {
                     filteredEstates.add(estate);
@@ -321,7 +317,8 @@ public class EstateListFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                applyFilters(); }
+                applyFilters();
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {

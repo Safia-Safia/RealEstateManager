@@ -10,6 +10,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.openclassrooms.realestatemanager.model.Estate;
+import com.openclassrooms.realestatemanager.model.Picture;
 
 import java.util.List;
 @Dao
@@ -35,10 +36,11 @@ public interface EstateDao {
             "AND (parking = :isParkingFilter OR :isParkingFilter = 0) " +
             "AND (soldDate IS NOT NULL OR :isSoldFilter = 0) " +
             "OR :isLastWeekFilter = 0 " +
+            "AND (:hasThreeOrMorePictures = 1 AND pictures >= 2)"+
             "AND (estateType = :selectedEstateType OR :selectedEstateType = '')")
     LiveData<List<Estate>> getFilteredEstates(
             long minPrice, long maxPrice, long minSurface, long maxSurface, boolean isSchoolFilter,
             boolean isStoreFilter, boolean isParkFilter, boolean isParkingFilter,
-            boolean isSoldFilter, boolean isLastWeekFilter, String selectedEstateType);
+            boolean isSoldFilter, boolean isLastWeekFilter, boolean hasThreeOrMorePictures , String selectedEstateType);
 
 }
