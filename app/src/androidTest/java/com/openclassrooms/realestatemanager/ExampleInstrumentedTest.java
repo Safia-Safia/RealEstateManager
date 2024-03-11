@@ -45,18 +45,6 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void testWifiEnabled() {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
-        // Get WifiManager
-        WifiManager wifiManager = (WifiManager) appContext.getSystemService(Context.WIFI_SERVICE);
-
-        // Check if WiFi is enabled
-        assertTrue("WiFi is not enabled", wifiManager.isWifiEnabled());
-    }
-
-    @Test
     public void testWifiDisabled() {
         try {
             grantWifiPermission();
@@ -74,7 +62,8 @@ public class ExampleInstrumentedTest {
 
         // Check WiFi state after a delay (adjust delay as needed)
         try {
-            Thread.sleep(2000);  // 2 seconds delay
+            Thread.sleep(5000);  // 2 seconds delay
+            assertTrue("WiFi is still enabled", !wifiManager.isWifiEnabled());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

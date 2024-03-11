@@ -10,7 +10,7 @@ import android.net.Uri;
 
 import androidx.room.Room;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.openclassrooms.realestatemanager.repository.EstateDatabase;
 import com.openclassrooms.realestatemanager.utils.ContentProvider;

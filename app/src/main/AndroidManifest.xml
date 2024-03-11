@@ -25,7 +25,7 @@
 
         <provider
             android:name=".utils.ContentProvider"
-            android:authorities="${applicationId}.listings.provider"
+            android:authorities="com.openclassrooms.realestatemanager.provider"
             android:exported="true" />
 
         <meta-data
