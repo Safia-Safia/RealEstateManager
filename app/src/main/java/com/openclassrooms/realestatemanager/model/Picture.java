@@ -2,17 +2,12 @@ package com.openclassrooms.realestatemanager.model;
 
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
 
 public class Picture implements Serializable {
 
-    private String id;
     String imageUrl, description;
 
     @Exclude
