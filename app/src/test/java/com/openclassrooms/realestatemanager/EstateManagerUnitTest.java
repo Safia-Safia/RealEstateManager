@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -26,38 +28,22 @@ import com.openclassrooms.realestatemanager.viewModel.UserViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
+@RunWith(JUnit4.class)
 public class EstateManagerUnitTest {
-    @Mock
     private EstateViewModel estateViewModel;
     @Mock
     private EstateRepository estateRepository;
-    @Mock
-    private UserViewModel userViewModel;
-    @Mock
-    private UserRepository userRepository;
-
     ArrayList<Estate> estateList = new ArrayList<>();
     @Mock
-    private final Executor executor;
+    private Executor executor;
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
-    public EstateManagerUnitTest(Executor executor) {
-        this.executor = executor;
-    }
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         estateViewModel = new EstateViewModel(estateRepository, executor);
-        userViewModel = new UserViewModel(userRepository);
         Estate estate1 = new Estate();
         Estate estate2 = new Estate();
         User user1 = new User();
@@ -160,8 +146,8 @@ public class EstateManagerUnitTest {
         newEstate.setId("1");
         result.setValue(true);
 
-        /*when(estateRepository.createEstate(Mockito.any(Estate.class))).thenReturn(result);
-        estateViewModel.createEstate(newEstate).observeForever(Assert::assertTrue);*/
+        when(estateRepository.createEstate(Mockito.any(Estate.class))).thenReturn(result);
+        estateViewModel.createEstate(newEstate).observeForever(Assert::assertTrue);
     }
 
     @Test
@@ -177,7 +163,7 @@ public class EstateManagerUnitTest {
         result.setValue(estateList);
     }
 
-   /* @Test
+    @Test
    public void updateEstate() {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         result.setValue(true);
@@ -190,7 +176,7 @@ public class EstateManagerUnitTest {
         estateList.get(0).setDescription("Updated");
         estateList.get(0).setPrice(12345);
 
-        Mockito.when(estateRepository.updateEstate(estateList.get(0), estateList.get(0).getId())).thenReturn(result);
+        Mockito.when(estateRepository.updateEstate(estateList.get(0), estateList.get(0).getId(),executor)).thenReturn(result);
         estateViewModel.updateEstate(estateList.get(0), estateList.get(0).getId()).observeForever(success -> {
             assertEquals(true, success);
 
@@ -198,7 +184,7 @@ public class EstateManagerUnitTest {
                     " Description: " + estateList.get(0).getDescription() + " Price: " + estateList.get(0).getPrice()
                     + " userName : " + estateList.get(0).getUser().getUsername());
         });
-    }*/
+    }
     @Test
     public void testConvertDollarToEuro() {
         assertEquals(406, Utils.convertDollarToEuro(500));
@@ -206,7 +192,7 @@ public class EstateManagerUnitTest {
 
     @Test
     public void testConvertEuroToDollar() {
-        assertEquals(616, Utils.convertEuroToDollar(500));
+         assertEquals(616, Utils.convertEuroToDollar(500));
     }
     @Test
     public void testFormattedTodayDate() {
