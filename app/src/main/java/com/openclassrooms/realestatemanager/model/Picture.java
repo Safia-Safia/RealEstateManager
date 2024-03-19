@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.model;
 import android.net.Uri;
 
 import com.google.firebase.firestore.Exclude;
+import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 
@@ -11,7 +12,7 @@ public class Picture implements Serializable {
     String imageUrl, description;
 
     @Exclude
-    public Uri imageUri;
+    public transient Uri imageUri;
 
     public Picture() {
     }

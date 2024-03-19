@@ -43,7 +43,7 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".controller.AddEstate"
+            android:name=".controller.AddEstateActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity

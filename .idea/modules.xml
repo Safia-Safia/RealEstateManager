@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RealEstateManager-NewVersionOfTheApp.iml" filepath="$PROJECT_DIR$/.idea/modules/RealEstateManager-NewVersionOfTheApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager-NewVersionOfTheApp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager-NewVersionOfTheApp.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager-NewVersionOfTheApp.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager-NewVersionOfTheApp.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager-NewVersionOfTheApp.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager-NewVersionOfTheApp.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager-NewVersionOfTheApp.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager-NewVersionOfTheApp.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RealEstateManager-Cisse_Safiatou_082023.iml" filepath="$PROJECT_DIR$/.idea/modules/RealEstateManager-Cisse_Safiatou_082023.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager-Cisse_Safiatou_082023.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager-Cisse_Safiatou_082023.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager-Cisse_Safiatou_082023.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager-Cisse_Safiatou_082023.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager-Cisse_Safiatou_082023.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager-Cisse_Safiatou_082023.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager-Cisse_Safiatou_082023.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager-Cisse_Safiatou_082023.app.unitTest.iml" />
     </modules>
   </component>
 </project>

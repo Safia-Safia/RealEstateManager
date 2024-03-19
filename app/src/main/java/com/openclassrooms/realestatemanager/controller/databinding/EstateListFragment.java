@@ -7,14 +7,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -28,12 +26,11 @@ import androidx.appcompat.widget.SearchView;
 
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jem.rubberpicker.RubberRangePicker;
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controller.AddEstate;
+import com.openclassrooms.realestatemanager.controller.AddEstateActivity;
 import com.openclassrooms.realestatemanager.controller.AuthenticationActivity;
 import com.openclassrooms.realestatemanager.controller.MapsActivity;
 import com.openclassrooms.realestatemanager.controller.placeholder.EstateListAdapter;
@@ -81,25 +78,6 @@ public class EstateListFragment extends Fragment {
     private RubberRangePicker priceRangeBar, surfaceRangeBar;
 
     Spinner spinner;
-    ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
-            Toast.makeText(
-                    v.getContext(),
-                    "Undo (Ctrl + Z) shortcut triggered",
-                    Toast.LENGTH_LONG
-            ).show();
-            return true;
-        } else if (event.getKeyCode() == KeyEvent.KEYCODE_F && event.isCtrlPressed()) {
-            Toast.makeText(
-                    v.getContext(),
-                    "Find (Ctrl + F) shortcut triggered",
-                    Toast.LENGTH_LONG
-            ).show();
-            return true;
-        }
-        return false;
-    };
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,7 +89,6 @@ public class EstateListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
         v = view.findViewById(R.id.property_detail_nav_container);
         setUpView();
         setUpEstateViewModel();
@@ -127,7 +104,6 @@ public class EstateListFragment extends Fragment {
         initListOnButtonClick(parkBtn, "park");
         initListOnButtonClick(hasThreeOrMorePicturesBtn, "moreThan3Picture");
         initListOnButtonClick(lastWeekBtn, "lastWeek");
-        initListOnButtonClick(soldBtn, "sold");
 
         initSearchBar();
         getAllEstates();
@@ -149,14 +125,15 @@ public class EstateListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 String searchStr = newText.toLowerCase();
-                List<Estate> filteredEstates = new ArrayList<>();
                 estateViewModel.getEstates().observe(getViewLifecycleOwner(), estates -> {
-
+                    List<Estate> filteredEstates = new ArrayList<>();
                     for (Estate estate : estates) {
                         if (estate.getAddress().toLowerCase().contains(searchStr)) {
+                            Log.e("searchstring", searchStr + ";"+ estate.getAddress());
                             filteredEstates.add(estate);
                         }
                     }
+                    Log.e("searchstring", searchStr +": "+ filteredEstates.size() + " " + estates.size());
                     setupRecyclerView(filteredEstates);
                 });
                 return true;
@@ -268,7 +245,7 @@ public class EstateListFragment extends Fragment {
         boolean isSoldFilter = soldBtn.isSelected();
         boolean isLastWeekFilter = lastWeekBtn.isSelected();
         boolean hasThreeOrMorePictures = hasThreeOrMorePicturesBtn.isSelected();
-
+        Log.e("applyfilter", "1");
         String selectedEstateType = spinner.getSelectedItem().toString();
 
         estateViewModel.getFilteredEstates(
@@ -304,6 +281,7 @@ public class EstateListFragment extends Fragment {
                     filteredEstates.add(estate);
                 }
             }
+            Log.e("applyfilter", "2 ; " + filteredEstates.size());
             setupRecyclerView(filteredEstates);
         });
     }
@@ -363,6 +341,7 @@ public class EstateListFragment extends Fragment {
         adapter = new EstateListAdapter(estates, v, this.requireContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        //Log.e("setuprecyclerview", estates.size() + "");
     }
 
     @Override
@@ -373,7 +352,7 @@ public class EstateListFragment extends Fragment {
 
     private void setUpAddEstate() {
         fabAddEstates.setOnClickListener(view -> {
-            Intent addEstateIntent = new Intent(this.requireContext(), AddEstate.class);
+            Intent addEstateIntent = new Intent(this.requireContext(), AddEstateActivity.class);
             startActivity(addEstateIntent);
         });
     }

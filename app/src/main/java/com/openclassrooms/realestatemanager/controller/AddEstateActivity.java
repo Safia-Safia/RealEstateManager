@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class AddEstate extends AppCompatActivity {
+public class AddEstateActivity extends AppCompatActivity {
     Uri imageUri;
     Estate estate;
     Spinner spinner;
