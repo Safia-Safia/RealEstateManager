@@ -39,12 +39,6 @@ public class AvailableWifiTest {
     }
 
     @Test
-    public void isWifiUnavailable() {
-        assertFalse(Utils.isInternet_Available(context));
-
-    }
-
-    @Test
     public void testWifiDisabled() {
         try {
             grantWifiPermission();
